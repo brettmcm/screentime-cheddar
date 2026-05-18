@@ -1,0 +1,223 @@
+{
+  "$description": "Cheddar design tokens aligned to the DTCG 2025.10 format. CSS tokens in src/styles/tokens.css are hand-authored — this JSON tracks color primitives, spacing, radius, and font dimensions only.",
+  "color": {
+    "$description": "Color tokens sourced from the Cheddar Figma design system.",
+    "black": {
+      "$type": "color",
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "hex": "#000000"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0.56,
+          "hex": "#000000"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0.08,
+          "hex": "#000000"
+        }
+      }
+    },
+    "white": {
+      "$type": "color",
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "alpha": 0.6,
+          "hex": "#ffffff"
+        }
+      }
+    },
+    "cheddar": {
+      "$type": "color",
+      "$description": "Cheddar product-brand specific colors.",
+      "black-cherry": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.14510, 0.12157, 0.13725],
+          "hex": "#251f23"
+        }
+      },
+      "orange": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.54510, 0],
+          "hex": "#ff8b00"
+        }
+      }
+    },
+    "brand": {
+      "$type": "color",
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.39399, 0, 0.17701],
+          "hex": "#64002d"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.51983, 0, 0.33789],
+          "hex": "#850056"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.78875, 0.06252, 0.60719],
+          "hex": "#c9109b"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.5677, 0.94957],
+          "hex": "#ff91f2"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.77509, 0.97376],
+          "hex": "#ffc6f8"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.92, 0.99333],
+          "hex": "#ffebfd"
+        }
+      }
+    },
+    "semantic": {
+      "foreground": {
+        "$type": "color",
+        "primary": { "$value": "{color.black.100}" },
+        "secondary": { "$value": "{color.black.300}" },
+        "brand-primary": { "$value": "{color.brand.200}" },
+        "on-brand": { "$value": "{color.white.100}" }
+      },
+      "background": {
+        "$type": "color",
+        "default": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.96078, 0.94118, 0.95294],
+            "hex": "#f5f0f3"
+          }
+        },
+        "muted": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.94902, 0.91765, 0.94118],
+            "hex": "#f2eaf0"
+          }
+        },
+        "surface": { "$value": "{color.white.100}" },
+        "brand-primary": { "$value": "{color.brand.200}" },
+        "brand-secondary": { "$value": "{color.brand.100}" },
+        "brand-tertiary": { "$value": "{color.brand.600}" },
+        "dark-default": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.10196, 0.07451, 0.10196],
+            "hex": "#1a131a"
+          }
+        },
+        "dark-surface": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.16863, 0.12157, 0.16863],
+            "hex": "#2b1f2b"
+          }
+        },
+        "dark-muted": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.20000, 0.14510, 0.20392],
+            "hex": "#332534"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "default": { "$value": "{color.black.600}" }
+      }
+    }
+  },
+  "size": {
+    "$description": "Core spacing, radius, and type scales.",
+    "padding": {
+      "$type": "dimension",
+      "xs": { "$value": { "value": 8, "unit": "px" } },
+      "s": { "$value": { "value": 12, "unit": "px" } },
+      "m": { "$value": { "value": 16, "unit": "px" } },
+      "l": { "$value": { "value": 24, "unit": "px" } },
+      "xl": { "$value": { "value": 32, "unit": "px" } }
+    },
+    "radius": {
+      "$type": "dimension",
+      "xs": { "$value": { "value": 8, "unit": "px" } },
+      "s": { "$value": { "value": 12, "unit": "px" } },
+      "m": { "$value": { "value": 24, "unit": "px" } },
+      "round": { "$value": { "value": 9999, "unit": "px" } }
+    },
+    "font": {
+      "$type": "dimension",
+      "s": { "$value": { "value": 14, "unit": "px" } },
+      "m": { "$value": { "value": 16, "unit": "px" } },
+      "l": { "$value": { "value": 24, "unit": "px" } }
+    }
+  },
+  "font": {
+    "$description": "Font family tokens.",
+    "family": {
+      "text": {
+        "$type": "fontFamily",
+        "$value": ["Mona Sans", "Inter", "system-ui", "sans-serif"]
+      },
+      "display": {
+        "$type": "fontFamily",
+        "$value": ["Oswald", "Mona Sans", "system-ui", "sans-serif"]
+      }
+    }
+  },
+  "shadow": {
+    "$description": "Shadow primitives for surfaces.",
+    "surface": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.34510, 0.07451, 0.23922],
+          "alpha": 0.08,
+          "hex": "#58133d"
+        },
+        "offsetX": { "value": 0, "unit": "px" },
+        "offsetY": { "value": 8, "unit": "px" },
+        "blur": { "value": 24, "unit": "px" },
+        "spread": { "value": 0, "unit": "px" }
+      }
+    }
+  }
+}

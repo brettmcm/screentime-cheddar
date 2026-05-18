@@ -1,0 +1,20 @@
+@import './styles/tokens.css';
+@import './styles/foundation.css';
+@import './styles/components.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--cds-font-family-text);
+  background: var(--cds-color-background-default);
+  color: var(--cds-color-foreground-primary);
+}
+
+#root {
+  min-height: 100svh;
+}

@@ -1,0 +1,231 @@
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.app-shell {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: var(--token-size-padding-l);
+  background: var(--cds-color-background-surface);
+  border-radius: var(--token-size-radius-l);
+  display: grid;
+  gap: var(--token-size-padding-m);
+}
+
+.ds-page {
+  gap: var(--token-size-padding-xl);
+}
+
+.ds-page-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.ds-section {
+  display: grid;
+  gap: var(--token-size-padding-m);
+  align-content: start;
+  padding-top: var(--token-size-padding-s);
+  border-top: 1px solid var(--cds-color-border-default);
+}
+
+.ds-section h1,
+.ds-section h2,
+.ds-section h3,
+.ds-section p {
+  margin: 0;
+}
+
+.ds-section h1 {
+  font: var(--cds-type-display-xsmall);
+}
+
+.ds-section h2 {
+  font: var(--cds-type-heading);
+}
+
+.ds-section h3 {
+  font: var(--cds-type-body-large-strong);
+}
+
+.ds-foundation-grid {
+  display: grid;
+  gap: var(--token-size-padding-m);
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+.ds-subsection {
+  gap: var(--token-size-padding-m);
+}
+
+.ds-type-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--token-size-padding-s);
+}
+
+.ds-type-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--token-size-padding-s);
+  border-bottom: 1px solid var(--cds-color-border-default);
+  padding-bottom: var(--token-size-padding-xs);
+}
+
+.ds-type-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.ds-type-row code {
+  color: var(--cds-color-foreground-secondary);
+}
+
+.ds-type-sample {
+  color: var(--cds-color-foreground-primary);
+}
+
+.ds-color-list {
+  display: grid;
+  gap: var(--token-size-padding-s);
+}
+
+.ds-color-family {
+  display: grid;
+  gap: var(--token-size-padding-xs);
+}
+
+.ds-color-family p {
+  font: var(--cds-type-body-large-strong);
+}
+
+.ds-color-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: var(--token-size-padding-xs);
+}
+
+.ds-color-swatch {
+  display: grid;
+  gap: 6px;
+}
+
+.ds-color-swatch span {
+  height: 44px;
+  border-radius: var(--token-size-radius-xs);
+  border: 1px solid var(--cds-color-border-default);
+}
+
+.ds-color-swatch code {
+  color: var(--cds-color-foreground-secondary);
+  text-align: center;
+}
+
+.ds-variant-grid {
+  display: grid;
+  gap: var(--token-size-padding-l);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.ds-variant-grid-tight {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.ds-variant-grid-wide {
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+}
+
+.ds-card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+}
+
+.ds-card-small-row {
+  grid-column: 1 / -1;
+}
+
+.ds-card-inline-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--token-size-padding-s);
+  align-items: flex-start;
+}
+
+.ds-variant-card {
+  gap: var(--token-size-padding-xs);
+  align-content: start;
+}
+
+.ds-page .ds-variant-card.panel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+.ds-variant-label {
+  font: var(--cds-type-body-medium-strong);
+  color: var(--cds-color-foreground-secondary);
+}
+
+.ds-center {
+  justify-items: center;
+}
+
+.ds-icon-row {
+  display: flex;
+  align-items: center;
+  gap: var(--token-size-padding-s);
+}
+
+.demo-layout {
+  display: grid;
+  gap: var(--token-size-padding-xl);
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+}
+
+.demo-section {
+  display: grid;
+  gap: var(--token-size-padding-m);
+  align-content: start;
+  padding-top: var(--token-size-padding-s);
+  border-top: 1px solid var(--cds-color-border-default);
+}
+
+.demo-section h2 {
+  margin: 0;
+  font: var(--cds-type-display-xsmall);
+}
+
+.demo-section-wide {
+  grid-column: 1 / -1;
+}
+
+.demo-stack {
+  display: grid;
+  gap: var(--token-size-padding-s);
+}
+
+.demo-card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--token-size-padding-s);
+  align-items: flex-start;
+}
+
+.demo-notification-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--token-size-padding-s);
+  align-items: flex-start;
+}

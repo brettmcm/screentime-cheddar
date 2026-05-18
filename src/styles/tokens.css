@@ -1,118 +1,131 @@
 :root {
-  color-scheme: light;
-  --cds-font-family-text: 'Mona Sans', 'Inter', system-ui, sans-serif;
-  --cds-font-family-display: 'Oswald', 'Mona Sans', 'Inter', system-ui, sans-serif;
+	color-scheme: light;
+	--cds-font-family-text: "Mona Sans Variable", "Inter", system-ui, sans-serif;
+	--cds-font-family-display: "Oswald", "Mona Sans Variable", "Inter", system-ui,
+		sans-serif;
 
-  --token-size-padding-xxs: 4px;
-  --token-size-padding-xs: 8px;
-  --token-size-padding-s: 12px;
-  --token-size-padding-m: 16px;
-  --token-size-padding-l: 24px;
-  --token-size-padding-xl: 32px;
-  --token-size-padding-2xl: 40px;
-  --token-size-padding-3xl: 48px;
-  --token-size-radius-xs: 8px;
-  --token-size-radius-s: 12px;
-  --token-size-radius-l: 16px;
-  --token-size-radius-m: 24px;
-  --token-size-radius-round: 9999px;
+	--token-size-padding-xxs: 4px;
+	--token-size-padding-xs: 8px;
+	--token-size-padding-s: 12px;
+	--token-size-padding-m: 16px;
+	--token-size-padding-l: 24px;
+	--token-size-padding-xl: 32px;
+	--token-size-padding-2xl: 40px;
+	--token-size-padding-3xl: 48px;
+	--token-size-radius-xs: 8px;
+	--token-size-radius-s: 12px;
+	--token-size-radius-l: 16px;
+	--token-size-radius-m: 24px;
+	--token-size-radius-round: 9999px;
 
-  --token-size-font-xs: 12px;
-  --token-size-font-s: 14px;
-  --token-size-font-m: 16px;
-  --token-size-font-h: 21px;
-  --token-size-font-l: 24px;
-  --token-size-font-xl: 34px;
-  --token-size-font-2xl: 48px;
-  --token-size-font-3xl: 64px;
-  --token-size-font-4xl: 80px;
+	--token-size-font-xs: 12px;
+	--token-size-font-s: 14px;
+	--token-size-font-m: 16px;
+	--token-size-font-h: 21px;
+	--token-size-font-l: 24px;
+	--token-size-font-xl: 34px;
+	--token-size-font-2xl: 48px;
+	--token-size-font-3xl: 64px;
+	--token-size-font-4xl: 80px;
 
-  --cds-type-display-xlarge: 500 var(--token-size-font-4xl) / 1 var(--cds-font-family-display);
-  --cds-type-display-large: 500 var(--token-size-font-3xl) / 1 var(--cds-font-family-display);
-  --cds-type-display-medium: 500 var(--token-size-font-2xl) / 1 var(--cds-font-family-display);
-  --cds-type-display-small: 500 var(--token-size-font-l) / 1 var(--cds-font-family-display);
-  --cds-type-display-xsmall: 500 var(--token-size-font-h) / 1 var(--cds-font-family-display);
-  --cds-type-heading: 500 var(--token-size-font-l) / 1.4 var(--cds-font-family-text);
-  --cds-type-body-large: 500 var(--token-size-font-m) / 1.3 var(--cds-font-family-text);
-  --cds-type-body-large-strong: 600 var(--token-size-font-m) / 1.3 var(--cds-font-family-text);
-  --cds-type-body-medium: 500 var(--token-size-font-s) / 1.3 var(--cds-font-family-text);
-  --cds-type-body-medium-strong: 700 var(--token-size-font-s) / 1.3 var(--cds-font-family-text);
-  --cds-type-body-small: 500 var(--token-size-font-xs) / 1.3 var(--cds-font-family-text);
-  --cds-type-body-small-strong: 600 var(--token-size-font-xs) / 1.3 var(--cds-font-family-text);
+	--cds-type-display-xlarge: 500 var(--token-size-font-4xl) / 1
+		var(--cds-font-family-display);
+	--cds-type-display-large: 500 var(--token-size-font-3xl) / 1
+		var(--cds-font-family-display);
+	--cds-type-display-medium: 500 var(--token-size-font-2xl) / 1
+		var(--cds-font-family-display);
+	--cds-type-display-small: 500 var(--token-size-font-l) / 1
+		var(--cds-font-family-display);
+	--cds-type-display-xsmall: 500 var(--token-size-font-h) / 1
+		var(--cds-font-family-display);
+	--cds-type-heading: 500 var(--token-size-font-l) / 1.4
+		var(--cds-font-family-text);
+	--cds-type-body-large: 500 var(--token-size-font-m) / 1.3
+		var(--cds-font-family-text);
+	--cds-type-body-large-strong: 600 var(--token-size-font-m) / 1.3
+		var(--cds-font-family-text);
+	--cds-type-body-medium: 500 var(--token-size-font-s) / 1.3
+		var(--cds-font-family-text);
+	--cds-type-body-medium-strong: 700 var(--token-size-font-s) / 1.3
+		var(--cds-font-family-text);
+	--cds-type-body-small: 500 var(--token-size-font-xs) / 1.3
+		var(--cds-font-family-text);
+	--cds-type-body-small-strong: 600 var(--token-size-font-xs) / 1.3
+		var(--cds-font-family-text);
 
-  --token-color-black-100: #000000;
-  --token-color-black-200: rgba(0, 0, 0, 0.72);
-  --token-color-black-300: rgba(0, 0, 0, 0.56);
-  --token-color-black-400: rgba(0, 0, 0, 0.4);
-  --token-color-black-500: rgba(0, 0, 0, 0.2);
-  --token-color-black-600: rgba(0, 0, 0, 0.08);
-  --token-color-white-100: #ffffff;
-  --token-color-white-200: rgba(255, 255, 255, 0.88);
-  --token-color-white-300: rgba(255, 255, 255, 0.6);
-  --token-color-white-400: rgba(255, 255, 255, 0.4);
-  --token-color-white-500: rgba(255, 255, 255, 0.24);
+	--token-color-black-100: #000000;
+	--token-color-black-200: rgba(0, 0, 0, 0.72);
+	--token-color-black-300: rgba(0, 0, 0, 0.56);
+	--token-color-black-400: rgba(0, 0, 0, 0.4);
+	--token-color-black-500: rgba(0, 0, 0, 0.2);
+	--token-color-black-600: rgba(0, 0, 0, 0.08);
+	--token-color-white-100: #ffffff;
+	--token-color-white-200: rgba(255, 255, 255, 0.88);
+	--token-color-white-300: rgba(255, 255, 255, 0.6);
+	--token-color-white-400: rgba(255, 255, 255, 0.4);
+	--token-color-white-500: rgba(255, 255, 255, 0.24);
 
-  --token-color-brand-100: #64002d;
-  --token-color-brand-200: #850056;
-  --token-color-brand-300: #c9109b;
-  --token-color-brand-400: #ff91f2;
-  --token-color-brand-500: #ffc6f8;
-  --token-color-brand-600: #ffebfd;
+	--token-color-brand-100: #64002d;
+	--token-color-brand-200: #850056;
+	--token-color-brand-300: #c9109b;
+	--token-color-brand-400: #ff91f2;
+	--token-color-brand-500: #ffc6f8;
+	--token-color-brand-600: #ffebfd;
 
-  --token-color-green-100: #1f4300;
-  --token-color-green-200: #357600;
-  --token-color-green-300: #5aba00;
-  --token-color-green-400: #8de331;
-  --token-color-green-500: #d4ff72;
-  --token-color-green-600: #efffcb;
-  --token-color-purple-100: #2d1d6b;
-  --token-color-purple-200: #4e30ad;
-  --token-color-purple-300: #7747ff;
-  --token-color-purple-400: #a384ff;
-  --token-color-purple-500: #cebeff;
-  --token-color-purple-600: #ebe4ff;
-  --token-color-blue-100: #003c74;
-  --token-color-blue-200: #005db5;
-  --token-color-blue-300: #007bee;
-  --token-color-blue-400: #4cb1ff;
-  --token-color-blue-500: #9eefff;
-  --token-color-blue-600: #def9ff;
+	--token-color-green-100: #1f4300;
+	--token-color-green-200: #357600;
+	--token-color-green-300: #5aba00;
+	--token-color-green-400: #8de331;
+	--token-color-green-500: #d4ff72;
+	--token-color-green-600: #efffcb;
+	--token-color-purple-100: #2d1d6b;
+	--token-color-purple-200: #4e30ad;
+	--token-color-purple-300: #7747ff;
+	--token-color-purple-400: #a384ff;
+	--token-color-purple-500: #cebeff;
+	--token-color-purple-600: #ebe4ff;
+	--token-color-blue-100: #003c74;
+	--token-color-blue-200: #005db5;
+	--token-color-blue-300: #007bee;
+	--token-color-blue-400: #4cb1ff;
+	--token-color-blue-500: #9eefff;
+	--token-color-blue-600: #def9ff;
 
-  --token-color-cheddar-black-cherry: #251f23;
-  --token-color-cheddar-orange: #ff8b00;
+	--token-color-cheddar-black-cherry: #251f23;
+	--token-color-cheddar-orange: #ff8b00;
 
-  --cds-color-foreground-primary: var(--token-color-black-100);
-  --cds-color-foreground-secondary: var(--token-color-black-300);
-  --cds-color-foreground-tertiary: var(--token-color-black-300);
-  --cds-color-foreground-brand-primary: var(--token-color-brand-200);
-  --cds-color-foreground-on-brand: var(--token-color-white-100);
-  --cds-color-background-default: #f5f0f3;
-  --cds-color-background-surface: var(--token-color-white-100);
-  --cds-color-background-muted: #f2eaf0;
-  --cds-color-background-brand-primary: var(--token-color-brand-200);
-  --cds-color-background-brand-secondary: var(--token-color-brand-100);
-  --cds-color-background-brand-tertiary: var(--token-color-brand-600);
-  --cds-color-background-overlay: rgba(0, 0, 0, 0.32);
-  --cds-color-border-default: var(--token-color-black-600);
-  --cds-color-border-strong: var(--token-color-black-500);
-  --cds-shadow-surface: 0 8px 24px rgba(88, 19, 61, 0.08);
+	--cds-color-foreground-primary: var(--token-color-black-100);
+	--cds-color-foreground-secondary: var(--token-color-black-300);
+	--cds-color-foreground-tertiary: var(--token-color-black-300);
+	--cds-color-foreground-brand-primary: var(--token-color-brand-200);
+	--cds-color-foreground-on-brand: var(--token-color-white-100);
+	--cds-color-background-default: #f5f0f3;
+	--cds-color-background-surface: var(--token-color-white-100);
+	--cds-color-background-muted: #f2eaf0;
+	--cds-color-background-brand-primary: var(--token-color-brand-200);
+	--cds-color-background-brand-secondary: var(--token-color-brand-100);
+	--cds-color-background-brand-tertiary: var(--token-color-brand-600);
+	--cds-color-background-overlay: rgba(0, 0, 0, 0.32);
+	--cds-color-border-default: var(--token-color-black-600);
+	--cds-color-border-strong: var(--token-color-black-500);
+	--cds-shadow-surface: 0 8px 24px rgba(88, 19, 61, 0.08);
 }
 
-[data-theme='dark'] {
-  color-scheme: dark;
-  --cds-color-foreground-primary: var(--token-color-white-100);
-  --cds-color-foreground-secondary: var(--token-color-white-200);
-  --cds-color-foreground-tertiary: var(--token-color-white-300);
-  --cds-color-foreground-brand-primary: var(--token-color-brand-400);
-  --cds-color-foreground-on-brand: var(--token-color-white-100);
-  --cds-color-background-default: #1a131a;
-  --cds-color-background-surface: #2b1f2b;
-  --cds-color-background-muted: #332534;
-  --cds-color-background-brand-primary: var(--token-color-brand-100);
-  --cds-color-background-brand-secondary: var(--token-color-brand-600);
-  --cds-color-background-brand-tertiary: var(--token-color-brand-100);
-  --cds-color-background-overlay: rgba(0, 0, 0, 0.52);
-  --cds-color-border-default: var(--token-color-white-500);
-  --cds-color-border-strong: var(--token-color-white-400);
-  --cds-shadow-surface: 0 12px 30px rgba(0, 0, 0, 0.32);
+[data-theme="dark"] {
+	color-scheme: dark;
+	--cds-color-foreground-primary: var(--token-color-white-100);
+	--cds-color-foreground-secondary: var(--token-color-white-200);
+	--cds-color-foreground-tertiary: var(--token-color-white-300);
+	--cds-color-foreground-brand-primary: var(--token-color-brand-400);
+	--cds-color-foreground-on-brand: var(--token-color-white-100);
+	--cds-color-background-default: #1a131a;
+	--cds-color-background-surface: #2b1f2b;
+	--cds-color-background-muted: #332534;
+	--cds-color-background-brand-primary: var(--token-color-brand-100);
+	--cds-color-background-brand-secondary: var(--token-color-brand-600);
+	--cds-color-background-brand-tertiary: var(--token-color-brand-100);
+	--cds-color-background-overlay: rgba(0, 0, 0, 0.52);
+	--cds-color-border-default: var(--token-color-white-500);
+	--cds-color-border-strong: var(--token-color-white-400);
+	--cds-shadow-surface: 0 12px 30px rgba(0, 0, 0, 0.32);
 }

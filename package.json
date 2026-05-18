@@ -1,41 +1,69 @@
 {
-  "name": "cds",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "figma": "dotenv -e .env.local -- npx figma",
-    "figma:url-sync": "node scripts/sync-figma-urls.mjs",
-    "figma:check-urls": "node scripts/sync-figma-urls.mjs --check",
-    "prefigma:publish": "npm run figma:url-sync",
-    "figma:publish": "dotenv -e .env.local -- npx figma connect publish",
-    "figma:publish:dry-run": "dotenv -e .env.local -- npx figma connect publish --dry-run",
-    "figma:unpublish": "dotenv -e .env.local -- npx figma connect unpublish"
-  },
-  "dependencies": {
-    "@fontsource-variable/mona-sans": "^5.2.8",
-    "@fontsource/oswald": "^5.2.8",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5"
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@figma/code-connect": "^1.4.5",
-    "@types/node": "^24.12.2",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
-    "dotenv-cli": "^11.0.0",
-    "eslint": "^10.2.1",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.5.0",
-    "typescript": "~6.0.2",
-    "typescript-eslint": "^8.58.2",
-    "vite": "^8.0.10"
-  }
+	"name": "@screentime/cheddar-ds",
+	"version": "1.0.0",
+	"description": "Cheddar Design System — React component library, styles, and design tokens.",
+	"type": "module",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./styles.css": "./dist/styles/index.css",
+		"./styles/fonts.css": "./dist/styles/fonts.css",
+		"./styles/tokens.css": "./dist/styles/tokens.css",
+		"./styles/foundation.css": "./dist/styles/foundation.css",
+		"./styles/components.css": "./dist/styles/components.css",
+		"./tokens.json": "./dist/tokens/cheddar.tokens.json",
+		"./package.json": "./package.json"
+	},
+	"sideEffects": [
+		"**/*.css"
+	],
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"registry": "https://registry.figma.com/npm/397d59b6-95ce-4b9e-8e24-db9b498f7374/registry/"
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+		"lint": "eslint .",
+		"preview": "vite preview",
+		"prepublishOnly": "npm run build",
+		"figma": "dotenv -e .env.local -- npx figma",
+		"figma:url-sync": "node scripts/sync-figma-urls.mjs",
+		"figma:check-urls": "node scripts/sync-figma-urls.mjs --check",
+		"prefigma:publish": "npm run figma:url-sync",
+		"figma:publish": "dotenv -e .env.local -- npx figma connect publish",
+		"figma:publish:dry-run": "dotenv -e .env.local -- npx figma connect publish --dry-run",
+		"figma:unpublish": "dotenv -e .env.local -- npx figma connect unpublish"
+	},
+	"peerDependencies": {
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0"
+	},
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@figma/code-connect": "^1.4.5",
+		"@fontsource-variable/mona-sans": "^5.2.8",
+		"@fontsource/oswald": "^5.2.8",
+		"@types/node": "^24.12.2",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"@vitejs/plugin-react": "^6.0.1",
+		"dotenv-cli": "^11.0.0",
+		"eslint": "^10.2.1",
+		"eslint-plugin-react-hooks": "^7.1.1",
+		"eslint-plugin-react-refresh": "^0.5.2",
+		"globals": "^17.5.0",
+		"react": "^19.2.5",
+		"react-dom": "^19.2.5",
+		"typescript": "~6.0.2",
+		"typescript-eslint": "^8.58.2",
+		"vite": "^8.0.10"
+	}
 }

@@ -2,14 +2,6 @@ import { useState } from 'react'
 import { ActivityItem } from '../activity-item/ActivityItem'
 import { Avatar } from '../avatar/Avatar'
 import { Logo } from '../brand/Brand'
-import chromeBook from '../../assets/chrome-illustrations/book.png'
-import chromeCamera from '../../assets/chrome-illustrations/camera.png'
-import chromeCoin2 from '../../assets/chrome-illustrations/coin-2.png'
-import chromeParty from '../../assets/chrome-illustrations/party.png'
-import chromePieChart from '../../assets/chrome-illustrations/pie-chart.png'
-import chromePiggyBank from '../../assets/chrome-illustrations/piggy-bank.png'
-import chromeSkateboard from '../../assets/chrome-illustrations/skateboard.png'
-import chromeWallet from '../../assets/chrome-illustrations/wallet.png'
 import type { IconName } from '../icon/Icon'
 import { Icon } from '../icon/Icon'
 import { classNames } from '../utils/classNames'
@@ -44,6 +36,7 @@ export type CardVariant =
 export type CardProps = {
   variant?: CardVariant
   items?: ActivityEntry[]
+  illustration?: string
 }
 
 type GenericTone = 'brand' | 'green' | 'purple' | 'blue'
@@ -68,7 +61,7 @@ export type ActivityEntry = {
   amount: string
 }
 
-type GoalIllustration = 'headphones' | 'sneakers' | 'trip' | 'camera'
+type GoalIcon = 'headphones' | 'sneakers' | 'trip' | 'camera'
 
 type GoalCardContent = {
   kind: 'goal-progress'
@@ -79,7 +72,7 @@ type GoalCardContent = {
   progress: number
   tileTone: GenericTone
   accentTone: GenericTone
-  illustration: GoalIllustration
+  illustration: GoalIcon
 }
 
 type ActivityCardContent = {
@@ -87,7 +80,6 @@ type ActivityCardContent = {
 }
 
 type FeatureKind = 'article-large' | 'guide' | 'total-savings' | 'profile' | 'article-small'
-type ArticleSmallIllustration = 'coin-2' | 'party' | 'pie-chart' | 'wallet'
 
 type FeatureCardContent = {
   kind: 'feature'
@@ -96,7 +88,6 @@ type FeatureCardContent = {
   description?: string
   amount?: string
   readTime?: string
-  illustration?: ArticleSmallIllustration
   tone?: GenericTone
 }
 
@@ -108,14 +99,11 @@ type BadgeCardContent = {
   tone: 'brand' | 'green' | 'purple'
 }
 
-type GoalFinishedIllustration = 'skateboard' | 'camera' | 'book'
-
 type GoalFinishedCardContent = {
   kind: 'goal-finished'
   title: string
   amount: string
   tone: 'brand' | 'blue' | 'purple'
-  illustration: GoalFinishedIllustration
 }
 
 type AccountCardContent = {
@@ -191,7 +179,6 @@ const cardVariants: Record<CardVariant, CardContent> = {
     type: 'article-small',
     title: 'How to choose your first credit card',
     readTime: '5 min',
-    illustration: 'coin-2',
     tone: 'green',
   },
   'article-small-expenses': {
@@ -199,7 +186,6 @@ const cardVariants: Record<CardVariant, CardContent> = {
     type: 'article-small',
     title: 'Cut expenses without cutting joy',
     readTime: '5 min',
-    illustration: 'party',
     tone: 'brand',
   },
   'article-small-fifty-thirty': {
@@ -207,7 +193,6 @@ const cardVariants: Record<CardVariant, CardContent> = {
     type: 'article-small',
     title: 'Save more with the 50/30/20 rule',
     readTime: '5 min',
-    illustration: 'pie-chart',
     tone: 'blue',
   },
   'article-small-emergency': {
@@ -215,7 +200,6 @@ const cardVariants: Record<CardVariant, CardContent> = {
     type: 'article-small',
     title: 'The importance of an emergency fund',
     readTime: '5 min',
-    illustration: 'wallet',
     tone: 'purple',
   },
   profile: {
@@ -229,21 +213,18 @@ const cardVariants: Record<CardVariant, CardContent> = {
     title: 'Skateboard',
     amount: '$120.00',
     tone: 'brand',
-    illustration: 'skateboard',
   },
   'goal-finished-variant-2': {
     kind: 'goal-finished',
     title: 'Camera',
     amount: '$260.00',
     tone: 'blue',
-    illustration: 'camera',
   },
   'goal-finished-variant-3': {
     kind: 'goal-finished',
     title: 'Art Book',
     amount: '$80.00',
     tone: 'purple',
-    illustration: 'book',
   },
   'badge-finance-nerd': {
     kind: 'badge',
@@ -330,20 +311,7 @@ const cardVariants: Record<CardVariant, CardContent> = {
   },
 }
 
-const articleSmallIllustrations: Record<ArticleSmallIllustration, string> = {
-  'coin-2': chromeCoin2,
-  party: chromeParty,
-  'pie-chart': chromePieChart,
-  wallet: chromeWallet,
-}
-
-const goalFinishedIllustrations: Record<GoalFinishedIllustration, string> = {
-  skateboard: chromeSkateboard,
-  camera: chromeCamera,
-  book: chromeBook,
-}
-
-const goalProgressIcons: Record<GoalIllustration, IconName> = {
+const goalProgressIcons: Record<GoalIcon, IconName> = {
   camera: 'chart',
   trip: 'learn',
   sneakers: 'piggybank',
@@ -360,7 +328,11 @@ const defaultActivityItems: ActivityEntry[] = [
   { id: 'activity-7', type: 'deposit', time: 'Tue, 4:15pm', amount: '$32.00' },
 ]
 
-export function Card({ variant = 'article-large', items = defaultActivityItems }: CardProps) {
+export function Card({
+  variant = 'article-large',
+  items = defaultActivityItems,
+  illustration,
+}: CardProps) {
   const card = cardVariants[variant]
 
   switch (card.kind) {
@@ -369,9 +341,9 @@ export function Card({ variant = 'article-large', items = defaultActivityItems }
     case 'goal-progress':
       return <GoalProgressCard card={card} />
     case 'feature':
-      return <FeatureCard card={card} />
+      return <FeatureCard card={card} illustration={illustration} />
     case 'goal-finished':
-      return <GoalFinishedCard card={card} />
+      return <GoalFinishedCard card={card} illustration={illustration} />
     case 'badge':
       return <BadgeCard card={card} />
     case 'account':
@@ -423,23 +395,41 @@ function GoalProgressCard({ card }: { card: GoalCardContent }) {
   )
 }
 
-function FeatureCard({ card }: { card: FeatureCardContent }) {
+function FeatureCard({
+  card,
+  illustration,
+}: {
+  card: FeatureCardContent
+  illustration?: string
+}) {
   return (
     <article className={classNames('card-feature', `card-feature-${card.type}`)}>
-      {card.type === 'article-large' ? <FeatureArticleLarge card={card} /> : null}
+      {card.type === 'article-large' ? (
+        <FeatureArticleLarge card={card} illustration={illustration} />
+      ) : null}
       {card.type === 'guide' ? <FeatureGuide card={card} /> : null}
       {card.type === 'total-savings' ? <FeatureTotalSavings card={card} /> : null}
       {card.type === 'profile' ? <FeatureProfile card={card} /> : null}
-      {card.type === 'article-small' ? <FeatureArticleSmall card={card} /> : null}
+      {card.type === 'article-small' ? (
+        <FeatureArticleSmall card={card} illustration={illustration} />
+      ) : null}
     </article>
   )
 }
 
-function FeatureArticleLarge({ card }: { card: FeatureCardContent }) {
+function FeatureArticleLarge({
+  card,
+  illustration,
+}: {
+  card: FeatureCardContent
+  illustration?: string
+}) {
   return (
     <>
       <div className="card-feature-hero">
-        <img src={chromePiggyBank} alt="" className="card-feature-hero-image" aria-hidden="true" />
+        {illustration ? (
+          <img src={illustration} alt="" className="card-feature-hero-image" aria-hidden="true" />
+        ) : null}
       </div>
       <h3 className="card-feature-title">{card.title}</h3>
       <p className="card-feature-description">{card.description}</p>
@@ -517,9 +507,14 @@ function FeatureProfile({ card }: { card: FeatureCardContent }) {
   )
 }
 
-function FeatureArticleSmall({ card }: { card: FeatureCardContent }) {
+function FeatureArticleSmall({
+  card,
+  illustration,
+}: {
+  card: FeatureCardContent
+  illustration?: string
+}) {
   const [isSaved, setIsSaved] = useState(false)
-  const illustration = card.illustration ? articleSmallIllustrations[card.illustration] : undefined
 
   return (
     <>
@@ -554,12 +549,19 @@ function FeatureArticleSmall({ card }: { card: FeatureCardContent }) {
   )
 }
 
-function GoalFinishedCard({ card }: { card: GoalFinishedCardContent }) {
-  const illustration = goalFinishedIllustrations[card.illustration]
+function GoalFinishedCard({
+  card,
+  illustration,
+}: {
+  card: GoalFinishedCardContent
+  illustration?: string
+}) {
   return (
     <article className="card-goal-finished">
       <div className={`card-goal-finished-hero card-goal-finished-hero-${card.tone}`}>
-        <img src={illustration} alt="" className="card-goal-finished-image" aria-hidden="true" />
+        {illustration ? (
+          <img src={illustration} alt="" className="card-goal-finished-image" aria-hidden="true" />
+        ) : null}
       </div>
       <div className="card-goal-finished-body">
         <p className="card-goal-finished-title">{card.title}</p>

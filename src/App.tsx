@@ -23,6 +23,25 @@ import {
 } from './components'
 import { Icon } from './components/icon/Icon'
 import { runA11yTokenChecks } from './a11y/contrast'
+import chromeBook from './assets/chrome-illustrations/book.png'
+import chromeCamera from './assets/chrome-illustrations/camera.png'
+import chromeCoin2 from './assets/chrome-illustrations/coin-2.png'
+import chromeParty from './assets/chrome-illustrations/party.png'
+import chromePieChart from './assets/chrome-illustrations/pie-chart.png'
+import chromePiggyBank from './assets/chrome-illustrations/piggy-bank.png'
+import chromeSkateboard from './assets/chrome-illustrations/skateboard.png'
+import chromeWallet from './assets/chrome-illustrations/wallet.png'
+
+const cardIllustrations: Record<string, string> = {
+  'article-large': chromePiggyBank,
+  'article-small-credit': chromeCoin2,
+  'article-small-expenses': chromeParty,
+  'article-small-fifty-thirty': chromePieChart,
+  'article-small-emergency': chromeWallet,
+  'goal-finished': chromeSkateboard,
+  'goal-finished-variant-2': chromeCamera,
+  'goal-finished-variant-3': chromeBook,
+}
 
 if (import.meta.env.DEV) {
   runA11yTokenChecks()
@@ -279,14 +298,18 @@ function App() {
           {cardVariants.map((variant) => (
             <article key={variant} className="panel ds-variant-card">
               <p className="ds-variant-label">Variant = {variant}</p>
-              <Card variant={variant} />
+              <Card variant={variant} illustration={cardIllustrations[variant]} />
             </article>
           ))}
           <article className="panel ds-variant-card ds-card-small-row">
             <p className="ds-variant-label">Article Small variants (single row)</p>
             <div className="ds-card-inline-row">
               {smallArticleCardVariants.map((variant) => (
-                <Card key={variant} variant={variant} />
+                <Card
+                  key={variant}
+                  variant={variant}
+                  illustration={cardIllustrations[variant]}
+                />
               ))}
             </div>
           </article>

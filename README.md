@@ -97,5 +97,3 @@ import '@screentime/cheddar-ds/styles.css'
 Types ship with the package (`dist/index.d.ts`) — no separate `@types/*` install needed.
 
 **Outside Figma Make** you will need the `@screentime` scope entry in your project's `.npmrc` pointing to the Figma registry. In Figma Make the registry is preconfigured and no `.npmrc` work is required.
-
-For full consumer setup details — CSS layers, theming, TypeScript imports, app shell layout — see [Guidelines/setup.md](Guidelines/setup.md).

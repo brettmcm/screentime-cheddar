@@ -65,18 +65,28 @@ This repo reads secrets from `.env.local` (gitignored). See [.env.example](.env.
 
 ## Publishing
 
-The package is published to the Figma private npm registry scoped to `@screentime`.
+The package is currently configured to publish to the Figma private npm registry scoped to `@screentime`.
 
 **Registry:** `https://registry.figma.com/npm/397d59b6-95ce-4b9e-8e24-db9b498f7374/registry/`
 
-This scope mapping is already set in `.npmrc`. The auth token is also present in `.npmrc`, so contributors with the repo can publish without any additional credential setup.
+The scope mapping and auth token should be configured in each publisher's local user-level npm config (or in CI secrets). This repo intentionally gitignores `.npmrc` so credentials are not committed.
 
 To publish a new version:
 
 1. Bump the `version` field in `package.json`.
-2. Run `npm publish`.
+2. Ensure your local npm auth is configured for the target registry.
+3. Run one of:
+   - `npm run publish:figma` (Figma registry as `@screentime/cheddar-ds`)
+   - `npm run publish:github` (GitHub Packages as `@figma/screentime-cheddar-ds`)
+   - `npm run publish:both` (GitHub first, then Figma)
 
 `prepublishOnly` runs `npm run build` automatically before the upload, so there is no separate build step required.
+
+Recommended preflight before any publish:
+
+```sh
+npm run release:check
+```
 
 **Note:** Do not publish with `--dry-run` to verify the tarball contents; use `npm pack` instead to inspect what would be uploaded without touching the registry.
 
@@ -96,4 +106,4 @@ import '@screentime/cheddar-ds/styles.css'
 
 Types ship with the package (`dist/index.d.ts`) — no separate `@types/*` install needed.
 
-**Outside Figma Make** you will need the `@screentime` scope entry in your project's `.npmrc` pointing to the Figma registry. In Figma Make the registry is preconfigured and no `.npmrc` work is required.
+**Outside Figma Make** you will need the `@screentime` scope entry in your project's npm config pointing to the Figma registry. In Figma Make the registry is preconfigured and no project-level npm config is required.

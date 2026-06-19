@@ -15,6 +15,6 @@ const label = labelHandle.type === 'TEXT' ? labelHandle.textContent : 'Label'
 
 export default {
   id: 'tag',
-  imports: ['import { Tag } from "./src/components"'],
+  imports: ['import { Tag } from "@screentime/cheddar-ds"'],
   example: figma.code`<Tag label="${label}" color="${color}" />`,
 }

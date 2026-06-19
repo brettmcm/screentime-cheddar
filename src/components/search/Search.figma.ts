@@ -8,6 +8,6 @@ const value = instance.getString('Value') || 'Search anything'
 
 export default {
   id: 'search',
-  imports: ['import { Search } from "./src/components"'],
+  imports: ['import { Search } from "@screentime/cheddar-ds"'],
   example: figma.code`<Search value="${value}" />`,
 }

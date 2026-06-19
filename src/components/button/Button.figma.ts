@@ -23,6 +23,6 @@ const disabled = state === 'disabled'
 
 export default {
   id: 'button',
-  imports: ['import { Button } from "./src/components"'],
+  imports: ['import { Button } from "@screentime/cheddar-ds"'],
   example: figma.code`<Button label="${label}" variant="${variant}" size="${size}" ${disabled ? 'disabled' : ''} ${icon ? 'showIcon' : ''} />`,
 }

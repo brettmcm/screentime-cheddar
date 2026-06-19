@@ -13,6 +13,6 @@ const descriptionProp = includeDescription ? ` description="${description}"` : '
 
 export default {
   id: 'textarea',
-  imports: ['import { Textarea } from "./src/components"'],
+  imports: ['import { Textarea } from "@screentime/cheddar-ds"'],
   example: figma.code`<Textarea label="${label}" value="${value}"${descriptionProp} ${showLabel ? '' : 'showLabel={false}'} />`,
 }

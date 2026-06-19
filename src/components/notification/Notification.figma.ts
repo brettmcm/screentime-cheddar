@@ -12,6 +12,6 @@ const variant = instance.getEnum('Property 1', {
 
 export default {
   id: 'notification',
-  imports: ['import { Notification } from "./src/components"'],
+  imports: ['import { Notification } from "@screentime/cheddar-ds"'],
   example: figma.code`<Notification variant="${variant}" />`,
 }

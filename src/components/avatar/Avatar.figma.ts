@@ -12,6 +12,6 @@ const size = instance.getEnum('Size', {
 
 export default {
   id: 'avatar',
-  imports: ['import { Avatar } from "./src/components"'],
+  imports: ['import { Avatar } from "@screentime/cheddar-ds"'],
   example: figma.code`<Avatar size="${size}" />`,
 }

@@ -13,6 +13,6 @@ const descriptionProp = includeDescription ? ` description="${description}"` : '
 
 export default {
   id: 'switch-field',
-  imports: ['import { SwitchField } from "./src/components"'],
+  imports: ['import { SwitchField } from "@screentime/cheddar-ds"'],
   example: figma.code`<SwitchField label="${label}"${descriptionProp} ${checked ? 'checked' : ''} ${showLabel ? '' : 'showLabel={false}'} />`,
 }

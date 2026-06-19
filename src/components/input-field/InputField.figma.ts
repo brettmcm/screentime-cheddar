@@ -14,6 +14,6 @@ const descriptionProp = includeDescription ? ` description="${description}"` : '
 
 export default {
   id: 'input-field',
-  imports: ['import { InputField } from "./src/components"'],
+  imports: ['import { InputField } from "@screentime/cheddar-ds"'],
   example: figma.code`<InputField label="${label}" value="${value}"${descriptionProp} ${dropdown ? 'dropdown' : ''} ${showLabel ? '' : 'showLabel={false}'} />`,
 }

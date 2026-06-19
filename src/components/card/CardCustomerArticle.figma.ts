@@ -11,6 +11,6 @@ const variant = instance.getEnum('Content', {
 
 export default {
   id: 'card-customer-article',
-  imports: ['import { Card } from "./src/components"'],
+  imports: ['import { Card } from "@screentime/cheddar-ds"'],
   example: figma.code`<Card variant="${variant}" />`,
 }

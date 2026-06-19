@@ -5,6 +5,6 @@ import figma from 'figma'
 
 export default {
   id: 'card-goal-summary',
-  imports: ['import { Card } from "./src/components"'],
+  imports: ['import { Card } from "@screentime/cheddar-ds"'],
   example: figma.code`<Card variant="goal-summary" />`,
 }

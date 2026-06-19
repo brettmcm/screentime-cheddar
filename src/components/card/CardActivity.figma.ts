@@ -8,7 +8,7 @@ const contents = instance.getSlot('contents')
 
 export default {
   id: 'card-activity',
-  imports: ['import { Card } from "./src/components"'],
+  imports: ['import { Card } from "@screentime/cheddar-ds"'],
   example: figma.code`<Card variant="activity-feed">${contents}</Card>`,
   metadata: {
     nestable: false,

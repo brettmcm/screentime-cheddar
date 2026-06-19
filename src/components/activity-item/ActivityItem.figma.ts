@@ -14,7 +14,7 @@ const activityTime = instance.getString('activityTime')
 
 export default {
   id: 'activity-item',
-  imports: ['import { ActivityItem } from "./src/components"'],
+  imports: ['import { ActivityItem } from "@screentime/cheddar-ds"'],
   example: figma.code`<ActivityItem type="${type}" time="${activityDate}, ${activityTime}" amount="${activityValue}" />`,
   metadata: {
     nestable: false,

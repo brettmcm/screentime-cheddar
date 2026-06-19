@@ -12,6 +12,6 @@ const message =
 
 export default {
   id: 'toast',
-  imports: ['import { Toast } from "./src/components"'],
+  imports: ['import { Toast } from "@screentime/cheddar-ds"'],
   example: figma.code`<Toast message="${message}" />`,
 }

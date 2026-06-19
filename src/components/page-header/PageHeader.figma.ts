@@ -11,6 +11,6 @@ const variant = instance.getEnum('Variant', {
 
 export default {
   id: 'page-header',
-  imports: ['import { PageHeader } from "./src/components"'],
+  imports: ['import { PageHeader } from "@screentime/cheddar-ds"'],
   example: figma.code`<PageHeader title="Header" variant="${variant}" />`,
 }

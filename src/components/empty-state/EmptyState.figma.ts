@@ -18,6 +18,6 @@ const description =
 
 export default {
   id: 'empty-state',
-  imports: ['import { EmptyState } from "./src/components"'],
+  imports: ['import { EmptyState } from "@screentime/cheddar-ds"'],
   example: figma.code`<EmptyState variant="${variant}" title="${title}" description="${description}" />`,
 }

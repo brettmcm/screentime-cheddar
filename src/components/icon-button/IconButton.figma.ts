@@ -27,6 +27,6 @@ if (iconSwap && iconSwap.type === 'INSTANCE') {
 
 export default {
   id: 'icon-button',
-  imports: ['import { IconButton } from "./src/components"'],
+  imports: ['import { IconButton } from "@screentime/cheddar-ds"'],
   example: figma.code`<IconButton variant="${variant}" size="${size}" ${disabled ? 'disabled' : ''} ${iconName ? `icon="${iconName}"` : ''} />`,
 }

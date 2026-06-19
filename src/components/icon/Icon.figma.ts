@@ -41,7 +41,7 @@ const isBrand = instance.getBoolean('Color')
 
 export default {
   id: 'icon',
-  imports: ['import { Icon } from "./src/components/icon/Icon"'],
+  imports: ['import { Icon } from "@screentime/cheddar-ds"'],
   example: figma.code`<Icon name="${name}" ${isBrand ? 'tone="brand"' : ''} />`,
   metadata: {
     nestable: true,

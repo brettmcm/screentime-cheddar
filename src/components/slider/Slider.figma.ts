@@ -5,6 +5,6 @@ import figma from 'figma'
 
 export default {
   id: 'slider',
-  imports: ['import { Slider } from "./src/components"'],
+  imports: ['import { Slider } from "@screentime/cheddar-ds"'],
   example: figma.code`<Slider />`,
 }

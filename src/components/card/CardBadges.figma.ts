@@ -12,6 +12,6 @@ const variant = instance.getEnum('Property 1', {
 
 export default {
   id: 'card-badges',
-  imports: ['import { Card } from "./src/components"'],
+  imports: ['import { Card } from "@screentime/cheddar-ds"'],
   example: figma.code`<Card variant="${variant}" />`,
 }

@@ -12,6 +12,6 @@ const descriptionProp = includeDescription ? ` description="${description}"` : '
 
 export default {
   id: 'radio',
-  imports: ['import { Radio } from "./src/components"'],
+  imports: ['import { Radio } from "@screentime/cheddar-ds"'],
   example: figma.code`<Radio label="${label}"${descriptionProp} ${checked ? 'checked' : ''} />`,
 }

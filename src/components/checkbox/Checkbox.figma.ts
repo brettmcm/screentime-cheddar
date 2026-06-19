@@ -12,6 +12,6 @@ const descriptionProp = includeDescription ? ` description="${description}"` : '
 
 export default {
   id: 'checkbox',
-  imports: ['import { Checkbox } from "./src/components"'],
+  imports: ['import { Checkbox } from "@screentime/cheddar-ds"'],
   example: figma.code`<Checkbox label="${label}"${descriptionProp} ${checked ? 'checked' : ''} />`,
 }

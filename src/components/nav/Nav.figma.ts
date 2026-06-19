@@ -13,6 +13,6 @@ const activeItem = instance.getEnum('Property 1', {
 
 export default {
   id: 'bottom-nav',
-  imports: ['import { Nav } from "./src/components"'],
+  imports: ['import { Nav } from "@screentime/cheddar-ds"'],
   example: figma.code`<Nav activeItem="${activeItem}" />`,
 }

@@ -63,38 +63,83 @@ This repo reads secrets from `.env.local` (gitignored). See [.env.example](.env.
 | `dist/fonts/` | Self-contained `.woff2` files — no `@fontsource` dep needed at consumer end |
 | `dist/tokens/cheddar.tokens.json` | Raw design token JSON |
 
-## Publishing
+## Publishing / distribution
 
-The package is currently configured to publish to the Figma private npm registry scoped to `@screentime`.
+The DS reaches consumers through two channels, both under the package name `@screentime/cheddar-ds`:
 
-**Registry:** `https://registry.figma.com/npm/397d59b6-95ce-4b9e-8e24-db9b498f7374/registry/`
+| Channel | Consumer | How it's distributed |
+| --- | --- | --- |
+| Figma registry - *Figma Advocates instance* -  | Figma Make | `npm run publish:figma` (published versions) |
+| Git (`git+ssh`) | App code outside Make | Consumers install directly from a git tag — no registry publish |
 
-The scope mapping and auth token should be configured in each publisher's local user-level npm config (or in CI secrets). This repo intentionally gitignores `.npmrc` so credentials are not committed.
+> **Why not GitHub Packages?** The `figma` org blocks classic personal access tokens and GitHub Packages' npm registry does not support fine-grained tokens, so the app code is consumed straight from git over SSH.
 
-To publish a new version:
+### Figma registry (`@screentime`)
 
-1. Bump the `version` field in `package.json`.
-2. Ensure your local npm auth is configured for the target registry.
-3. Run one of:
-   - `npm run publish:figma` (Figma registry as `@screentime/cheddar-ds`)
-   - `npm run publish:github` (GitHub Packages as `@figma/screentime-cheddar-ds`)
-   - `npm run publish:both` (GitHub first, then Figma)
+Credentials live in the publisher's `.npmrc` (this repo gitignores `.npmrc`, so tokens are never committed):
 
-`prepublishOnly` runs `npm run build` automatically before the upload, so there is no separate build step required.
+```
+@screentime:registry=https://registry.figma.com/npm/397d59b6-95ce-4b9e-8e24-db9b498f7374/registry/
+//registry.figma.com/npm/397d59b6-95ce-4b9e-8e24-db9b498f7374/registry/:_authToken=<figma-token>
+```
 
-Recommended preflight before any publish:
+To release: bump `version` in `package.json`, confirm auth, then run `npm run publish:figma`. The build runs automatically via the `prepublishOnly` hook.
+
+### Git distribution (app code)
+
+There is no upload step — consumers install from a git ref and the `prepare` script builds `dist/` on install. To cut a release:
+
+1. Bump the `version` field in `package.json` and merge to the default branch.
+2. Tag the commit so apps can pin to it:
+
+```sh
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+Recommended preflight before any release:
 
 ```sh
 npm run release:check
 ```
 
-**Note:** Do not publish with `--dry-run` to verify the tarball contents; use `npm pack` instead to inspect what would be uploaded without touching the registry.
+**Note:** Use `npm pack` to inspect what would be shipped; do not rely on `--dry-run` publishes.
 
 ## Installing as a consumer
 
-```sh
-npm install @screentime/cheddar-ds
+Both channels install under the name `@screentime/cheddar-ds`; only the dependency source differs.
+
+### Option A — Git install (`git+ssh`, for app code)
+
+Add the DS to your app's `package.json`, pinned to a tag (or branch/commit):
+
+```json
+{
+  "dependencies": {
+    "@screentime/cheddar-ds": "git+ssh://git@github.com/figma/screentime-cheddar-ds.git#v1.0.1"
+  }
+}
 ```
+
+Then run `npm install`. npm clones the repo over SSH, runs the `prepare` script to build `dist/`, and packs it — so `dist/` does not need to be committed. This relies only on your existing SSH access to the repo; no registry token is required. CI runners must also have an SSH key (or git token) with read access to the repo.
+
+To update, bump the tag/ref in your app's `package.json` and reinstall.
+
+### Option B — Figma registry (`@screentime`, for Figma Make)
+
+Add the dependency to your Make project's `package.json` and Make resolves it against its preconfigured registry — no `.npmrc` or scope mapping needed:
+
+```json
+{
+  "dependencies": {
+    "@screentime/cheddar-ds": "^1.0.1"
+  }
+}
+```
+
+This channel is for Figma Make only. For app code outside Make, use Option A.
+
+### Usage (both channels)
 
 Peer dependencies: `react@^19.0.0`, `react-dom@^19.0.0`.
 
@@ -104,6 +149,4 @@ Import the all-in-one stylesheet once at your app entry point — it is required
 import '@screentime/cheddar-ds/styles.css'
 ```
 
-Types ship with the package (`dist/index.d.ts`) — no separate `@types/*` install needed.
-
-**Outside Figma Make** you will need the `@screentime` scope entry in your project's npm config pointing to the Figma registry. In Figma Make the registry is preconfigured and no project-level npm config is required.
+Types ship with the package (`dist/index.d.ts`) — no separate `@types/*` install needed. Ensure your app's TypeScript `moduleResolution` is `bundler`, `node16`, or `nodenext` so the package's `exports` map and type declarations resolve correctly.

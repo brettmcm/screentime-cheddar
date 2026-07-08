@@ -2,6 +2,10 @@
 	"name": "@screentime/cheddar-ds",
 	"version": "1.0.1",
 	"description": "Cheddar Design System — React component library, styles, and design tokens.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/figma/screentime-cheddar-ds.git"
+	},
 	"type": "module",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
@@ -31,14 +35,12 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+		"prepare": "npm run build",
 		"lint": "eslint .",
 		"release:check": "npm run lint && npm run build && npm pack",
 		"preview": "vite preview",
 		"prepublishOnly": "npm run build",
 		"publish:figma": "npm publish --registry=https://registry.figma.com/npm/397d59b6-95ce-4b9e-8e24-db9b498f7374/registry/",
-		"prepublish:github": "npm run build",
-		"publish:github": "node scripts/publish-github.mjs",
-		"publish:both": "npm run publish:github && npm run publish:figma",
 		"figma": "dotenv -e .env.local -- npx figma",
 		"figma:url-sync": "node scripts/sync-figma-urls.mjs",
 		"figma:check-urls": "node scripts/sync-figma-urls.mjs --check",

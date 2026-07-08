@@ -18,8 +18,10 @@ import {
   SwitchField,
   Tag,
   Textarea,
+  ThemeScope,
   Toast,
   Wordmark,
+  type BrandTheme,
 } from './components'
 import { Icon } from './components/icon/Icon'
 import { runA11yTokenChecks } from './a11y/contrast'
@@ -70,11 +72,20 @@ const typeScale = [
 
 const colorFamilies = [
   { name: 'Black', prefix: 'black', steps: ['100', '200', '300', '400', '500', '600'] },
-  { name: 'White', prefix: 'white', steps: ['100', '200', '300', '400', '500'] },
+  { name: 'White', prefix: 'white', steps: ['100', '200', '300', '400', '500', '600'] },
   { name: 'Green', prefix: 'green', steps: ['100', '200', '300', '400', '500', '600'] },
   { name: 'Purple', prefix: 'purple', steps: ['100', '200', '300', '400', '500', '600'] },
   { name: 'Magenta', prefix: 'brand', steps: ['100', '200', '300', '400', '500', '600'] },
   { name: 'Blue', prefix: 'blue', steps: ['100', '200', '300', '400', '500', '600'] },
+]
+
+const brandRampSteps = ['100', '200', '300', '400', '500', '600'] as const
+
+const brandThemes: { name: string; brand: BrandTheme }[] = [
+  { name: 'Magenta (default)', brand: 'magenta' },
+  { name: 'Blue', brand: 'blue' },
+  { name: 'Green', brand: 'green' },
+  { name: 'Purple', brand: 'purple' },
 ]
 
 const cardVariants = [
@@ -212,6 +223,65 @@ function App() {
             </div>
           </section>
         </div>
+      </section>
+
+      <section className="ds-section">
+        <h2>Brand themes (extended collections)</h2>
+        <p>
+          Figma's Blue / Green / Purple collections are theme layers over Brand. In code
+          each maps to <code>[data-brand]</code>, re-pointing <code>--cds-color-brand-100…600</code>{' '}
+          for a subtree via <code>&lt;ThemeScope brand scheme&gt;</code>. Every tile below is the
+          same markup — only the wrapper's <code>brand</code> and <code>scheme</code> differ.
+        </p>
+        <div className="ds-variant-grid ds-variant-grid-wide">
+          {brandThemes.map(({ name, brand }) => (
+            <article key={brand} className="panel ds-variant-card">
+              <p className="ds-variant-label">brand = {brand}</p>
+              <div className="ds-theme-pair">
+                {(['light', 'dark'] as const).map((scheme) => (
+                  <ThemeScope
+                    key={scheme}
+                    brand={brand}
+                    scheme={scheme}
+                    className="ds-theme-tile"
+                  >
+                    <p className="ds-theme-tile-caption">{scheme}</p>
+                    <div className="ds-theme-ramp">
+                      {brandRampSteps.map((step) => (
+                        <span
+                          key={step}
+                          style={{ background: `var(--cds-color-brand-${step})` }}
+                        />
+                      ))}
+                    </div>
+                    <div className="ds-theme-controls">
+                      <Button label="Save" variant="primary" size="small" />
+                      <Tag color={brand} label={name.split(' ')[0]} dismissible={false} />
+                      <Icon name="sparkle" width={24} height={24} tone="brand" />
+                    </div>
+                  </ThemeScope>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+        <article className="panel ds-variant-card">
+          <p className="ds-variant-label">Nesting — a light green frame inside a dark purple shell</p>
+          <ThemeScope brand="purple" scheme="dark" className="ds-theme-nested">
+            <div className="ds-theme-controls">
+              <Button label="Purple / dark" variant="primary" size="small" />
+              <Icon name="sparkle" width={24} height={24} tone="brand" />
+            </div>
+            <ThemeScope brand="green" scheme="light" as="section" className="ds-theme-tile">
+              <p className="ds-theme-tile-caption">green / light (nested)</p>
+              <div className="ds-theme-controls">
+                <Button label="Save" variant="primary" size="small" />
+                <Tag color="green" label="Nested" dismissible={false} />
+                <Icon name="sparkle" width={24} height={24} tone="brand" />
+              </div>
+            </ThemeScope>
+          </ThemeScope>
+        </article>
       </section>
 
       <section className="ds-section">

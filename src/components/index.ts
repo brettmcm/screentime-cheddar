@@ -16,4 +16,10 @@ export { Slider } from './slider/Slider'
 export { SwitchField } from './switch-field/SwitchField'
 export { Tag } from './tag/Tag'
 export { Textarea } from './textarea/Textarea'
+export {
+  ThemeScope,
+  type BrandTheme,
+  type ColorScheme,
+  type ThemeScopeProps,
+} from './theme/ThemeScope'
 export { Toast } from './toast/Toast'

@@ -6,7 +6,6 @@
 //   src/styles/tokens.css              web / React (CSS custom properties)
 //   src/tokens/tokens.ts               typed accessors for React consumers
 //   platforms/swift/CheddarTokens.swift
-//   platforms/react-native/tokens.ts
 //
 // Pass --check to fail instead of writing when an output is stale (CI guard).
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -488,82 +487,6 @@ export function getResolvedColors(mode: TokenMode = 'light', brand: BrandTheme =
 `
 }
 
-// --------------------------------------------------------- React Native
-
-function buildReactNativeTokens() {
-  const primitives = primitiveEntries
-    .map(([name, path]) => `  ${name}: '${rgbaString(at(path).$value)}',`)
-    .join('\n')
-
-  const sizes = sizeEntries.map(([name, value]) => `  ${name}: ${value},`).join('\n')
-
-  const typeStyles = [...leaves(tokens)]
-    .filter(([path]) => path.startsWith('type.'))
-    .map(([path, node]) => {
-      const v = node.$value
-      const fontSize = isRef(v.fontSize)
-        ? at(v.fontSize.slice(1, -1)).$value.value
-        : v.fontSize.value
-      const family = at(v.fontFamily.slice(1, -1)).$value[0]
-      return `  ${camel([path.slice(5)])}: { fontFamily: '${family}', fontWeight: '${v.fontWeight}', fontSize: ${fontSize}, lineHeight: ${round(fontSize * v.lineHeight)} },`
-    })
-    .join('\n')
-
-  const palettes = MODES.map(
-    (mode) => `  ${mode}: {
-${BRANDS.map(
-  (brand) => `    ${brand}: {
-${semanticTable(mode, brand)
-  .map(([name, value]) => `      ${name}: '${value}',`)
-  .join('\n')}
-${[1, 2, 3, 4, 5, 6]
-  .map(
-    (i) =>
-      `      brand${i * 100}: '${rgbaString(resolveColor(`color.semantic.brand.${i * 100}`, mode, brand))}',`,
-  )
-  .join('\n')}
-    },`,
-).join('\n')}
-  },`,
-  ).join('\n')
-
-  return `${GENERATED_TS_BANNER}
-export type BrandTheme = ${BRANDS.map((b) => `'${b}'`).join(' | ')}
-export type TokenMode = ${MODES.map((m) => `'${m}'`).join(' | ')}
-
-/** Primitive ramps. Alpha is baked into the rgba() strings. */
-export const primitives = {
-${primitives}
-} as const
-
-export const size = {
-${sizes}
-} as const
-
-export const typography = {
-${typeStyles}
-} as const
-
-/**
- * Semantic palettes for every mode x brand combination. React Native has no
- * cascade, so each combination is pre-resolved; alpha is preserved as rgba().
- */
-export const palettes = {
-${palettes}
-} as const
-
-export type Palette = (typeof palettes)['light']['magenta']
-
-/**
- * Pick the palette for the current mode and brand. \`brand\` is the branded app
- * shell appearance — the saturated brand-100 canvas, not dark mode.
- */
-export function usePalette(mode: TokenMode = 'light', brand: BrandTheme = 'magenta'): Palette {
-  return palettes[mode][brand]
-}
-`
-}
-
 // -------------------------------------------------------------------- Swift
 
 function swiftColor(value) {
@@ -724,7 +647,6 @@ ${paletteCases}
 const outputs = [
   ['src/styles/tokens.css', buildCss()],
   ['src/tokens/tokens.ts', buildReactTokens()],
-  ['platforms/react-native/tokens.ts', buildReactNativeTokens()],
   ['platforms/swift/CheddarTokens.swift', buildSwift()],
 ]
 

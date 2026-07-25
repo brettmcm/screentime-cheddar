@@ -13,7 +13,7 @@ React 19 + TypeScript + Vite component library for the Cheddar product, with Fig
 | `src/tokens/` | Generated typed token accessors for React consumers |
 | `src/demo-assets/` | Typed manifest for the bundled demo imagery |
 | `tokens/cheddar.tokens.json` | **Source of truth** for every design token (DTCG) |
-| `platforms/` | Generated Swift + React Native token outputs |
+| `platforms/` | Generated Swift token output |
 | `docs/` | Parity audit and migration notes |
 | `tests/visual/` | Playwright screenshot suite |
 | `**/*.figma.ts` | Figma Code Connect mapping files |
@@ -110,7 +110,6 @@ This repo reads secrets from `.env.local` (gitignored). See [.env.example](.env.
 | `dist/demo-assets.js` | Demo imagery manifest (`@screentime/cheddar-ds/demo-assets`) |
 | `dist/assets/` | Fingerprinted demo images referenced by the manifest |
 | `dist/platforms/swift/CheddarTokens.swift` | Generated SwiftUI tokens |
-| `dist/platforms/react-native/tokens.ts` | Generated React Native palettes |
 
 ## Tokens
 
@@ -121,17 +120,16 @@ from it by `scripts/build-tokens.mjs`:
 tokens/cheddar.tokens.json
         ├── src/styles/tokens.css                  web / React
         ├── src/tokens/tokens.ts                   typed accessors
-        ├── platforms/swift/CheddarTokens.swift     SwiftUI
-        └── platforms/react-native/tokens.ts        React Native
+        └── platforms/swift/CheddarTokens.swift     SwiftUI
 ```
 
 Never hand-edit a generated file — change the JSON and run `npm run tokens:build`. `npm run tokens:check`
 fails the build if an output has drifted.
 
 Semantic tokens carry their per-mode values in `$extensions["com.cheddar.mode"]` (`dark` and `brand`), and
-alpha is preserved end-to-end: as `rgba()` in CSS and React Native, and as `opacity` on `CheddarColor` in
-Swift. Tokens that are brand-derived tints declare a `com.cheddar.mix` recipe so every platform stays
-reactive to the selected brand instead of freezing a magenta value.
+alpha is preserved end-to-end: as `rgba()` in CSS and as `opacity` on `CheddarColor` in Swift. Tokens that
+are brand-derived tints declare a `com.cheddar.mix` recipe so every platform stays reactive to the
+selected brand instead of freezing a magenta value.
 
 ## Theming
 
@@ -228,7 +226,7 @@ Add the dependency to your Make project's `package.json` and Make resolves it ag
 ```json
 {
   "dependencies": {
-    "@screentime/cheddar-ds": "^1.2.0"
+    "@screentime/cheddar-ds": "^1.2.1"
   }
 }
 ```

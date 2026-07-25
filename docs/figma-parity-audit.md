@@ -91,7 +91,7 @@ The 8 permutations per flow are the 4 brand ramps (magenta, blue, green, purple)
 | **No branded app-shell appearance** | The Figma screens' brand canvas had no token representation. The app approximated it with `<ThemeScope scheme="dark">` plus its own `--app-bg: var(--cds-color-brand-100)` override — so DS dark mode (`#1a131a`) and the actual design (`#64002d`) never agreed. |
 | **No validation tokens** | The Figma library defines no error/danger colour, so form validation states had nothing to reference. |
 | **Foreign tokens leaking into the design** | Screen variable bindings included `var(--ads-color-primary)` and `var(--sds-size-stroke-border)` from the Astra and Simple Design System libraries, plus raw `Cheddar/Black Cherry` and `Cheddar/Orange` styles. Flagged for design cleanup — not fixable in code. |
-| **No Swift or React Native output** | Only CSS was generated, despite an iOS `CheddarDS` Swift package and a React Native app existing in the consumer monorepo. |
+| **No Swift output** | Only CSS was generated, despite an iOS `CheddarDS` Swift package existing in the consumer monorepo. |
 
 ### 2.5 Content mismatches (Figma copy vs. hardcoded code copy)
 

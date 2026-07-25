@@ -80,7 +80,6 @@ Every component now exports its props type (`ButtonProps`, `GoalCardProps`, …)
 | `@screentime/cheddar-ds/demo-assets`                         | typed demo imagery manifest     |
 | `@screentime/cheddar-ds/tokens`                              | typed token accessors for React |
 | `@screentime/cheddar-ds/tokens.json`                         | the DTCG source document        |
-| `@screentime/cheddar-ds/platforms/react-native`              | generated RN token module       |
 | `@screentime/cheddar-ds/platforms/swift/CheddarTokens.swift` | generated Swift tokens          |
 
 ---
@@ -173,9 +172,9 @@ progress bars now expose `role="progressbar"` with value semantics.
 
 **The DTCG document is now the source of truth.** `tokens/cheddar.tokens.json` is
 hand-edited, and `scripts/build-tokens.mjs` generates the CSS, the typed React module,
-the Swift package, and the React Native module from it. `npm run tokens:check` fails the
-build if the generated outputs drift. Previously the JSON was generated _from_ hardcoded
-hex values that mirrored the CSS, so it was a lossy copy rather than a source.
+and the Swift package from it. `npm run tokens:check` fails the build if the generated
+outputs drift. Previously the JSON was generated _from_ hardcoded hex values that
+mirrored the CSS, so it was a lossy copy rather than a source.
 
 ### Nothing was removed
 

@@ -55,9 +55,9 @@ for (const file of ['files.mjs', 'files.d.mts']) {
   await cp(resolve(root, 'src/demo-assets', file), resolve(distDemoAssets, file))
 }
 
-// Platform token outputs. Swift and React Native ship as source rather than
-// compiled artifacts — they are consumed by an Xcode package and a Metro
-// bundler respectively, neither of which wants our JS build output.
+// Platform token outputs. Swift ships as source rather than a compiled
+// artifact — it is consumed by an Xcode package, which does not want our JS
+// build output.
 await cp(resolve(root, 'platforms'), resolve(dist, 'platforms'), { recursive: true })
 
 // Font bundling: read each fontsource CSS entry, copy every referenced font file

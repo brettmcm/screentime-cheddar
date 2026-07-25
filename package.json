@@ -1,6 +1,6 @@
 {
 	"name": "@screentime/cheddar-ds",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Cheddar Design System — React component library, styles, and design tokens.",
 	"repository": {
 		"type": "git",
@@ -24,7 +24,6 @@
 			"import": "./dist/tokens/tokens.js"
 		},
 		"./platforms/swift/CheddarTokens.swift": "./dist/platforms/swift/CheddarTokens.swift",
-		"./platforms/react-native": "./dist/platforms/react-native/tokens.ts",
 		"./styles.css": "./dist/styles/index.css",
 		"./styles/fonts.css": "./dist/styles/fonts.css",
 		"./styles/tokens.css": "./dist/styles/tokens.css",

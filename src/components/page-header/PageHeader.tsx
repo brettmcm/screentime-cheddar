@@ -7,10 +7,6 @@ type HeaderLevel = 'h1' | 'h2' | 'h3'
 
 export type PageHeaderProps = {
   title: string
-  /**
-   * @deprecated Use `align` instead. Still honoured when `align` is absent.
-   */
-  variant?: HeaderAlign
   align?: HeaderAlign
   /** Heading level for `title`. */
   as?: HeaderLevel
@@ -35,8 +31,7 @@ export type PageHeaderProps = {
 
 export function PageHeader({
   title,
-  variant = 'left',
-  align,
+  align = 'left',
   as: Heading = 'h1',
   onBack,
   backLabel = 'Back',
@@ -46,7 +41,7 @@ export function PageHeader({
   className,
   ref,
 }: PageHeaderProps) {
-  const center = (align ?? variant) === 'center'
+  const center = align === 'center'
   const backEnabled = onBack !== undefined
   const renderBack = showBack ?? (backEnabled || !center)
 

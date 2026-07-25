@@ -68,6 +68,14 @@ Shared vocabulary: `Accent` (the four brand ramps), and `formatAmount` / `Money`
 `AmountFormatter` for money rendering, so amount formatting is consistent across cards
 and overridable per call site.
 
+`ArticleCard` covers those four Figma shapes and nothing else. `Card / Customer Article` is
+the small photo tile — `size="small"` with an `image` and `media="photo"`, which masks the
+photograph into the brand shape — not the large card with an eyebrow and a tag that earlier
+versions rendered for it. That large flat card matched no design, so it is gone, and with it
+the `tag` prop that only ever appeared in it. `size="large"` now always draws its media
+frame; `showMedia={false}` is ignored there, since dropping the frame left the card matching
+no layout at all.
+
 ### Types
 
 Every component now exports its props type (`ButtonProps`, `GoalCardProps`, …).
@@ -135,8 +143,9 @@ completion by watching `value >= 98` inside `onValueChange`, delete it.
 
 ## 4. Replacing `Card`
 
-`Card` still works. Every variant delegates to its replacement internally, so output is
-unchanged — but it cannot carry real data, which is why `apps/web` never imported it.
+`Card` was deprecated in `1.2.0` and removed in `1.2.2`. It rendered hardcoded demo content
+selected by `variant` and could not carry real data, which is why `apps/web` never imported
+it. Each variant has a replacement that takes props.
 
 | Old variant                                                       | Replacement                     |
 | ----------------------------------------------------------------- | ------------------------------- |
@@ -148,7 +157,7 @@ unchanged — but it cannot carry real data, which is why `apps/web` never impor
 | `account`                                                         | `AccountCard`                   |
 | `goal-summary`                                                    | `GoalSummaryCard`               |
 | `profile`                                                         | `ProfileCard`                   |
-| `activity`, `activity-feed`                                       | compose `ActivityItem` yourself |
+| `activity`, `activity-feed`                                       | `ActivityCard`                  |
 
 ```tsx
 - <Card variant="goal-headphones" illustration={headphonesPng} />
@@ -254,8 +263,32 @@ only when you build a custom surface of your own:
 
 If you add such a component to the DS itself, add its selector to `SURFACE_SELECTORS` in
 `scripts/build-tokens.mjs` so its whole subtree is re-scoped. Components that deliberately
-sit on the canvas — `GoalCard`, `SectionHeader`, `SavingsStreak` — are transparent or paint
-a brand fill and need no entry.
+sit on the canvas — `SectionHeader`, the large `ArticleCard` hero, the guide tile — are
+transparent or paint a brand fill and need no entry.
+
+A component whose design has no mode variants at all — drawn from primitives in Figma, the
+same white card in every theme — belongs in `PINNED_LIGHT_SELECTORS` instead. That list
+re-declares the light value of every token any mode would have changed, unscoped by
+appearance, so dark mode and the branded shell both leave the component alone.
+`SpendingChartPanel`, `GoalCard`, `SavingsStreak`, `AccountCard`, `GoalSummaryCard`,
+`ActivityCard` and every `ArticleCard` except the large hero and the guide tile are the
+current members. Reach for it only when the design really is fixed; anything
+that should follow the mode wants `SURFACE_SELECTORS`.
+
+The `ArticleCard` entry narrows the base class rather than listing each white variant, so
+the exclusion has to name both classes of the variants it skips —
+`.article-card-large.article-card-media`, not the bare `.article-card-media`. Excluding the
+bare classes matches nothing, since the component always sets exactly one of `-media` and
+`-flat`.
+
+A pinned component has to declare both halves of the surface pairing itself. The pin only
+re-points custom properties, so a rule that paints the background and leaves `color` to
+inherit gets the shell's white text on its own white card — which is how `ActivityCard`
+briefly became unreadable in dark mode.
+
+The two lists are mutually exclusive, and a pinned selector has to paint both
+`--cds-color-background-surface` and `--cds-color-foreground-on-surface` itself. All of
+this is enforced by `src/styles/pinned-light.test.ts`.
 
 Two related fixes fell out of the same reasoning. `--cds-color-background-muted` in the
 brand appearance is now `brand-200` rather than the near-white `brand-600`, which was
@@ -291,18 +324,23 @@ padding yourself.
 
 ---
 
-## 7. Deprecated in `1.2.0`
+## 7. Deprecated in `1.2.0`, removed in `1.2.2`
 
-Still exported, still working, scheduled for removal in `2.0.0`.
+Everything deprecated by `1.2.0` is gone. Nothing in the package is deprecated today.
 
-| API                                         | Replacement                                              |
-| ------------------------------------------- | -------------------------------------------------------- |
-| `Card`                                      | the card component matching your shape (§4)              |
-| `CardVariant`, `CardProps`, `ActivityEntry` | the replacement component's props type                   |
-| `Card`'s `variant` prop                     | —                                                        |
-| `Card`'s `items` / `entries` props          | compose `ActivityItem`                                   |
-| `Card`'s `illustration` prop                | each replacement takes `image`                           |
-| `PageHeader`'s `variant` prop               | `align` (identical values; `align` wins if both are set) |
+| Removed API                                 | Replacement                                 |
+| ------------------------------------------- | ------------------------------------------- |
+| `Card`                                      | the card component matching your shape (§4) |
+| `CardVariant`, `CardProps`, `ActivityEntry` | the replacement component's props type      |
+| `Card`'s `variant` prop                     | —                                           |
+| `Card`'s `items` / `entries` props          | `ActivityCard` wrapping `ActivityItem`s     |
+| `Card`'s `illustration` prop                | each replacement takes `image`              |
+| `PageHeader`'s `variant` prop               | `align` (identical values)                  |
+
+`Card`'s stylesheet went with it: the `.card-*` rules in `components.css` had already been
+orphaned by the `1.2.0` adapters, which rendered the replacement components' classes
+instead. Removing them and a shadow copy of `.goal-card` that `cards.css` was overriding
+took `components.css` from 1805 lines to 1138.
 
 ---
 

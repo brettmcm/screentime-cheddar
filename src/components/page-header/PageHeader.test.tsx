@@ -91,22 +91,8 @@ describe('PageHeader', () => {
       expect(container.querySelector('.page-header')).toHaveClass('page-header-left')
     })
 
-    it('honours the deprecated variant prop', () => {
-      const { container } = renderThemed(<PageHeader title="Goals" variant="center" />)
-
-      expect(container.querySelector('.page-header')).toHaveClass('page-header-center')
-      expect(screen.queryByRole('button', { hidden: true })).not.toBeInTheDocument()
-    })
-
-    it('lets align win over variant', () => {
-      const { container } = renderThemed(<PageHeader title="Goals" variant="center" align="left" />)
-
-      expect(container.querySelector('.page-header')).toHaveClass('page-header-left')
-      expect(backControl()).toBeInTheDocument()
-    })
-
-    it('lets align win over variant in the other direction too', () => {
-      const { container } = renderThemed(<PageHeader title="Goals" variant="left" align="center" />)
+    it('centres the header when asked', () => {
+      const { container } = renderThemed(<PageHeader title="Goals" align="center" />)
 
       expect(container.querySelector('.page-header')).toHaveClass('page-header-center')
       expect(screen.queryByRole('button', { hidden: true })).not.toBeInTheDocument()

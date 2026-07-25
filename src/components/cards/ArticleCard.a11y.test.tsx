@@ -74,10 +74,11 @@ describe('ArticleCard accessibility', () => {
   it('renders the customer-story layout without violations', async () => {
     const { container } = renderThemed(
       <ArticleCard
-        size="large"
+        size="small"
+        media="photo"
         title="How Mia saved $2,000"
-        eyebrow="Customer story"
-        tag="Saving"
+        readTime="6 min"
+        image="https://example.test/story.jpg"
         accent="green"
       />,
     )

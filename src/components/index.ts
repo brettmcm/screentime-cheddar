@@ -35,6 +35,7 @@ export {
  * to a published Figma component set — see docs/figma-parity-audit.md.
  * -------------------------------------------------------------------------- */
 export { AccountCard, type AccountCardProps } from './cards/AccountCard'
+export { ActivityCard, type ActivityCardProps } from './cards/ActivityCard'
 export { ArticleCard, type ArticleCardProps } from './cards/ArticleCard'
 export { BadgeCard, type BadgeCardProps } from './cards/BadgeCard'
 export {
@@ -73,15 +74,3 @@ export {
 export type { Accent } from './cards/accent'
 export { formatAmount, type AmountFormatter, type Money } from './cards/formatAmount'
 
-/* -------------------------------------------------------------- deprecated */
-/**
- * @deprecated Retained for v1.1.0 compatibility. `Card` renders hardcoded demo
- * content selected by `variant` and cannot carry real application data. Use the
- * prop-driven card components above — see docs/migration-1.2.md.
- */
-export {
-  Card,
-  type ActivityEntry,
-  type CardProps,
-  type CardVariant,
-} from './card/Card'

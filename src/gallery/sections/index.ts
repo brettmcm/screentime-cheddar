@@ -2,7 +2,7 @@ import type { ComponentType } from 'react'
 import type { Appearance } from '../../components'
 import { ButtonsBody, IconButtonsBody, TagsBody, TextLinkBody } from './Actions'
 import { AppShellBody } from './AppShell'
-import { CardsBody, DeprecatedCardsBody, PanelsBody } from './Cards'
+import { CardsBody, PanelsBody } from './Cards'
 import { ActivityBody, AvatarBody, NotificationBody, StatusBody } from './Feedback'
 import {
   BrandBody,
@@ -61,7 +61,7 @@ export const gallerySections: readonly GallerySectionMeta[] = [
   },
   {
     id: 'activity',
-    title: 'ActivityItem',
+    title: 'ActivityItem and ActivityCard',
     Body: ActivityBody,
   },
   {
@@ -85,11 +85,6 @@ export const gallerySections: readonly GallerySectionMeta[] = [
     title: 'Cards',
     note: 'The prop-driven card set. Content comes from the published demo asset manifest (@screentime/cheddar-ds/demo-assets).',
     Body: CardsBody,
-  },
-  {
-    id: 'cards-deprecated',
-    title: 'Card (deprecated)',
-    Body: DeprecatedCardsBody,
   },
   {
     id: 'form-fields',

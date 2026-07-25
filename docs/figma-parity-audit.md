@@ -63,7 +63,7 @@ The 8 permutations per flow are the 4 brand ramps (magenta, blue, green, purple)
 | `Panel / Chart` | `Type` + `Savings Type List` slot | — | No mapping. |
 | `Numpad Key` | `Label`, `Type` (Number/Decimal/Backspace) | — | No mapping. |
 | `Search` | `Value`, `State` (Placeholder/Active) | `Value` only | `State` unmapped. |
-| `Card / Activity` | `contents` **slot** | slot read correctly | React `Card` did not accept `children`, so the emitted snippet did not compile. |
+| `Card / Activity` | `contents` **slot** | slot read correctly | React `Card` did not accept `children`, so the emitted snippet did not compile. Now mapped to `ActivityCard`, which takes the slot as `children`. |
 | `Icon Button` | `Variant` = Primary/Neutral/Outline | maps a 4th `ghost` | Code has a `ghost` variant with no Figma counterpart. Kept — the app relies on it — but it is a code-only extension. |
 
 ### 2.3 API mismatches (component exists, but cannot express the design)
@@ -130,4 +130,5 @@ Per the brief, existing Figma components and assets were reused:
 - `Button`, `IconButton`, `Avatar`, `Logo`, `Wordmark`, `Icon`, `Tag`, `ActivityItem` are composed by the new card components rather than reimplemented.
 - Demo imagery is the approved `Chrome illustration` set already in `src/assets/`, re-exported under semantic names — no new artwork.
 - The existing `[data-theme]` / `[data-brand]` token architecture was extended with a third axis, not replaced.
-- All 24 `Card` variants survive as deprecated adapters over the new components.
+- All 24 `Card` variants survived `1.2.0` as deprecated adapters over the new components.
+  `Card` itself was removed in `1.2.2`; see `docs/migration-1.2.md` §4.

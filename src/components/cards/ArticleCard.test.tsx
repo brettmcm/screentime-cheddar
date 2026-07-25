@@ -26,19 +26,17 @@ describe('ArticleCard', () => {
     expect(screen.getByRole('heading', { name: 'Budgeting basics' })).toBeInTheDocument()
   })
 
-  it('renders the eyebrow, tag, description and read time', () => {
+  it('renders the eyebrow, description and read time', () => {
     renderThemed(
       <ArticleCard
         title="Budgeting basics"
         eyebrow="Customer story"
-        tag="Guide"
         description="Where to start when you have never budgeted."
         readTime="4 min read"
       />,
     )
 
     expect(screen.getByText('Customer story')).toBeInTheDocument()
-    expect(screen.getByText('Guide')).toBeInTheDocument()
     expect(screen.getByText('Where to start when you have never budgeted.')).toBeInTheDocument()
     expect(screen.getByText('4 min read')).toBeInTheDocument()
   })
@@ -56,17 +54,65 @@ describe('ArticleCard', () => {
       expect(screen.getByRole('img', { name: 'A notebook' })).toBeInTheDocument()
     })
 
-    it('uses the flat layout when there is no image', () => {
-      const { container } = renderThemed(<ArticleCard title="Budgeting basics" />)
+    it('uses the flat layout when a small card has no image', () => {
+      const { container } = renderThemed(<ArticleCard size="small" title="Budgeting basics" />)
 
       expect(container.querySelector('.article-card')).toHaveClass('article-card-flat')
       expect(container.querySelector('.article-card-frame')).toBeNull()
+    })
+
+    // Large has one shape in Figma and it is the hero. Letting it go flat left
+    // it matching no layout at all, so the card lost its padding entirely.
+    it('keeps the frame on a large card with no image', () => {
+      const { container } = renderThemed(<ArticleCard size="large" title="Budgeting basics" />)
+
+      expect(container.querySelector('.article-card')).toHaveClass('article-card-media')
+      expect(container.querySelector('.article-card-frame')).toBeInTheDocument()
+    })
+
+    it('ignores showMedia on a large card', () => {
+      const { container } = renderThemed(
+        <ArticleCard size="large" title="Budgeting basics" showMedia={false} />,
+      )
+
+      expect(container.querySelector('.article-card')).not.toHaveClass('article-card-flat')
     })
 
     it('keeps the media frame when showMedia is forced on', () => {
       const { container } = renderThemed(<ArticleCard title="Budgeting basics" showMedia />)
 
       expect(container.querySelector('.article-card-frame')).toBeInTheDocument()
+    })
+
+    it('marks a photo so the shape can crop it', () => {
+      const { container } = renderThemed(
+        <ArticleCard
+          size="small"
+          media="photo"
+          title="Friends who started saving together"
+          image="https://example.test/story.jpg"
+        />,
+      )
+
+      expect(container.querySelector('.article-card')).toHaveClass('article-card-photo')
+    })
+
+    it('treats the media as an illustration unless asked otherwise', () => {
+      const { container } = renderThemed(
+        <ArticleCard size="small" title="Budgeting basics" image="https://example.test/a.png" />,
+      )
+
+      expect(container.querySelector('.article-card')).not.toHaveClass('article-card-photo')
+    })
+
+    // The class drives a mask on the image, so without a frame it would style
+    // nothing while still reading as a photo card.
+    it('does not mark a photo on a card with no media frame', () => {
+      const { container } = renderThemed(
+        <ArticleCard size="small" media="photo" title="Budgeting basics" />,
+      )
+
+      expect(container.querySelector('.article-card')).not.toHaveClass('article-card-photo')
     })
   })
 

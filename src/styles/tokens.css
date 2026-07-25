@@ -317,20 +317,8 @@
 .panel,
 .textarea-input,
 .search-field,
-.card,
-.activity-card,
-.card-feature-article-small,
-.card-goal-finished,
-.card-badge,
-.card-account,
-.card-goal-summary,
-.article-card:not(.article-card-media, .article-card-flat),
 .completed-goal-card,
 .badge-card,
-.account-card,
-.goal-summary-card,
-.chart-panel,
-.chart-panel-donut-hole,
 .sheet,
 .app-shell,
 .ds-theme-tile
@@ -376,4 +364,57 @@
 /* Opt a subtree back out of the branded shell without picking a scheme. */
 [data-appearance="surface"] {
 	--cds-color-background-default: var(--cds-color-background-surface);
+}
+
+/* Always-light components. See PINNED_LIGHT_SELECTORS in
+ * scripts/build-tokens.mjs. */
+:where(
+.account-card,
+.activity-card,
+.article-card:not(.article-card-large.article-card-media, .article-card-small.article-card-flat),
+.chart-panel,
+.goal-card,
+.goal-summary-card,
+.savings-streak
+) {
+	color-scheme: light;
+
+	--cds-color-foreground-primary: var(--token-color-black-100);
+	--cds-color-foreground-secondary: var(--token-color-black-300);
+	--cds-color-foreground-tertiary: var(--token-color-black-600);
+	--cds-color-foreground-brand-primary: var(--cds-color-brand-200);
+	--cds-color-foreground-brand-secondary: var(--cds-color-brand-100);
+	--cds-color-foreground-brand-tertiary: var(--cds-color-brand-600);
+	--cds-color-foreground-on-reverse: var(--token-color-white-100);
+	--cds-color-foreground-on-reverse-secondary: var(--token-color-white-300);
+	--cds-color-foreground-brand-reverse: var(--cds-color-brand-100);
+	--cds-color-foreground-brand-reverse-secondary: var(--cds-color-brand-400);
+	--cds-color-foreground-brand-reverse-tertiary: var(--cds-color-brand-200);
+	--cds-color-foreground-danger: var(--token-color-red-200);
+	--cds-color-foreground-success: var(--token-color-green-200);
+	--cds-color-foreground-on-surface: var(--token-color-black-100);
+	--cds-color-foreground-on-surface-secondary: var(--token-color-black-300);
+	--cds-color-foreground-on-surface-tertiary: var(--token-color-black-600);
+	--cds-color-bg-brand-primary: var(--cds-color-brand-600);
+	--cds-color-bg-brand-secondary: var(--cds-color-brand-100);
+	--cds-color-bg-brand-tertiary: var(--cds-color-brand-500);
+	--cds-color-bg-brand-shade: var(--cds-color-brand-400);
+	--cds-color-bg-on-brand: var(--token-color-white-100);
+	--cds-color-bg-danger: var(--token-color-red-600);
+	--cds-color-bg-scrim: var(--token-color-black-500);
+	--cds-color-icon-primary: var(--cds-color-brand-200);
+	--cds-color-icon-secondary: var(--cds-color-brand-400);
+	--cds-color-background-default: color-mix(in srgb, var(--cds-color-brand-100) 6%, var(--token-color-white-100) 94%);
+	--cds-color-background-surface: var(--token-color-white-100);
+	--cds-color-background-muted: color-mix(in srgb, var(--cds-color-brand-100) 9%, var(--token-color-white-100) 91%);
+	--cds-color-background-overlay: color-mix(in srgb, var(--token-color-black-100) 32%, transparent);
+	--cds-color-border-default: var(--token-color-black-600);
+	--cds-color-border-strong: var(--token-color-black-300);
+	--cds-color-border-focus: var(--cds-color-brand-200);
+	--cds-color-border-danger: var(--token-color-red-300);
+	--cds-color-track-default: var(--token-color-black-600);
+	--cds-color-shadow-surface: color-mix(in srgb, var(--cds-color-brand-100) 8%, transparent);
+	--cds-color-shadow-control: var(--token-color-black-500);
+	--cds-shadow-surface: 0px 8px 24px var(--cds-color-shadow-surface);
+	--cds-shadow-focus-ring: 0px 0px 0px var(--cds-size-border) var(--cds-color-background-surface), 0px 0px 0px 3px var(--cds-color-border-focus);
 }

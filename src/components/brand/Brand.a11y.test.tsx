@@ -15,7 +15,7 @@ describe('Brand accessibility', () => {
     const { container, getByRole } = renderThemed(<Wordmark />)
 
     expect(getByRole('img', { name: 'Cheddar wordmark' })).toBeInTheDocument()
-    expect(container.querySelector('img')).toHaveAttribute('aria-hidden', 'true')
+    expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
     await expect(container).toHaveNoAxeViolations()
   })
 })

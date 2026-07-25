@@ -1,5 +1,13 @@
 import { useState } from 'react'
-import { ActivityItem, Avatar, Button, EmptyState, Notification, Toast } from '../../components'
+import {
+  ActivityCard,
+  ActivityItem,
+  Avatar,
+  Button,
+  EmptyState,
+  Notification,
+  Toast,
+} from '../../components'
 import { demoAssets } from '../../demo-assets'
 import { Readout, Specimen, SpecimenGrid } from '../GallerySection'
 
@@ -46,6 +54,14 @@ export function ActivityBody() {
             <ActivityItem type="deposit" time="Today, 11:17am" amount="$45.00" />
             <ActivityItem type="withdrawal" time="Mon, 8:22am" amount="$13.75" />
           </div>
+        </Specimen>
+        <Specimen label="ActivityCard — the same rows on their surface">
+          <ActivityCard>
+            <ActivityItem type="deposit" time="Today, 1:34pm" amount="$20.00" />
+            <ActivityItem type="deposit" time="Today, 11:17am" amount="$45.00" />
+            <ActivityItem type="withdrawal" time="Mon, 8:22am" amount="$13.75" />
+            <ActivityItem type="deposit" time="Sat, 11:00am" amount="$16.00" />
+          </ActivityCard>
         </Specimen>
       </SpecimenGrid>
       <Readout>Last activity selected: {selected}</Readout>

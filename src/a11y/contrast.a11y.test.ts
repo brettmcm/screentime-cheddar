@@ -167,6 +167,13 @@ const PAIRS: Pair[] = [
     usage: 'the display-size balance read-out on .total-savings-card',
   },
   {
+    id: 'brand-tinted heading on a reverse brand surface',
+    foreground: 'foregroundBrandReverseSecondary',
+    background: 'bgBrandSecondary',
+    level: 'large',
+    usage: 'the display-size title on the large article hero and the guide tile',
+  },
+  {
     id: 'field outline on a card',
     foreground: 'borderStrong',
     background: 'backgroundSurface',

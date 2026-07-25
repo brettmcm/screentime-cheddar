@@ -4,7 +4,6 @@ import {
   AccountCard,
   ArticleCard,
   BadgeCard,
-  Card,
   CompletedGoalCard,
   GoalCard,
   GoalSummaryCard,
@@ -184,14 +183,14 @@ export function CardsBody() {
             href="#section-cards"
           />
         </Specimen>
-        <Specimen label="ArticleCard — customer story (large, flat, tag + eyebrow)">
+        <Specimen label="ArticleCard — customer story (small, photo in the brand shape)">
           <ArticleCard
-            size="large"
-            eyebrow="Customer Story"
-            tag="Credit Card"
-            title="Paying down credit card debt"
-            description="How Maya consolidated spending and rebuilt momentum."
-            accent="magenta"
+            size="small"
+            media="photo"
+            title="How to choose your first credit card"
+            readTime="5 min"
+            accent="green"
+            image={demoAssets.articles.customerStory}
           />
         </Specimen>
       </SpecimenGrid>
@@ -296,6 +295,31 @@ export function PanelsBody() {
         <Specimen label="SpendingChartPanel — pie">
           <SpendingChartPanel type="pie" title="Savings split" segments={spendingSegments} />
         </Specimen>
+        <Specimen label="SpendingChartPanel — segmented">
+          {/* Whole dollars: cents are what push a narrow column past the width
+            * its own share earns it. */}
+          <SpendingChartPanel
+            type="segmented"
+            segments={[
+              { id: 'travel', label: 'Travel', amount: 212, accent: 'green' },
+              { id: 'entertainment', label: 'Entertainment', amount: 56, accent: 'blue' },
+              { id: 'food', label: 'Food', amount: 29, accent: 'magenta' },
+              { id: 'clothes', label: 'Clothes', amount: 16, accent: 'purple' },
+            ]}
+            formatAmount={(value) => `$${Math.round(value)}`}
+          />
+        </Specimen>
+        <Specimen label="SpendingChartPanel — segmented, lopsided split">
+          <SpendingChartPanel
+            type="segmented"
+            segments={[
+              { label: 'Rent', amount: 1450 },
+              { label: 'Transit', amount: 62 },
+              { label: 'Coffee', amount: 9 },
+            ]}
+            formatAmount={(value) => `$${Math.round(value)}`}
+          />
+        </Specimen>
         <Specimen label="SpendingChartPanel — empty">
           <SpendingChartPanel
             title="Your spending"
@@ -350,31 +374,6 @@ export function PanelsBody() {
       </SpecimenGrid>
 
       <Readout>Section actions pressed {viewedAll} times</Readout>
-    </>
-  )
-}
-
-export function DeprecatedCardsBody() {
-  return (
-    <>
-      <p className="ds-note">
-        <strong>Deprecated.</strong> <code>Card variant=&quot;…&quot;</code> renders hardcoded demo
-        content and cannot carry real data. It now delegates to the prop-driven cards above —
-        these two instances only exist to prove the compatibility adapters still render. Use{' '}
-        <code>ArticleCard</code>, <code>GoalCard</code>, <code>TotalSavingsCard</code> and friends
-        instead; see <code>docs/migration-1.2.md</code>.
-      </p>
-      <SpecimenGrid width="wide">
-        <Specimen label='Card variant="article-large" → ArticleCard'>
-          <Card variant="article-large" illustration={demoAssets.articles.piggyBank} />
-        </Specimen>
-        <Specimen label='Card variant="goal-headphones" → GoalCard'>
-          <Card variant="goal-headphones" illustration={demoAssets.goals.headphones} />
-        </Specimen>
-        <Specimen label='Card variant="activity-feed" → compose ActivityItem yourself'>
-          <Card variant="activity-feed" />
-        </Specimen>
-      </SpecimenGrid>
     </>
   )
 }

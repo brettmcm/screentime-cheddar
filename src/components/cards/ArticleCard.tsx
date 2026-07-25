@@ -14,13 +14,18 @@ export type ArticleCardProps = {
   imageAlt?: string
   /**
    * Render the media frame even without an `image`. Defaults to `true`
-   * whenever `image` is set. Cards without a media frame use the flat
-   * layouts — the guide tile at `size="small"`, the customer story card at
-   * `size="large"`.
+   * whenever `image` is set, and is ignored at `size="large"`, which has no
+   * layout without media. Dropping the frame at `size="small"` gives the
+   * guide tile.
    */
   showMedia?: boolean
+  /**
+   * How the media frame treats the `image`. An `illustration` sits centred on
+   * the accent tile at its own size; a `photo` fills the frame and is masked
+   * into the brand shape, leaving the accent visible around it.
+   */
+  media?: 'illustration' | 'photo'
   eyebrow?: string
-  tag?: string
   readTime?: string
   actionLabel?: string
   onAction?: () => void
@@ -38,8 +43,8 @@ export type ArticleCardProps = {
  *
  * - `Card / Article Large` — `size="large"` with an `image`
  * - `Card / Article Small` — `size="small"` with an `image`
+ * - `Card / Customer Article` — as above, plus `media="photo"`
  * - `Card / Guide` — `size="small"` with no media, a description and a read time
- * - `Card / Customer Article` — `size="large"` with no media, an `eyebrow` and a `tag`
  *
  * `href` / `onClick` turn the title into the card's link and stretch its hit
  * area over the whole card, which keeps the favourite toggle and the action
@@ -52,8 +57,8 @@ export function ArticleCard({
   image,
   imageAlt,
   showMedia,
+  media = 'illustration',
   eyebrow,
-  tag,
   readTime,
   actionLabel,
   onAction,
@@ -72,7 +77,10 @@ export function ArticleCard({
     defaultValue: defaultFavorite,
     onChange: onFavoriteChange,
   })
-  const hasMedia = showMedia ?? Boolean(image)
+  // Only the small card has a layout without media — the guide tile. Figma
+  // draws one large shape and it is the hero, so `large` keeps its frame even
+  // with nothing to put in it rather than falling through to an unstyled card.
+  const hasMedia = size === 'large' || (showMedia ?? Boolean(image))
 
   const titleContent = href ? (
     <a className="article-card-link" href={href} onClick={onClick}>
@@ -92,6 +100,7 @@ export function ArticleCard({
         'article-card',
         `article-card-${size}`,
         hasMedia ? 'article-card-media' : 'article-card-flat',
+        hasMedia && media === 'photo' ? 'article-card-photo' : undefined,
         accentClass(accent),
         className,
       )}
@@ -110,7 +119,6 @@ export function ArticleCard({
         </div>
       ) : null}
       <div className="article-card-body">
-        {tag ? <span className="article-card-tag">{tag}</span> : null}
         {eyebrow ? <p className="article-card-eyebrow">{eyebrow}</p> : null}
         <h3 className="article-card-title">{titleContent}</h3>
         {description ? <p className="article-card-description">{description}</p> : null}

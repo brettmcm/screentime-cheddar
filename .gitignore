@@ -13,12 +13,14 @@ dist
 dist-ssr
 *.local
 
-# Test artifacts. Screenshot baselines under tests/visual/__screenshots__ ARE
-# committed — only the run output and reports are ignored.
+# Test artifacts. The Playwright visual suite is local-only: `tests/` is not
+# committed, so its screenshot baselines are recorded on whichever machine runs
+# it. A fresh clone has no suite to run and no baselines to compare against —
+# the unit and accessibility tests under src/ are the ones that travel.
 coverage
 playwright-report
 test-results
-tests/visual/.output
+tests/
 
 # npm auth (contains Figma registry token)
 .npmrc

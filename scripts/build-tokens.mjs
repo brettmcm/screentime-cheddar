@@ -218,36 +218,21 @@ function declarations(entries, mode) {
  * tokens:check` cannot catch an omission, but a missing entry shows up
  * immediately as unreadable text on that component under `appearance="brand"`.
  *
- * Components that deliberately sit on the canvas — GoalCard, SectionHeader,
- * SavingsStreak, TotalSavingsCard, ProfileCard — are absent on purpose: they are
- * transparent or paint a brand fill, so the canvas pairing is already correct
- * for them.
+ * Components that deliberately sit on the canvas — SectionHeader,
+ * TotalSavingsCard, ProfileCard — are absent on purpose: they are transparent
+ * or paint a brand fill, so the canvas pairing is already correct for them.
+ *
+ * Components fixed to one appearance are absent for the opposite reason; they
+ * live in PINNED_LIGHT_SELECTORS, which covers the branded shell as well.
  */
 const SURFACE_SELECTORS = [
   // components.css
   '.panel',
   '.textarea-input',
   '.search-field',
-  '.card',
-  '.activity-card',
-  '.card-feature-article-small',
-  '.card-goal-finished',
-  '.card-badge',
-  '.card-account',
-  '.card-goal-summary',
   // cards.css
-  //
-  // The large-with-media and guide variants replace the white surface with a
-  // brand fill, so they must keep the canvas pairing: re-scoping them resolved
-  // bg-brand-secondary to brand-100 — the canvas colour — and the card lost its
-  // container entirely (measured 1.00:1 against the canvas).
-  '.article-card:not(.article-card-media, .article-card-flat)',
   '.completed-goal-card',
   '.badge-card',
-  '.account-card',
-  '.goal-summary-card',
-  '.chart-panel',
-  '.chart-panel-donut-hole',
   // overlays.css
   '.sheet',
   // foundation.css (gallery chrome)
@@ -276,6 +261,68 @@ function buildSurfaceScope() {
   return `/* Surfaces inside the branded shell are light islands. See SURFACE_SELECTORS
  * in scripts/build-tokens.mjs. */
 [data-appearance="brand"] :where(
+${selector}
+) {
+\tcolor-scheme: light;
+
+${declarations(entries, 'light')}
+}`
+}
+
+/**
+ * Components the design draws from primitives rather than semantic colour: a
+ * white card with black text, whatever mode surrounds it. In Figma these carry
+ * no mode variants at all, so a themed build was inventing a dark treatment the
+ * design never specified.
+ *
+ * Only add a selector here when the design genuinely has one fixed appearance.
+ * Anything that should follow the mode belongs in SURFACE_SELECTORS instead.
+ */
+const PINNED_LIGHT_SELECTORS = [
+  // cards.css
+  '.account-card',
+  '.activity-card',
+  // Every ArticleCard except the two that replace the white surface with a
+  // brand fill — the large hero and the guide tile. Those keep the canvas
+  // pairing; re-scoping them once resolved bg-brand-secondary to the canvas
+  // colour and the card lost its container entirely (measured 1.00:1).
+  //
+  // Excluding the bare `-media`/`-flat` classes, as this once did, excluded
+  // every card instead: the component always sets exactly one of the two, so
+  // the entry silently matched nothing.
+  '.article-card:not(.article-card-large.article-card-media, .article-card-small.article-card-flat)',
+  // SpendingChartPanel, all three layouts. Descendants that paint the surface
+  // again (the donut hole) inherit these from the panel.
+  '.chart-panel',
+  '.goal-card',
+  '.goal-summary-card',
+  '.savings-streak',
+]
+
+/**
+ * Re-declares the light value of every token some mode would have changed, so
+ * the subtree renders as if no mode were set. Unlike buildSurfaceScope this is
+ * unscoped, and it does reset `background-surface`: dark mode redefines it, and
+ * here the panel is what has to stay white.
+ *
+ * `:where()` keeps it at zero specificity, which is enough because the mode
+ * layers match an ancestor — an inherited custom property loses to any
+ * declaration that matches the element itself, whatever its specificity.
+ */
+function buildPinnedLightScope() {
+  const entries = [...leaves(tokens)].filter(([path, node]) => {
+    if (!isSemanticColor(path) && !path.startsWith('shadow.')) return false
+    const light = cssValue(path, forMode(node, 'light'))
+    return ['dark', 'brand'].some(
+      (mode) =>
+        node.$extensions?.['com.cheddar.mode']?.[mode] &&
+        cssValue(path, forMode(node, mode)) !== light,
+    )
+  })
+  const selector = PINNED_LIGHT_SELECTORS.join(',\n')
+  return `/* Always-light components. See PINNED_LIGHT_SELECTORS in
+ * scripts/build-tokens.mjs. */
+:where(
 ${selector}
 ) {
 \tcolor-scheme: light;
@@ -373,7 +420,9 @@ ${buildSurfaceScope()}
 /* Opt a subtree back out of the branded shell without picking a scheme. */
 [data-appearance="surface"] {
 \t--cds-color-background-default: var(--cds-color-background-surface);
-}`)
+}
+
+${buildPinnedLightScope()}`)
 
   return `${banner}\n${sections.join('\n\n')}\n`
 }

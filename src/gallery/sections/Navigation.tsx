@@ -53,9 +53,6 @@ export function PageHeaderBody() {
         <Specimen label="align = center">
           <PageHeader title="Add funds" align="center" />
         </Specimen>
-        <Specimen label="variant (deprecated alias for align)">
-          <PageHeader title="Legacy centre" variant="center" />
-        </Specimen>
         <Specimen label="onBack — pops the breadcrumb below">
           <PageHeader
             title={current}

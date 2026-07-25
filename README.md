@@ -15,7 +15,7 @@ React 19 + TypeScript + Vite component library for the Cheddar product, with Fig
 | `tokens/cheddar.tokens.json` | **Source of truth** for every design token (DTCG) |
 | `platforms/` | Generated Swift token output |
 | `docs/` | Parity audit and migration notes |
-| `tests/visual/` | Playwright screenshot suite |
+| `tests/visual/` | Playwright screenshot suite — **local-only**, not committed (see below) |
 | `**/*.figma.ts` | Figma Code Connect mapping files |
 
 ## Components
@@ -29,11 +29,11 @@ Every component is exported from the package root along with its props type
 | Forms | `InputField`, `Textarea`, `Search`, `Checkbox`, `Radio`, `SwitchField`, `Slider`, `NumberPad` |
 | Navigation & chrome | `Nav`, `PageHeader`, `Sheet`, `SectionHeader` |
 | Content | `ActivityItem`, `Avatar`, `Tag`, `Toast`, `Notification`, `EmptyState`, `Icon`, `Logo`, `Wordmark` |
-| Cards & panels | `TotalSavingsCard`, `GoalCard`, `CompletedGoalCard`, `ArticleCard`, `ProfileCard`, `BadgeCard`, `AccountCard`, `GoalSummaryCard`, `SpendingChartPanel`, `SavingsStreak` |
+| Cards & panels | `TotalSavingsCard`, `GoalCard`, `CompletedGoalCard`, `ArticleCard`, `ActivityCard`, `ProfileCard`, `BadgeCard`, `AccountCard`, `GoalSummaryCard`, `SpendingChartPanel`, `SavingsStreak` |
 | Theming | `ThemeScope` |
 
-`Card` is still exported but **deprecated** — it renders hardcoded demo content selected by
-`variant`. Use the card component matching your shape; see
+The catch-all `Card`, which rendered hardcoded demo content selected by `variant`, was removed
+in v1.2.2. Use the card component matching your shape; see
 [`docs/migration-1.2.md`](docs/migration-1.2.md) for the variant-to-component table.
 
 Demo imagery for the cards lives behind its own subpath so the artwork stays out of the main
@@ -81,7 +81,7 @@ This repo reads secrets from `.env.local` (gitignored). See [.env.example](.env.
 | `npm run assets:check` | Fail if the demo-asset manifest references a file that is missing or empty. |
 | `npm run test` | Interaction + accessibility tests (Vitest, jsdom). |
 | `npm run test:a11y` | Accessibility tests only (axe-core). |
-| `npm run test:visual` | Screenshot tests against the gallery (Playwright + Chromium). |
+| `npm run test:visual` | Screenshot tests against the gallery (Playwright + Chromium). Local-only — see below. |
 | `npm run test:visual:update` | Re-record screenshot baselines. |
 | `npm run verify` | `tokens:check` + `assets:check` + `lint` + `typecheck` + `test`. |
 | `npm run release:check` | `verify` + `build` + Code Connect validation + `npm pack --dry-run`. Run this before tagging. |
@@ -90,6 +90,17 @@ This repo reads secrets from `.env.local` (gitignored). See [.env.example](.env.
 | `npm run figma:publish` | Publish Code Connect mappings to the Figma file. Runs `figma:url-sync` first. |
 | `npm run figma:publish:dry-run` | Same as above but no upload — useful for previewing the diff. |
 | `npm run figma:unpublish` | Remove Code Connect mappings from the Figma file. |
+
+### Visual tests are local-only
+
+`tests/` is gitignored, so neither the specs nor their screenshot baselines are in
+the repo. The tests that travel with a clone are the Vitest unit and accessibility
+suites under `src/`, which `npm run verify` covers.
+
+The consequence is worth stating plainly: because Playwright records a baseline the
+first time it sees a screenshot name, a freshly generated set always passes. The
+suite therefore catches changes you make within one local session, not regressions
+introduced by someone else. Treat it as a development aid rather than a guard.
 
 ## Build output
 
@@ -187,8 +198,8 @@ There is no upload step — consumers install from a git ref and the `prepare` s
 2. Tag the commit so apps can pin to it:
 
 ```sh
-git tag v1.2.0
-git push origin v1.2.0
+git tag v1.2.2
+git push origin v1.2.2
 ```
 
 Recommended preflight before any release:
@@ -210,7 +221,7 @@ Add the DS to your app's `package.json`, pinned to a tag (or branch/commit):
 ```json
 {
   "dependencies": {
-    "@screentime/cheddar-ds": "git+ssh://git@github.com/figma/screentime-cheddar-ds.git#v1.2.0"
+    "@screentime/cheddar-ds": "git+ssh://git@github.com/figma/screentime-cheddar-ds.git#v1.2.2"
   }
 }
 ```
@@ -219,6 +230,8 @@ Then run `npm install`. npm clones the repo over SSH, runs the `prepare` script 
 
 To update, bump the tag/ref in your app's `package.json` and reinstall.
 
+npm also accepts a range here — `…screentime-cheddar-ds.git#semver:^1.2.2` resolves against the repo's tags — but an explicit tag is the documented form on purpose. This package's version numbers do not strictly track semver: `1.2.2` removed public exports, and a caret range would have delivered that as an automatic upgrade. Pinning keeps every DS bump a visible, reviewable line in the consuming app's diff. Either form records the resolved commit in `package-lock.json`, so committed lockfiles install identically; the range only drifts when the lockfile is regenerated.
+
 ### Option B — Figma registry (`@screentime`, for Figma Make)
 
 Add the dependency to your Make project's `package.json` and Make resolves it against its preconfigured registry — no `.npmrc` or scope mapping needed:
@@ -226,7 +239,7 @@ Add the dependency to your Make project's `package.json` and Make resolves it ag
 ```json
 {
   "dependencies": {
-    "@screentime/cheddar-ds": "^1.2.1"
+    "@screentime/cheddar-ds": "^1.2.2"
   }
 }
 ```

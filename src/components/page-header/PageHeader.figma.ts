@@ -14,7 +14,6 @@ const title = titleHandle.type === 'TEXT' ? titleHandle.textContent : 'Header'
 export default {
   id: 'page-header',
   imports: ['import { PageHeader } from "@screentime/cheddar-ds"'],
-  // `align` supersedes the deprecated `variant`; `onBack` makes the back
-  // control live rather than decorative.
+  // `onBack` makes the back control live rather than decorative.
   example: figma.code`<PageHeader title="${title}" align="${align}" onBack={() => goBack()} />`,
 }

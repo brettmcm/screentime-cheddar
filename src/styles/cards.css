@@ -218,8 +218,8 @@
 	padding: var(--cds-size-padding-s);
 	border: var(--cds-size-border) solid var(--cds-color-border-default);
 	border-radius: var(--cds-size-corner-large);
-	background: transparent;
-	color: var(--cds-color-foreground-primary);
+	background: var(--cds-color-background-surface);
+	color: var(--cds-color-foreground-on-surface);
 	display: grid;
 	grid-template-columns: 64px 1fr;
 	align-items: center;
@@ -280,9 +280,33 @@
 }
 
 /* ============================================================
+ * ActivityCard
+ * ============================================================ */
+.activity-card {
+	width: 382px;
+	max-width: 100%;
+	border-radius: var(--cds-size-corner-large);
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	background: var(--cds-color-background-surface);
+	color: var(--cds-color-foreground-on-surface);
+	padding: var(--cds-size-padding-l) var(--cds-size-padding-m);
+}
+
+.activity-card-content {
+	display: grid;
+	gap: var(--cds-size-padding-l);
+}
+
+/* ============================================================
  * ArticleCard — Article Large / Article Small / Guide / Customer Article
  * ============================================================ */
 .article-card {
+	/* The four-lobed brand shape, exported from Figma (node 5114:9261). A plain
+	 * local var, not a `--cds-` one — those all come from the generated
+	 * tokens.css. The large card masks a tint with it; the customer story masks
+	 * its photograph. Square, so `cover` fits it to the wider edge and lets the
+	 * frame crop the overhang, which is how Figma composes both. */
+	--article-card-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 370 370'%3E%3Cpath d='M136.348 354.409C57.0835 407.892 -37.8916 312.917 15.5907 233.652C35.4286 204.251 35.4287 165.749 15.5907 136.348C-37.8916 57.0835 57.0835 -37.8916 136.348 15.5907C165.749 35.4286 204.251 35.4286 233.652 15.5907C312.917 -37.8916 407.892 57.0835 354.409 136.348C334.571 165.749 334.571 204.251 354.409 233.652C407.892 312.917 312.917 407.892 233.652 354.409C204.251 334.571 165.749 334.571 136.348 354.409Z'/%3E%3C/svg%3E");
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -330,16 +354,6 @@
 	color: var(--cds-color-foreground-secondary);
 }
 
-.article-card-tag {
-	align-self: start;
-	padding: var(--cds-size-padding-xxs) var(--cds-size-padding-xs);
-	border-radius: var(--cds-size-corner-full);
-	background: var(--accent-300);
-	color: var(--accent-fg);
-	font-size: var(--cds-size-font-xs);
-	font-weight: 600;
-}
-
 .article-card-footer {
 	display: flex;
 	align-items: center;
@@ -366,16 +380,17 @@
 }
 
 .article-card-action.btn {
+	/* Layout only. The button keeps every `btn btn-primary btn-large` visual —
+	 * re-declaring them here is what put the card's action on the heading type
+	 * ramp instead of the button's own. `position`/`z-index` lift it above the
+	 * title's stretched link so it stays clickable. `min-width` releases
+	 * `.btn-large`'s 144px floor, which the large media card's ~136px body would
+	 * otherwise overflow on a narrow phone. */
 	position: relative;
 	z-index: 1;
 	width: 100%;
+	min-width: 0;
 	margin-top: auto;
-	min-height: 66px;
-	border: 0;
-	border-radius: var(--cds-size-corner-large);
-	background: var(--cds-color-brand-500);
-	color: var(--cds-color-brand-100);
-	font: var(--cds-type-heading);
 }
 
 /* Article Large — hero image, centred copy, full-width action. */
@@ -392,22 +407,39 @@
 }
 
 .article-card-large.article-card-media .article-card-frame {
-	width: 184px;
-	height: 184px;
+	position: relative;
+	width: 200px;
+	height: 200px;
 	flex-shrink: 0;
-	border-radius: var(--cds-size-corner-full);
-	background: var(--accent-300);
-	color: var(--token-color-white-100);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	overflow: hidden;
+}
+
+/* The illustration sits on a four-lobed shape, not a circle — a square with
+ * bowed sides and pinched corners. The path is the vector exported from Figma
+ * (Illustration / Large, a 370px master drawn here at 200px); carrying it as a
+ * mask rather than a coloured asset is what keeps the fill a token, so the
+ * shape follows the brand ramp the way the rest of the card does.
+ *
+ * It has to be a pseudo-element: `mask` would clip the frame's children too,
+ * and the artwork is meant to sit on top of the shape rather than inside it. */
+.article-card-large.article-card-media .article-card-frame::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: var(--cds-color-foreground-brand-reverse-tertiary);
+	-webkit-mask: var(--article-card-shape) center / contain no-repeat;
+	mask: var(--article-card-shape) center / contain no-repeat;
 }
 
 .article-card-large.article-card-media .article-card-image {
+	/* Above the shape, and uncropped: the artwork overhangs the lobes rather
+	 * than being clipped to them. */
+	position: relative;
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: contain;
 }
 
 .article-card-large.article-card-media .article-card-body {
@@ -422,24 +454,15 @@
 	font: var(--cds-type-display-medium);
 	letter-spacing: var(--cds-type-display-medium-tracking);
 	letter-spacing: -0.03em;
+	/* The heading takes the brand tint rather than the card's plain
+	 * `on-reverse`, which stays on the description and footer. */
+	color: var(--cds-color-foreground-brand-reverse-secondary);
 }
 
 .article-card-large.article-card-media .article-card-description {
 	max-width: 320px;
 	font: var(--cds-type-body-large-strong);
 	color: var(--cds-color-foreground-on-reverse);
-}
-
-/* Customer Article — a plain surface card with an eyebrow and a tag. */
-.article-card-large.article-card-flat {
-	max-width: 382px;
-	padding: var(--cds-size-padding-s);
-	border-radius: var(--cds-size-corner-small);
-	gap: var(--cds-size-gap-s);
-}
-
-.article-card-large.article-card-flat .article-card-body {
-	gap: var(--cds-size-gap-s);
 }
 
 /* Article Small — compact tile with a favourite toggle. */
@@ -469,6 +492,34 @@
 	padding: var(--cds-size-padding-s);
 }
 
+/* Customer Article — the same tile, but the media is a photograph masked into
+ * the brand shape instead of an illustration resting on the accent. */
+.article-card-small.article-card-media.article-card-photo {
+	min-height: 287px;
+}
+
+.article-card-small.article-card-photo .article-card-frame {
+	height: 177px;
+	background: var(--accent-200);
+	--cds-icon-knockout: var(--accent-200);
+}
+
+.article-card-small.article-card-photo .article-card-image {
+	/* Fills the frame, then the shape crops it: Figma draws the accent as an
+	 * overlay with the lobes knocked out of it, which composites the same.
+	 *
+	 * The knockout is a 155px square inside the 187px frame — an even 16px of
+	 * accent down either side — so it is sized off the width and left square,
+	 * not fitted to the frame. `cover` would scale it to 187 and swallow the
+	 * margin the design is built around. */
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	--article-card-photo-shape: calc(100% - var(--cds-size-padding-m) * 2) auto;
+	-webkit-mask: var(--article-card-shape) center / var(--article-card-photo-shape) no-repeat;
+	mask: var(--article-card-shape) center / var(--article-card-photo-shape) no-repeat;
+}
+
 /* Guide — a square brand tile with the copy pinned to the bottom. */
 .article-card-small.article-card-flat {
 	width: min(270px, 100%);
@@ -487,6 +538,7 @@
 	font: var(--cds-type-display-medium);
 	letter-spacing: var(--cds-type-display-medium-tracking);
 	letter-spacing: -0.03em;
+	color: var(--cds-color-foreground-brand-reverse-secondary);
 }
 
 .article-card-small.article-card-flat .article-card-description {
@@ -833,6 +885,63 @@
 	height: 100%;
 }
 
+/* Unlike the stacked bar, these are separate rounded columns with air between
+ * them — there is no shared track behind them to show through. */
+.chart-panel-segmented {
+	display: flex;
+	gap: var(--cds-size-gap-s);
+	height: 104px;
+}
+
+.chart-panel-segmented-segment {
+	/* Width is the only variable: the share arrives as `flex-grow` and the zero
+	 * basis makes the row fill the container exactly. `min-width: min-content`
+	 * is what stops a small share from clipping its own amount — the label sets
+	 * the floor and the wider columns absorb the difference. Border-box keeps
+	 * that floor honest whether or not the consumer ships a global reset. */
+	box-sizing: border-box;
+	flex-basis: 0;
+	flex-shrink: 1;
+	min-width: min-content;
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-start;
+	height: 100%;
+	padding: var(--cds-size-padding-s);
+	border-radius: var(--cds-size-corner-large);
+	color: var(--accent-100);
+}
+
+.chart-panel-segmented-amount {
+	font: var(--cds-type-body-medium);
+	white-space: nowrap;
+}
+
+/* The columns already state every amount, so the segmented legend collapses to
+ * a single inline key rather than the stacked label/amount table. */
+.chart-panel-type-segmented {
+	gap: var(--cds-size-padding-s);
+}
+
+.chart-panel-type-segmented .chart-panel-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--cds-size-gap-xs) var(--cds-size-gap-m);
+}
+
+.chart-panel-type-segmented .chart-panel-legend li {
+	gap: var(--cds-size-gap-xs);
+	font: var(--cds-type-body-medium);
+}
+
+.chart-panel-type-segmented .chart-panel-legend-label {
+	flex: 0 0 auto;
+}
+
+.chart-panel-type-segmented .chart-panel-swatch {
+	border-radius: var(--cds-size-corner-full);
+}
+
 .chart-panel-donut {
 	position: relative;
 	justify-self: center;
@@ -903,6 +1012,11 @@
  * ============================================================ */
 .savings-streak {
 	width: min(382px, 100%);
+	padding: var(--cds-size-padding-s);
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-background-surface);
+	color: var(--cds-color-foreground-on-surface);
 	display: grid;
 	gap: var(--cds-size-padding-s);
 }
@@ -910,7 +1024,7 @@
 .savings-streak-title {
 	margin: 0;
 	font: var(--cds-type-body-large-strong);
-	color: var(--cds-color-foreground-primary);
+	color: var(--cds-color-foreground-on-surface);
 }
 
 .savings-streak-list {

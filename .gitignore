@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+dist/
+*.xcuserstate
+xcuserdata/
+apps/ios/Cheddar.xcodeproj/
+apps/ios/Cheddar.xcworkspace/
+DerivedData/

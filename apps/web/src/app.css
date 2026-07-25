@@ -1,0 +1,779 @@
+/*
+ * App-owned layout only. Everything with a design-system component behind it —
+ * cards, panels, badges, the nav, headers, sheets — is styled by
+ * `@screentime/cheddar-ds/styles.css` and must not be re-skinned here.
+ *
+ * What lives in this file:
+ *   1. the outer stage the phone sits on
+ *   2. the 430x932 viewport, its scrolling and its safe areas
+ *   3. screen-level composition (stacks, carousels, per-screen layout)
+ */
+
+:root {
+  --app-viewport-width: 430px;
+  --app-viewport-height: 932px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  overflow: hidden;
+  background: var(--token-color-black-100);
+  /* `Sheet` portals out of `.app-frame`, so the type ramp has to reach the root
+     the same way the theme attributes do — otherwise sheets fall back to the
+     browser's default serif. */
+  font: var(--cds-type-body-large);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* ------------------------------------------------------------- stage -- */
+
+.web-stage {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: var(--token-color-black-100);
+}
+
+/* ---------------------------------------------------------- viewport -- */
+
+.app-frame {
+  /* No status bar is rendered; the design's top chrome is safe-area padding. */
+  --app-safe-top: max(env(safe-area-inset-top), 50px);
+  /* Likewise at the bottom: the design reserves a 32px home-indicator region and
+     the design system draws the 5px bar itself, so the app owes the remainder. */
+  --app-safe-bottom: max(env(safe-area-inset-bottom), 27px);
+  /* Two-tone icons knock their counter out in the colour behind them, which
+     defaults to the surface. On the brand canvas that paints white on white and
+     the glyph collapses to a blob. `background-default` is re-scoped inside every
+     surface, so this one declaration tracks the real backdrop everywhere. */
+  --cds-icon-knockout: var(--cds-color-background-default);
+  position: relative;
+  width: min(100%, var(--app-viewport-width));
+  height: min(100dvh, var(--app-viewport-height));
+  overflow: hidden;
+  background: var(--cds-color-background-default);
+  color: var(--cds-color-foreground-primary);
+  font: var(--cds-type-body-large);
+}
+
+.app-frame .home-indicator {
+  display: none;
+}
+
+.app-screen {
+  height: 100%;
+  padding-top: var(--app-safe-top);
+  display: flex;
+  flex-direction: column;
+}
+
+.screen-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding: var(--cds-size-padding-l) var(--cds-size-padding-l) var(--cds-size-padding-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cds-size-gap-l);
+}
+
+.screen-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * The App Flow draws `Notification` as a light island on the branded canvas, the
+ * same as the panels and cards the token build lists in `SURFACE_SELECTORS`, but
+ * `.notification` is missing from that list and so inherits the shell instead.
+ * Re-scope the variables it reads until the design system adds it.
+ */
+[data-appearance='brand'] :where(.notification) {
+  color-scheme: light;
+
+  --cds-color-foreground-primary: var(--token-color-black-100);
+  --cds-color-foreground-secondary: var(--token-color-black-300);
+  --cds-color-foreground-brand-primary: var(--cds-color-brand-200);
+  --cds-color-bg-brand-primary: var(--cds-color-brand-600);
+  --cds-color-bg-scrim: var(--token-color-black-500);
+  --cds-color-border-default: var(--token-color-black-600);
+  --cds-color-icon-primary: var(--cds-color-brand-200);
+  --cds-color-icon-secondary: var(--cds-color-brand-400);
+  --cds-color-background-default: color-mix(
+    in srgb,
+    var(--cds-color-brand-100) 6%,
+    var(--token-color-white-100) 94%
+  );
+}
+
+/*
+ * The App Flow sets section titles at body-large and reserves `heading` for the
+ * page title, but `SectionHeader` ships the heading ramp for both. Correct it
+ * here until the design system catches up; the rest of the component is its own.
+ */
+.section-header-title {
+  font: var(--cds-type-body-large);
+}
+
+/*
+ * `Nav` ships its internal 12px gap but no box padding, leaving the tab bar to
+ * its container. Inset it to the design's 16px gutter and reserve the home
+ * indicator's safe area, which together give the 108px bar height in Figma.
+ */
+.app-nav {
+  padding: var(--cds-size-padding-m) var(--cds-size-padding-m)
+    var(--app-safe-bottom);
+}
+
+/* A stack screen pins its primary action to the bottom of the viewport. */
+.stacked-screen .screen-scroll > .btn:last-child,
+.stacked-screen .form-step > .btn:last-child {
+  margin-top: auto;
+}
+
+.app-toast {
+  position: absolute;
+  top: calc(var(--app-safe-top) + var(--cds-size-padding-s));
+  left: 50%;
+  z-index: 50;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - (2 * var(--cds-size-padding-m)));
+}
+
+/*
+ * `Sheet` portals into `document.body`, so its scrim covers the browser window
+ * rather than the phone. Re-state the viewport box on it.
+ */
+.sheet-scrim {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(100%, var(--app-viewport-width));
+  height: min(100dvh, var(--app-viewport-height));
+}
+
+/* ------------------------------------------------------- composition -- */
+
+.card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cds-size-gap-s);
+}
+
+.card-carousel {
+  display: flex;
+  gap: var(--cds-size-gap-s);
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* Bleed to the frame edge so the row reads as scrollable. */
+  margin-right: calc(-1 * var(--cds-size-padding-l));
+  padding-right: var(--cds-size-padding-l);
+}
+
+.card-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.card-carousel > * {
+  flex: 0 0 auto;
+}
+
+/* Two 187px cards to a row, the Learn tile rhythm. */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--cds-size-gap-s);
+  align-items: start;
+}
+
+.split-actions {
+  display: flex;
+  gap: var(--cds-size-gap-s);
+}
+
+.split-actions > * {
+  flex: 1;
+}
+
+.header-actions {
+  display: flex;
+  gap: var(--cds-size-gap-xs);
+}
+
+/*
+ * `Card / Activity` has no component of its own, so this is a consumer surface:
+ * it has to pair the surface background with the surface foreground itself.
+ */
+/* `.panel` carries the surface; these only undo the list defaults. */
+.activity-list {
+  list-style: none;
+  margin: 0;
+  gap: var(--cds-size-gap-m);
+}
+
+.activity-list-empty {
+  margin: 0;
+  text-align: center;
+  color: var(--cds-color-foreground-secondary);
+}
+
+.amount-readout {
+  display: grid;
+  place-items: center;
+  gap: var(--cds-size-gap-xs);
+  margin: 0;
+  padding: var(--cds-size-padding-s);
+  border: 1px solid transparent;
+  border-radius: var(--cds-size-corner-medium);
+  background: transparent;
+  color: inherit;
+  text-align: center;
+}
+
+.amount-readout span {
+  color: var(--cds-color-foreground-secondary);
+}
+
+.amount-readout strong {
+  color: var(--cds-color-foreground-brand-primary);
+  font: var(--cds-type-display-large);
+  letter-spacing: var(--cds-type-display-large-tracking);
+}
+
+/* A border rather than a fill: background-muted is light enough under the brand
+   appearance to drop the secondary label to 4.17:1. */
+.amount-readout.is-active {
+  border-color: var(--cds-color-border-strong);
+}
+
+.amount-readout:focus-visible {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
+}
+
+.goal-picker {
+  display: grid;
+  gap: var(--cds-size-gap-s);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.goal-picker legend {
+  padding: 0 0 var(--cds-size-padding-xs);
+  font: var(--cds-type-body-large-strong);
+}
+
+/* ----------------------------------------------------------- landing -- */
+
+.landing-screen .screen-scroll {
+  overflow: hidden;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+
+.landing-brand .brand-wordmark {
+  width: 97px;
+  height: 24px;
+  color: var(--cds-color-foreground-brand-primary);
+}
+
+.landing-screen h1 {
+  margin: var(--cds-size-padding-xl) 0 var(--cds-size-padding-xxl);
+  color: var(--cds-color-foreground-brand-primary);
+  font: var(--cds-type-display-large);
+  letter-spacing: var(--cds-type-display-large-tracking);
+  line-height: 1;
+}
+
+.landing-hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 1 300px;
+  width: min(100%, 362px);
+  height: 300px;
+  isolation: isolate;
+}
+
+.landing-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 38% 62% 42% 58% / 55% 41% 59% 45%;
+  background: var(--cds-color-bg-brand-tertiary);
+  transform: rotate(10deg);
+}
+
+.landing-hero img {
+  width: 240px;
+  height: 240px;
+  object-fit: contain;
+}
+
+.landing-screen p {
+  margin-top: var(--cds-size-padding-l);
+}
+
+.landing-actions {
+  display: flex;
+  gap: var(--cds-size-gap-s);
+  width: 100%;
+  margin-top: auto;
+  padding-top: var(--cds-size-padding-m);
+}
+
+.landing-actions > * {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------- add goal -- */
+
+.form-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cds-size-gap-l);
+}
+
+.amount-step {
+  text-align: center;
+}
+
+.illustration-picker {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.illustration-picker legend {
+  padding-bottom: var(--cds-size-padding-s);
+}
+
+.illustration-picker > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--cds-size-gap-s);
+}
+
+.illustration-picker button {
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  overflow: hidden;
+  border: 3px solid transparent;
+  border-radius: var(--cds-size-corner-medium);
+  background: var(--cds-color-bg-brand-secondary);
+}
+
+.illustration-picker button.selected {
+  border-color: var(--cds-color-foreground-brand-primary);
+}
+
+.illustration-picker button:focus-visible {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
+}
+
+.illustration-picker img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ------------------------------------------------- goal detail / won -- */
+
+/* Figma composes the goal's saved-of-target readout from text, not a component:
+   the amount at display-large with smaller cents, the target beneath it. */
+.goal-price {
+  display: grid;
+  gap: var(--cds-size-gap-xs);
+}
+
+.goal-price-saved {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  color: var(--cds-color-foreground-brand-primary);
+  font: var(--cds-type-display-large);
+  letter-spacing: var(--cds-type-display-large-tracking);
+}
+
+.goal-price-cents {
+  font: var(--cds-type-display-medium);
+  letter-spacing: var(--cds-type-display-medium-tracking);
+}
+
+.goal-price-target {
+  margin: 0;
+  color: var(--cds-color-foreground-brand-primary);
+  font: var(--cds-type-body-large);
+}
+
+/* Figma's `Illustration / Large` (4993:10153): two concentric copies of the
+ * four-lobed brand shape, the inner drawn at 273/370 of the outer, with the
+ * artwork over the top. It's the same 370px master the DS masks into
+ * `ArticleCard`, and carrying it as a mask here too is what keeps both lobes
+ * token-filled — `bg-brand-tertiary` and `bg-brand-shade` resolve to the
+ * design's dark pair under the branded shell and its pale pair in light mode,
+ * off whichever brand ramp is active. */
+.goal-hero,
+.celebration-hero {
+  --goal-hero-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 370 370'%3E%3Cpath d='M136.348 354.409C57.0835 407.892 -37.8916 312.917 15.5907 233.652C35.4286 204.251 35.4287 165.749 15.5907 136.348C-37.8916 57.0835 57.0835 -37.8916 136.348 15.5907C165.749 35.4286 204.251 35.4286 233.652 15.5907C312.917 -37.8916 407.892 57.0835 354.409 136.348C334.571 165.749 334.571 204.251 354.409 233.652C407.892 312.917 312.917 407.892 233.652 354.409C204.251 334.571 165.749 334.571 136.348 354.409Z'/%3E%3C/svg%3E");
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+  isolation: isolate;
+}
+
+.goal-hero::before,
+.goal-hero::after,
+.celebration-hero::before,
+.celebration-hero::after {
+  content: '';
+  position: absolute;
+  -webkit-mask: var(--goal-hero-shape) center / contain no-repeat;
+  mask: var(--goal-hero-shape) center / contain no-repeat;
+}
+
+.goal-hero::before,
+.celebration-hero::before {
+  width: 100%;
+  height: 100%;
+  background: var(--cds-color-bg-brand-tertiary);
+}
+
+.goal-hero::after,
+.celebration-hero::after {
+  width: 73.8%;
+  height: 73.8%;
+  background: var(--cds-color-bg-brand-shade);
+}
+
+.goal-hero img,
+.celebration-hero img {
+  /* Over both lobes — `::after` is painted after the content otherwise — and
+   * uncropped, so the artwork overhangs the lobes instead of sitting inside
+   * them. 343/370 of the outer shape. */
+  position: relative;
+  z-index: 1;
+  width: 92.7%;
+  height: 92.7%;
+  object-fit: contain;
+}
+
+.celebration-screen .screen-scroll {
+  align-items: center;
+  text-align: center;
+}
+
+.celebration-screen h1 {
+  margin: 0;
+  color: var(--cds-color-foreground-brand-primary);
+  font: var(--cds-type-display-medium);
+  letter-spacing: var(--cds-type-display-medium-tracking);
+}
+
+.celebration-screen p {
+  margin: 0;
+  color: var(--cds-color-foreground-brand-primary);
+}
+
+.celebration-screen .slider-field {
+  width: min(360px, 100%);
+  margin-top: auto;
+}
+
+/* --------------------------------------------------- learn / article -- */
+
+.learn-section {
+  display: grid;
+  gap: var(--cds-size-gap-m);
+}
+
+.learn-empty {
+  margin: 0;
+  color: var(--cds-color-foreground-secondary);
+}
+
+.article-hero {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: var(--cds-size-corner-large);
+  background: var(--cds-color-bg-brand-shade);
+}
+
+.article-screen .article-title {
+  margin: 0;
+  font: var(--cds-type-display-medium);
+  letter-spacing: var(--cds-type-display-medium-tracking);
+}
+
+.article-read-time {
+  margin: 0;
+  color: var(--cds-color-foreground-secondary);
+}
+
+.article-body {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.article-takeaways {
+  display: grid;
+  gap: var(--cds-size-gap-s);
+  padding: var(--cds-size-padding-m);
+  border-radius: var(--cds-size-corner-large);
+  background: var(--cds-color-background-surface);
+  color: var(--cds-color-foreground-on-surface);
+}
+
+.article-takeaways h2 {
+  margin: 0;
+  font: var(--cds-type-body-large-strong);
+}
+
+.article-takeaways ul {
+  margin: 0;
+  padding-left: var(--cds-size-padding-m);
+  display: grid;
+  gap: var(--cds-size-gap-xs);
+}
+
+/* ------------------------------------------------------ theme picker -- */
+
+.settings-copy {
+  margin: 0;
+  color: var(--cds-color-foreground-secondary);
+}
+
+.settings-legend {
+  margin: 0;
+  padding: 0;
+  color: var(--cds-color-foreground-secondary);
+  font: var(--cds-type-body-small);
+}
+
+.theme-options {
+  display: grid;
+  gap: var(--cds-size-gap-s);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Each card is its own ThemeScope, so it paints in the brand it offers and the
+   swatches can read straight off that brand's ramp. The card sits a step above
+   the canvas, which keeps the darkest swatch legible against it. */
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: var(--cds-size-gap-m);
+  padding: var(--cds-size-padding-m);
+  border: var(--cds-size-border) solid transparent;
+  border-radius: var(--cds-size-corner-large);
+  background: var(--cds-color-bg-brand-tertiary);
+  color: var(--cds-color-foreground-primary);
+  cursor: pointer;
+}
+
+.theme-option.is-selected {
+  border-color: var(--cds-color-border-strong);
+}
+
+.theme-option:has(:focus-visible) {
+  box-shadow: var(--cds-shadow-focus-ring);
+}
+
+.theme-swatches {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+.theme-swatches span {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--cds-size-corner-full);
+}
+
+.theme-option-text {
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+
+.theme-option-text strong {
+  font: var(--cds-type-body-large-strong);
+}
+
+/* foreground-secondary is rated against the canvas, and these cards sit a step
+   above it on a brand tint, where every brand lands just under 4.5:1. Dimming
+   the primary foreground toward the card's own fill keeps the hierarchy and
+   cannot cross the midpoint, so it stays legible on all four ramps. */
+.theme-option-text span {
+  color: color-mix(in srgb, var(--cds-color-foreground-primary) 80%, var(--cds-color-bg-brand-tertiary));
+  font: var(--cds-type-body-small);
+}
+
+.theme-option-check {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--cds-size-corner-full);
+  background: var(--cds-color-foreground-brand-primary);
+  color: var(--cds-color-bg-on-brand);
+}
+
+/* Only the chosen card is badged; the card itself is the affordance. */
+.theme-option:not(.is-selected) .theme-option-check {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--cds-size-border) var(--cds-color-border-default);
+}
+
+/* A canvas-over-card sliver standing in for the whole shell. */
+.theme-mode-chip {
+  display: grid;
+  flex: 0 0 auto;
+  align-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+  border-radius: var(--cds-size-corner-full);
+  background: var(--cds-color-background-default);
+  box-shadow: inset 0 0 0 var(--cds-size-border) var(--cds-color-border-default);
+}
+
+/* The ring keeps the card sliver readable in light mode, where a white card on a
+   near-white canvas would otherwise vanish. */
+.theme-mode-chip span {
+  height: 10px;
+  border-radius: var(--cds-size-corner-full);
+  background: var(--cds-color-background-surface);
+  box-shadow: 0 0 0 var(--cds-size-border) var(--cds-color-border-default);
+}
+
+.theme-preview {
+  display: grid;
+  padding: var(--cds-size-padding-m);
+  border-radius: var(--cds-size-corner-large);
+  background: var(--cds-color-background-default);
+}
+
+.theme-preview-card {
+  gap: var(--cds-size-gap-s);
+}
+
+.theme-preview-row {
+  display: flex;
+  align-items: center;
+  gap: var(--cds-size-gap-s);
+}
+
+.theme-preview-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--cds-size-corner-full);
+  background: var(--cds-color-brand-400);
+}
+
+.theme-preview-lines {
+  flex: 1;
+  display: grid;
+  gap: 6px;
+}
+
+.theme-preview-lines span {
+  height: 8px;
+  border-radius: var(--cds-size-corner-full);
+  background: var(--cds-color-foreground-brand-primary);
+}
+
+.theme-preview-lines span:last-child {
+  width: 45%;
+  opacity: 0.45;
+}
+
+.theme-preview-track {
+  height: 8px;
+  border-radius: var(--cds-size-corner-full);
+  background: var(--cds-color-track-default);
+}
+
+.theme-preview-track span {
+  display: block;
+  width: 62%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--cds-color-foreground-brand-primary);
+}
+
+.theme-preview-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--cds-size-gap-s);
+}
+
+@media (max-height: 760px) {
+  .landing-screen h1 {
+    margin-block: var(--cds-size-padding-s) var(--cds-size-padding-m);
+    font-size: 52px;
+  }
+
+  .landing-hero {
+    flex-basis: 240px;
+    height: 240px;
+  }
+
+  .landing-hero img {
+    width: 190px;
+    height: 190px;
+  }
+}
+
+/* ------------------------------------------------------ DS 1.2.0 bugs -- */
+
+/* The Guide tile paints bg-brand-secondary and flips its title and description
+   to foreground-on-reverse, but .article-card-eyebrow keeps the unreversed
+   foreground-secondary and lands at 1.07:1 on the pale tile. Remove once the
+   library reverses the eyebrow with the rest of the flat card's text. */
+.article-card-small.article-card-flat .article-card-eyebrow {
+  color: var(--cds-color-foreground-on-reverse);
+}
+
+/* `.toast` inverts by painting foreground-primary and writing in
+   background-surface. Under the brand appearance both are white-100, so the
+   message disappears into its own pill. Scoped to brand so the light and dark
+   themes keep the library's pairing. */
+[data-appearance='brand'] .toast {
+  color: var(--cds-color-foreground-on-surface);
+}

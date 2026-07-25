@@ -1,0 +1,138 @@
+{
+  "": {
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/primary.swiftdeps"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/CheddarDS.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarDS.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarDS.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarDS~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarDS.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarDS.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSActivityItem.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSActivityItem.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSActivityItem.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSActivityItem~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSActivityItem.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSActivityItem.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSArticleFeatureCard.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSArticleFeatureCard.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSArticleFeatureCard.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSArticleFeatureCard~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSArticleFeatureCard.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSArticleFeatureCard.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSAvatar.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSAvatar.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSAvatar.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSAvatar~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSAvatar.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSAvatar.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSButton.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSButton.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSButton.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSButton~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSButton.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSButton.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSGoalCard.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSGoalCard.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSGoalCard.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSGoalCard~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSGoalCard.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSGoalCard.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSIntroIllustration.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSIntroIllustration.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSIntroIllustration.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSIntroIllustration~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSIntroIllustration.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSIntroIllustration.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSNavBar.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNavBar.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNavBar.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNavBar~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNavBar.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNavBar.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSNotificationTrendCard.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNotificationTrendCard.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNotificationTrendCard.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNotificationTrendCard~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNotificationTrendCard.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSNotificationTrendCard.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSPageHeader.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSPageHeader.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSPageHeader.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSPageHeader~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSPageHeader.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSPageHeader.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSSectionHeader.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSectionHeader.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSectionHeader.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSectionHeader~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSectionHeader.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSectionHeader.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSSpendingChartPanel.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSpendingChartPanel.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSpendingChartPanel.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSpendingChartPanel~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSpendingChartPanel.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSSpendingChartPanel.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSTotalSavingsCard.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSTotalSavingsCard.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSTotalSavingsCard.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSTotalSavingsCard~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSTotalSavingsCard.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSTotalSavingsCard.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Components/CDSWordmark.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSWordmark.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSWordmark.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSWordmark~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSWordmark.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CDSWordmark.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Theme/CheddarColors.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarColors.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarColors.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarColors~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarColors.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarColors.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Theme/CheddarSpacing.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarSpacing.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarSpacing.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarSpacing~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarSpacing.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarSpacing.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Theme/CheddarTypography.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarTypography.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarTypography.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarTypography~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarTypography.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/CheddarTypography.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/Sources/CheddarDS/Theme/Color+Hex.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/Color+Hex.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/Color+Hex.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/Color+Hex~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/Color+Hex.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/Color+Hex.dia"
+  },
+  "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/DerivedSources/resource_bundle_accessor.swift": {
+    "dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/resource_bundle_accessor.d",
+    "object": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/resource_bundle_accessor.swift.o",
+    "swiftmodule": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/resource_bundle_accessor~partial.swiftmodule",
+    "swift-dependencies": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/resource_bundle_accessor.swiftdeps",
+    "diagnostics": "/Users/cbergman/Developer/screentime-cheddar-app/apps/ios/Packages/CheddarDS/.build/arm64-apple-macosx/debug/CheddarDS.build/resource_bundle_accessor.dia"
+  }
+}

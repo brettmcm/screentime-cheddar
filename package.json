@@ -1,0 +1,26 @@
+{
+  "name": "cheddar-app",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/web",
+    "packages/cheddar-tokens"
+  ],
+  "scripts": {
+    "sync:tokens": "cp node_modules/@screentime/cheddar-ds/dist/tokens/cheddar.tokens.json packages/cheddar-tokens/cheddar.tokens.json",
+    "sync:swift": "cp node_modules/@screentime/cheddar-ds/dist/platforms/swift/CheddarTokens.swift apps/ios/Packages/CheddarDS/Sources/CheddarDS/Theme/Generated/CheddarTokens.swift",
+    "generate:tokens": "node scripts/generate-tokens.mjs",
+    "generate:appicon": "node scripts/generate-app-icon.mjs",
+    "generate:icons": "node scripts/generate-ios-icons.mjs",
+    "sync:fonts": "node scripts/sync-ios-fonts.mjs",
+    "sync:ios-assets": "node scripts/sync-ios-assets.mjs",
+    "codegen": "npm run sync:tokens && npm run sync:swift && npm run generate:tokens && npm run generate:icons && npm run sync:fonts && npm run sync:ios-assets",
+    "ios:generate": "cd apps/ios && xcodegen generate",
+    "ios:build": "cd apps/ios && xcodebuild -scheme Cheddar -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17' build",
+    "dev": "npm run dev --workspace apps/web",
+    "build": "npm run build --workspace apps/web"
+  },
+  "dependencies": {
+    "@screentime/cheddar-ds": "git+ssh://git@github.com/figma/screentime-cheddar-ds.git#semver:^1.2.2"
+  }
+}

@@ -4,9 +4,9 @@
  * `src/index.css` (the dev entry) loads tokens, foundation and components but
  * not the three sheets the v1.2.0 components need, so they are pulled in here.
  * The published bundle (`src/styles/index.css`) already lists all six. */
-@import '../styles/cards.css';
-@import '../styles/overlays.css';
-@import '../styles/text-link.css';
+@import "../styles/cards.css";
+@import "../styles/overlays.css";
+@import "../styles/text-link.css";
 
 .ds-controls {
   display: grid;
@@ -56,6 +56,7 @@
   border: 1px solid var(--cds-color-border-default);
   border-radius: var(--cds-size-corner-large);
   background: var(--cds-color-background-default);
+  --cds-icon-knockout: var(--cds-color-background-default);
   color: var(--cds-color-foreground-primary);
 }
 
@@ -98,9 +99,8 @@
   width: min(390px, 100%);
   min-height: 660px;
   padding: var(--cds-size-padding-m);
-  border: 1px solid var(--cds-color-border-default);
-  border-radius: var(--cds-size-corner-xlarge);
   background: var(--cds-color-background-default);
+  --cds-icon-knockout: var(--cds-color-background-default);
   color: var(--cds-color-foreground-primary);
 }
 
@@ -118,6 +118,7 @@
   padding: var(--cds-size-padding-s);
   border-radius: var(--cds-size-corner-large);
   background: var(--cds-color-background-default);
+  --cds-icon-knockout: var(--cds-color-background-default);
 }
 
 .ds-phone-amount {

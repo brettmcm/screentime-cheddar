@@ -13,5 +13,7 @@ const size = instance.getEnum('Size', {
 export default {
   id: 'avatar',
   imports: ['import { Avatar } from "@screentime/cheddar-ds"'],
-  example: figma.code`<Avatar size="${size}" />`,
+  // `src`/`name` are new in v1.2.0 — the component used to render bundled
+  // artwork only. `name` also supplies the initials fallback.
+  example: figma.code`<Avatar size="${size}" src={user.photoUrl} name={user.name} />`,
 }

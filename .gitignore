@@ -13,6 +13,13 @@ dist
 dist-ssr
 *.local
 
+# Test artifacts. Screenshot baselines under tests/visual/__screenshots__ ARE
+# committed — only the run output and reports are ignored.
+coverage
+playwright-report
+test-results
+tests/visual/.output
+
 # npm auth (contains Figma registry token)
 .npmrc
 

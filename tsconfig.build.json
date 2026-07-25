@@ -19,11 +19,14 @@
     "rootDir": "src",
     "types": ["vite/client"]
   },
-  "include": ["src/index.ts"],
+  "include": ["src/index.ts", "src/demo-assets/index.ts", "src/tokens/tokens.ts"],
   "exclude": [
     "src/main.tsx",
     "src/App.tsx",
     "src/**/*.figma.ts",
-    "src/**/*.figma.tsx"
+    "src/**/*.figma.tsx",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/test/**"
   ]
 }

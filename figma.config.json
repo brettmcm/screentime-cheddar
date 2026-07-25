@@ -3,7 +3,7 @@
     "fileKey": "JZfxpUBr0jz86f8imEBEdC"
   },
   "codeConnect": {
-    "include": ["src/components/**/*.figma.ts"],
+    "include": ["src/**/*.figma.ts"],
     "label": "React",
     "language": "jsx"
   }

@@ -9,9 +9,43 @@ React 19 + TypeScript + Vite component library for the Cheddar product, with Fig
 | `src/App.tsx` | Dev gallery app — rendered by the Vite dev server for visual development |
 | `src/index.ts` | Library entry point — all exported components and types |
 | `src/components/` | React components |
-| `src/styles/` | CSS source files (tokens, foundation, components) |
-| `tokens/` | Raw design token JSON (`cheddar.tokens.json`) |
+| `src/styles/` | CSS source files (`tokens.css` is **generated** — see Tokens below) |
+| `src/tokens/` | Generated typed token accessors for React consumers |
+| `src/demo-assets/` | Typed manifest for the bundled demo imagery |
+| `tokens/cheddar.tokens.json` | **Source of truth** for every design token (DTCG) |
+| `platforms/` | Generated Swift + React Native token outputs |
+| `docs/` | Parity audit and migration notes |
+| `tests/visual/` | Playwright screenshot suite |
 | `**/*.figma.ts` | Figma Code Connect mapping files |
+
+## Components
+
+Every component is exported from the package root along with its props type
+(`import { GoalCard, type GoalCardProps } from '@screentime/cheddar-ds'`).
+
+| Group | Exports |
+| --- | --- |
+| Actions | `Button`, `IconButton`, `TextLink` |
+| Forms | `InputField`, `Textarea`, `Search`, `Checkbox`, `Radio`, `SwitchField`, `Slider`, `NumberPad` |
+| Navigation & chrome | `Nav`, `PageHeader`, `Sheet`, `SectionHeader` |
+| Content | `ActivityItem`, `Avatar`, `Tag`, `Toast`, `Notification`, `EmptyState`, `Icon`, `Logo`, `Wordmark` |
+| Cards & panels | `TotalSavingsCard`, `GoalCard`, `CompletedGoalCard`, `ArticleCard`, `ProfileCard`, `BadgeCard`, `AccountCard`, `GoalSummaryCard`, `SpendingChartPanel`, `SavingsStreak` |
+| Theming | `ThemeScope` |
+
+`Card` is still exported but **deprecated** — it renders hardcoded demo content selected by
+`variant`. Use the card component matching your shape; see
+[`docs/migration-1.2.md`](docs/migration-1.2.md) for the variant-to-component table.
+
+Demo imagery for the cards lives behind its own subpath so the artwork stays out of the main
+entry point:
+
+```ts
+import { demoAssets } from '@screentime/cheddar-ds/demo-assets'
+// demoAssets.goals.headphones, demoAssets.articles.piggyBank, demoAssets.celebration.goalReached
+```
+
+Further reading: [`docs/figma-parity-audit.md`](docs/figma-parity-audit.md) records how the
+library maps onto the Figma file and where the two had drifted.
 
 ## Getting started
 
@@ -38,10 +72,20 @@ This repo reads secrets from `.env.local` (gitignored). See [.env.example](.env.
 | Command | What it does |
 | --- | --- |
 | `npm run dev` | Start the Vite dev server with the component gallery. |
-| `npm run build` | Vite library build → type declarations (`tsc -p tsconfig.build.json`) → asset copy (CSS layers, fonts, tokens) into `dist/`. |
+| `npm run build` | Token generation → Vite library build → type declarations (`tsc -p tsconfig.build.json`) → asset copy (CSS layers, fonts, tokens, platform outputs) into `dist/`. |
 | `npm run preview` | Preview the last Vite production build locally. |
 | `npm run lint` | Run ESLint across the repo. |
-| `npm run figma:check-urls` | Verify every `.figma.ts` file points to a node that still exists in the Figma file. |
+| `npm run typecheck` | Type-check all three TS projects without emitting: library source, build scripts, and the Code Connect templates. |
+| `npm run tokens:build` | Regenerate every platform's tokens from `tokens/cheddar.tokens.json`. |
+| `npm run tokens:check` | Fail if any generated token output is stale (CI guard). |
+| `npm run assets:check` | Fail if the demo-asset manifest references a file that is missing or empty. |
+| `npm run test` | Interaction + accessibility tests (Vitest, jsdom). |
+| `npm run test:a11y` | Accessibility tests only (axe-core). |
+| `npm run test:visual` | Screenshot tests against the gallery (Playwright + Chromium). |
+| `npm run test:visual:update` | Re-record screenshot baselines. |
+| `npm run verify` | `tokens:check` + `assets:check` + `lint` + `typecheck` + `test`. |
+| `npm run release:check` | `verify` + `build` + Code Connect validation + `npm pack --dry-run`. Run this before tagging. |
+| `npm run figma:check-urls` | Verify every `.figma.ts` URL points at the file in `figma.config.json`. Node IDs are validated by `figma:publish:dry-run`, which resolves them against the live file. |
 | `npm run figma:url-sync` | Refresh stale node URLs in `.figma.ts` files. |
 | `npm run figma:publish` | Publish Code Connect mappings to the Figma file. Runs `figma:url-sync` first. |
 | `npm run figma:publish:dry-run` | Same as above but no upload — useful for previewing the diff. |
@@ -61,7 +105,59 @@ This repo reads secrets from `.env.local` (gitignored). See [.env.example](.env.
 | `dist/styles/foundation.css` | Layout helpers (`.app-shell`, `.ds-page`, etc.) |
 | `dist/styles/components.css` | All component class definitions |
 | `dist/fonts/` | Self-contained `.woff2` files — no `@fontsource` dep needed at consumer end |
-| `dist/tokens/cheddar.tokens.json` | Raw design token JSON |
+| `dist/tokens/cheddar.tokens.json` | The authoritative DTCG token document |
+| `dist/tokens/tokens.js` + `.d.ts` | Typed token accessors (`@screentime/cheddar-ds/tokens`) |
+| `dist/demo-assets.js` | Demo imagery manifest (`@screentime/cheddar-ds/demo-assets`) |
+| `dist/assets/` | Fingerprinted demo images referenced by the manifest |
+| `dist/platforms/swift/CheddarTokens.swift` | Generated SwiftUI tokens |
+| `dist/platforms/react-native/tokens.ts` | Generated React Native palettes |
+
+## Tokens
+
+`tokens/cheddar.tokens.json` is the **single source of truth** (DTCG 2025.10). Everything else is generated
+from it by `scripts/build-tokens.mjs`:
+
+```
+tokens/cheddar.tokens.json
+        ├── src/styles/tokens.css                  web / React
+        ├── src/tokens/tokens.ts                   typed accessors
+        ├── platforms/swift/CheddarTokens.swift     SwiftUI
+        └── platforms/react-native/tokens.ts        React Native
+```
+
+Never hand-edit a generated file — change the JSON and run `npm run tokens:build`. `npm run tokens:check`
+fails the build if an output has drifted.
+
+Semantic tokens carry their per-mode values in `$extensions["com.cheddar.mode"]` (`dark` and `brand`), and
+alpha is preserved end-to-end: as `rgba()` in CSS and React Native, and as `opacity` on `CheddarColor` in
+Swift. Tokens that are brand-derived tints declare a `com.cheddar.mix` recipe so every platform stays
+reactive to the selected brand instead of freezing a magenta value.
+
+## Theming
+
+Theming is three independent, nestable axes, applied as data attributes by `ThemeScope`:
+
+| Axis | Attribute | Values |
+| --- | --- | --- |
+| Colour scheme | `data-theme` | `light`, `dark` |
+| Brand ramp | `data-brand` | `magenta`, `blue`, `green`, `purple` |
+| Appearance | `data-appearance` | `surface`, `brand` |
+
+`appearance="brand"` is the **product app shell**: a saturated `--cds-color-brand-100` canvas carrying light
+surfaces, matching the Cheddar app screens in Figma. It is not the same thing as dark mode — reach for it
+instead of `scheme="dark"` when you want the branded chrome.
+
+```tsx
+import { ThemeScope } from '@screentime/cheddar-ds'
+
+<ThemeScope brand="blue" appearance="brand">
+  {/* branded blue app shell */}
+  <ThemeScope scheme="light">{/* a light island inside it */}</ThemeScope>
+</ThemeScope>
+```
+
+Because each layer only redefines CSS custom properties, scopes nest arbitrarily and a descendant always
+wins over its ancestor.
 
 ## Publishing / distribution
 
@@ -93,8 +189,8 @@ There is no upload step — consumers install from a git ref and the `prepare` s
 2. Tag the commit so apps can pin to it:
 
 ```sh
-git tag v1.0.1
-git push origin v1.0.1
+git tag v1.2.0
+git push origin v1.2.0
 ```
 
 Recommended preflight before any release:
@@ -116,7 +212,7 @@ Add the DS to your app's `package.json`, pinned to a tag (or branch/commit):
 ```json
 {
   "dependencies": {
-    "@screentime/cheddar-ds": "git+ssh://git@github.com/figma/screentime-cheddar-ds.git#v1.0.1"
+    "@screentime/cheddar-ds": "git+ssh://git@github.com/figma/screentime-cheddar-ds.git#v1.2.0"
   }
 }
 ```
@@ -132,7 +228,7 @@ Add the dependency to your Make project's `package.json` and Make resolves it ag
 ```json
 {
   "dependencies": {
-    "@screentime/cheddar-ds": "^1.0.1"
+    "@screentime/cheddar-ds": "^1.2.0"
   }
 }
 ```

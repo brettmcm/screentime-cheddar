@@ -4,14 +4,17 @@
 import figma from 'figma'
 
 const instance = figma.selectedInstance
-const variant = instance.getEnum('Property 1', {
+// The Figma property is `Type`, not `Property 1` — reading the wrong name
+// silently yielded undefined and emitted `<Notification variant="" />`.
+const variant = instance.getEnum('Type', {
   Default: 'default',
   Trend: 'trend',
   Opportunity: 'opportunity',
 })
+const showDismiss = instance.getBoolean('Close button')
 
 export default {
   id: 'notification',
   imports: ['import { Notification } from "@screentime/cheddar-ds"'],
-  example: figma.code`<Notification variant="${variant}" />`,
+  example: figma.code`<Notification variant="${variant}"${showDismiss ? '' : ' showDismiss={false}'} />`,
 }

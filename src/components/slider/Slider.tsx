@@ -1,5 +1,7 @@
-import { useRef } from 'react'
+import type { Ref } from 'react'
+import { useEffect, useRef } from 'react'
 import { Logo } from '../brand/Brand'
+import { classNames } from '../utils/classNames'
 import { useControllableState } from '../utils/useControllableState'
 
 export type SliderProps = {
@@ -10,6 +12,27 @@ export type SliderProps = {
   defaultValue?: number
   step?: number
   onValueChange?: (value: number) => void
+  /** Fires once when the value reaches `completeAt`. */
+  onComplete?: () => void
+  /**
+   * Value that counts as complete.
+   * @default max
+   */
+  completeAt?: number
+  /**
+   * Defer `onComplete` to pointer/key release rather than firing mid-gesture.
+   * @default true
+   */
+  completeOnRelease?: boolean
+  /** Snap to `max` once complete. */
+  snapOnComplete?: boolean
+  /** Overrides the default `$x.xx` formatting. */
+  formatValue?: (value: number) => string
+  /** @default true */
+  showValue?: boolean
+  disabled?: boolean
+  className?: string
+  ref?: Ref<HTMLElement>
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -28,9 +51,20 @@ export function Slider({
   defaultValue = 420,
   step = 1,
   onValueChange,
+  onComplete,
+  completeAt,
+  completeOnRelease = true,
+  snapOnComplete = false,
+  formatValue,
+  showValue = true,
+  disabled = false,
+  className,
+  ref,
 }: SliderProps) {
   const trackRef = useRef<HTMLDivElement>(null)
   const thumbRef = useRef<HTMLSpanElement>(null)
+  const completedRef = useRef(false)
+  const keyGestureRef = useRef(false)
   const safeMax = Math.max(max, min + 1)
   const safeStep = step > 0 ? step : 1
   const { currentValue, setValue } = useControllableState({
@@ -40,7 +74,42 @@ export function Slider({
   })
   const safeValue = clamp(roundToStep(currentValue, min, safeStep), min, safeMax)
   const percentage = ((safeValue - min) / (safeMax - min)) * 100
-  const valueText = `$${safeValue.toFixed(2)}`
+  const valueText = formatValue ? formatValue(safeValue) : `$${safeValue.toFixed(2)}`
+  const threshold = clamp(completeAt ?? safeMax, min, safeMax)
+  const latestValueRef = useRef(safeValue)
+
+  useEffect(() => {
+    latestValueRef.current = safeValue
+    if (safeValue < threshold) {
+      completedRef.current = false
+    }
+  }, [safeValue, threshold])
+
+  const fireComplete = (candidate: number) => {
+    if (disabled || completedRef.current || candidate < threshold) {
+      return
+    }
+    completedRef.current = true
+    if (snapOnComplete && candidate !== safeMax) {
+      latestValueRef.current = safeMax
+      setValue(safeMax)
+    }
+    onComplete?.()
+  }
+
+  const commitValue = (next: number) => {
+    if (disabled) {
+      return
+    }
+    if (next < threshold) {
+      completedRef.current = false
+    }
+    latestValueRef.current = next
+    setValue(next)
+    if (!completeOnRelease) {
+      fireComplete(next)
+    }
+  }
 
   const updateValueFromX = (clientX: number) => {
     const track = trackRef.current
@@ -53,11 +122,15 @@ export function Slider({
     const ratio = clamp((clientX - bounds.left - thumbWidth / 2) / availableWidth, 0, 1)
     const rawValue = min + ratio * (safeMax - min)
     const snappedValue = clamp(roundToStep(rawValue, min, safeStep), min, safeMax)
-    setValue(snappedValue)
+    commitValue(snappedValue)
   }
 
   return (
-    <section className="slider-field" aria-label={label}>
+    <section
+      ref={ref}
+      className={classNames('slider-field', disabled && 'slider-field-disabled', className)}
+      aria-label={label}
+    >
       <span className="slider-label">{label}</span>
       <div className="slider-pill">
         <div
@@ -70,35 +143,58 @@ export function Slider({
           aria-valuenow={safeValue}
           aria-valuetext={valueText}
           aria-label={label}
+          aria-disabled={disabled || undefined}
           onPointerDown={(event) => {
+            if (disabled) {
+              return
+            }
             event.preventDefault()
             event.currentTarget.setPointerCapture(event.pointerId)
             updateValueFromX(event.clientX)
           }}
           onPointerMove={(event) => {
-            if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+            if (disabled || !event.currentTarget.hasPointerCapture(event.pointerId)) {
               return
             }
             updateValueFromX(event.clientX)
           }}
           onPointerUp={(event) => {
-            if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+            const wasDragging = event.currentTarget.hasPointerCapture(event.pointerId)
+            if (wasDragging) {
               event.currentTarget.releasePointerCapture(event.pointerId)
+            }
+            if (wasDragging && completeOnRelease) {
+              fireComplete(latestValueRef.current)
             }
           }}
           onKeyDown={(event) => {
+            if (disabled) {
+              return
+            }
             if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
               event.preventDefault()
-              setValue(clamp(safeValue - safeStep, min, safeMax))
+              commitValue(clamp(safeValue - safeStep, min, safeMax))
             } else if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
               event.preventDefault()
-              setValue(clamp(safeValue + safeStep, min, safeMax))
+              commitValue(clamp(safeValue + safeStep, min, safeMax))
             } else if (event.key === 'Home') {
               event.preventDefault()
-              setValue(min)
+              commitValue(min)
             } else if (event.key === 'End') {
               event.preventDefault()
-              setValue(safeMax)
+              commitValue(safeMax)
+            } else {
+              return
+            }
+            keyGestureRef.current = true
+          }}
+          onKeyUp={() => {
+            if (!keyGestureRef.current) {
+              return
+            }
+            keyGestureRef.current = false
+            if (completeOnRelease) {
+              fireComplete(latestValueRef.current)
             }
           }}
         >
@@ -116,7 +212,7 @@ export function Slider({
       </div>
       <div className="slider-header">
         <span>{min}</span>
-        <strong>{valueText}</strong>
+        {showValue ? <strong>{valueText}</strong> : null}
         <span>{safeMax}</span>
       </div>
     </section>

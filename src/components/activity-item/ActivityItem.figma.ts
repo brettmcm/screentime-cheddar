@@ -1,4 +1,4 @@
-// url=https://www.figma.com/design/JZfxpUBr0jz86f8imEBEdC?node-id=4441-631&t=dsZZMCRqT4nyf9E1-1
+// url=https://www.figma.com/design/JZfxpUBr0jz86f8imEBEdC?node-id=4441-631
 // source=src/components/activity-item/ActivityItem.tsx
 // component=ActivityItem
 import figma from 'figma'

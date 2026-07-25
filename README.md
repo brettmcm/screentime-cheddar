@@ -1,6 +1,6 @@
 # Cheddar App
 
-Multi-platform Cheddar product demo aligned with [Learning Lab App Flow](https://www.figma.com/design/RrolMpn1uioqHJDpERgySk/Learning-Lab-Demos?node-id=125-1363) and the shared [`@screentime/cheddar-ds`](https://github.com/figma/screentime-cheddar-ds) design system.
+Multi-platform Cheddar product demo aligned with the shared [`@screentime/cheddar-ds`](https://github.com/figma/screentime-cheddar-ds) design system.
 
 ## Repository layout
 

@@ -1,0 +1,955 @@
+/* Cards and panels.
+ *
+ * Every rule here is token-driven — no raw color literals. Per-item accent
+ * colors come from the `.accent-*` classes below, which are deliberately
+ * brand-independent so a list of goals or spending segments stays readable
+ * under any [data-brand]. */
+
+/* ============================================================
+ * Accent ramps
+ * ============================================================ */
+.accent-magenta {
+	--accent-100: var(--token-color-brand-100);
+	--accent-200: var(--token-color-brand-200);
+	--accent-300: var(--token-color-brand-300);
+	--accent-400: var(--token-color-brand-400);
+	--accent-500: var(--token-color-brand-500);
+	--accent-600: var(--token-color-brand-600);
+	--accent-fg: var(--token-color-white-100);
+}
+
+.accent-blue {
+	--accent-100: var(--token-color-blue-100);
+	--accent-200: var(--token-color-blue-200);
+	--accent-300: var(--token-color-blue-300);
+	--accent-400: var(--token-color-blue-400);
+	--accent-500: var(--token-color-blue-500);
+	--accent-600: var(--token-color-blue-600);
+	--accent-fg: var(--token-color-white-100);
+}
+
+.accent-green {
+	--accent-100: var(--token-color-green-100);
+	--accent-200: var(--token-color-green-200);
+	--accent-300: var(--token-color-green-300);
+	--accent-400: var(--token-color-green-400);
+	--accent-500: var(--token-color-green-500);
+	--accent-600: var(--token-color-green-600);
+	--accent-fg: var(--token-color-black-100);
+}
+
+.accent-purple {
+	--accent-100: var(--token-color-purple-100);
+	--accent-200: var(--token-color-purple-200);
+	--accent-300: var(--token-color-purple-300);
+	--accent-400: var(--token-color-purple-400);
+	--accent-500: var(--token-color-purple-500);
+	--accent-600: var(--token-color-purple-600);
+	--accent-fg: var(--token-color-white-100);
+}
+
+/* ============================================================
+ * Shared card behaviour
+ * ============================================================ */
+.account-card,
+.article-card,
+.badge-card,
+.chart-panel,
+.completed-goal-card,
+.goal-card,
+.goal-summary-card,
+.profile-card,
+.savings-streak,
+.total-savings-card {
+	box-sizing: border-box;
+}
+
+/* Whole-card affordances render as real buttons/links; reset the control
+ * chrome so they inherit the card's own surface. */
+.account-card-interactive,
+.badge-card-interactive,
+.completed-goal-card-interactive,
+.goal-card-interactive,
+.article-card-link,
+.article-card-favorite,
+.section-header-action {
+	font: inherit;
+	color: inherit;
+	text-align: inherit;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.account-card-interactive:focus-visible,
+.badge-card-interactive:focus-visible,
+.completed-goal-card-interactive:focus-visible,
+.goal-card-interactive:focus-visible,
+.article-card-favorite:focus-visible,
+.article-card-link:focus-visible,
+.section-header-action:focus-visible {
+	box-shadow: var(--cds-shadow-focus-ring);
+	outline: none;
+}
+
+/* ============================================================
+ * SectionHeader
+ * ============================================================ */
+.section-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--cds-size-gap-m);
+	width: 100%;
+}
+
+.section-header-title {
+	margin: 0;
+	font: var(--cds-type-heading);
+	color: var(--cds-color-foreground-primary);
+}
+
+.section-header-trailing {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--cds-size-gap-s);
+}
+
+.section-header-action {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--cds-size-padding-xs);
+	padding: 0;
+	border: 0;
+	background: transparent;
+	border-radius: var(--cds-size-corner-xxsmall);
+	color: var(--cds-color-foreground-primary);
+	font: var(--cds-type-body-large-strong);
+}
+
+/* ============================================================
+ * TotalSavingsCard
+ * ============================================================ */
+.total-savings-card {
+	width: min(382px, 100%);
+	min-height: 255px;
+	padding: var(--cds-size-padding-m);
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-bg-brand-secondary);
+	color: var(--cds-color-foreground-brand-reverse-secondary);
+	--cds-icon-knockout: var(--cds-color-bg-brand-secondary);
+	display: grid;
+	gap: var(--cds-size-padding-m);
+}
+
+.total-savings-card-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: var(--cds-size-gap-s);
+}
+
+.total-savings-card-label {
+	margin: 0;
+	font: var(--cds-type-body-large);
+}
+
+.total-savings-card-badge,
+.total-savings-card-logo {
+	width: 50px;
+	height: 32px;
+	flex-shrink: 0;
+	border-radius: var(--cds-size-corner-full);
+	background: var(--cds-color-brand-500);
+	color: var(--cds-color-brand-100);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.total-savings-card-logo .brand-logo,
+.total-savings-card-logo .brand-logo svg {
+	width: 28px;
+	height: 21px;
+	color: currentcolor;
+}
+
+.total-savings-card-amount {
+	margin: 0;
+	display: flex;
+	align-items: flex-start;
+	font: var(--cds-type-display-large);
+	letter-spacing: var(--cds-type-display-large-tracking);
+}
+
+.total-savings-card-cents {
+	font: var(--cds-type-display-medium);
+	letter-spacing: var(--cds-type-display-medium-tracking);
+}
+
+.total-savings-card-actions {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--cds-size-padding-xs);
+}
+
+/* Border, label and icon all take the card's own foreground, so the pair stays
+ * matched when the card flips from dark-maroon-on-pink to pale-on-magenta. */
+.total-savings-card-action.btn,
+.profile-card-action.btn {
+	min-height: 66px;
+	border: var(--cds-size-border) solid currentcolor;
+	border-radius: var(--cds-size-corner-large);
+	background: transparent;
+	color: inherit;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--cds-size-gap-s);
+	font: var(--cds-type-body-large);
+}
+
+/* ============================================================
+ * GoalCard
+ * ============================================================ */
+.goal-card {
+	width: min(382px, 100%);
+	min-height: 88px;
+	padding: var(--cds-size-padding-s);
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: transparent;
+	color: var(--cds-color-foreground-primary);
+	display: grid;
+	grid-template-columns: 64px 1fr;
+	align-items: center;
+	gap: var(--cds-size-gap-s);
+}
+
+.goal-card-tile {
+	width: 64px;
+	height: 64px;
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-xsmall);
+	background: var(--accent-500);
+	--cds-icon-knockout: var(--accent-500);
+	color: var(--cds-color-foreground-primary);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.goal-card-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.goal-card-content {
+	display: grid;
+	gap: 6px;
+	min-width: 0;
+}
+
+.goal-card-line {
+	display: flex;
+	justify-content: space-between;
+	gap: var(--cds-size-gap-s);
+	font: var(--cds-type-body-medium-strong);
+}
+
+.goal-card-meta {
+	font: var(--cds-type-body-small);
+	color: var(--cds-color-foreground-secondary);
+}
+
+.goal-card-track {
+	display: block;
+	width: 100%;
+	height: 6px;
+	border-radius: var(--cds-size-corner-full);
+	background: var(--cds-color-track-default);
+	overflow: hidden;
+}
+
+.goal-card-track-fill {
+	display: block;
+	height: 100%;
+	background: var(--accent-300);
+}
+
+/* ============================================================
+ * ArticleCard — Article Large / Article Small / Guide / Customer Article
+ * ============================================================ */
+.article-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-background-surface);
+	color: var(--cds-color-foreground-on-surface);
+	overflow: hidden;
+}
+
+.article-card-body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--cds-size-padding-s);
+	min-width: 0;
+}
+
+.article-card-title {
+	margin: 0;
+	font: var(--cds-type-body-large-strong);
+}
+
+.article-card-link {
+	padding: 0;
+	border: 0;
+	background: none;
+	border-radius: var(--cds-size-corner-xxsmall);
+}
+
+/* Stretch the title's hit area over the card without nesting controls. */
+.article-card-link::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+}
+
+.article-card-description {
+	margin: 0;
+	font: var(--cds-type-body-medium);
+}
+
+.article-card-eyebrow {
+	margin: 0;
+	font: var(--cds-type-body-small);
+	color: var(--cds-color-foreground-secondary);
+}
+
+.article-card-tag {
+	align-self: start;
+	padding: var(--cds-size-padding-xxs) var(--cds-size-padding-xs);
+	border-radius: var(--cds-size-corner-full);
+	background: var(--accent-300);
+	color: var(--accent-fg);
+	font-size: var(--cds-size-font-xs);
+	font-weight: 600;
+}
+
+.article-card-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--cds-size-gap-s);
+	color: var(--cds-color-foreground-secondary);
+	font: var(--cds-type-body-large);
+}
+
+.article-card-favorite {
+	position: relative;
+	z-index: 1;
+	padding: 0;
+	border: 0;
+	border-radius: var(--cds-size-corner-full);
+	background: transparent;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.article-card-favorite[aria-pressed="true"] {
+	color: var(--cds-color-foreground-brand-primary);
+}
+
+.article-card-action.btn {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	margin-top: auto;
+	min-height: 66px;
+	border: 0;
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-brand-500);
+	color: var(--cds-color-brand-100);
+	font: var(--cds-type-heading);
+}
+
+/* Article Large — hero image, centred copy, full-width action. */
+.article-card-large.article-card-media {
+	width: min(382px, 100%);
+	min-height: 535px;
+	padding: var(--cds-size-padding-l) var(--cds-size-padding-m)
+		var(--cds-size-padding-m);
+	gap: var(--cds-size-padding-s);
+	align-items: center;
+	text-align: center;
+	background: var(--cds-color-bg-brand-secondary);
+	color: var(--cds-color-foreground-on-reverse);
+}
+
+.article-card-large.article-card-media .article-card-frame {
+	width: 184px;
+	height: 184px;
+	flex-shrink: 0;
+	border-radius: var(--cds-size-corner-full);
+	background: var(--accent-300);
+	color: var(--token-color-white-100);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.article-card-large.article-card-media .article-card-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.article-card-large.article-card-media .article-card-body {
+	flex: 1;
+	width: 100%;
+	align-items: center;
+	text-align: center;
+}
+
+.article-card-large.article-card-media .article-card-title {
+	max-width: 320px;
+	font: var(--cds-type-display-medium);
+	letter-spacing: var(--cds-type-display-medium-tracking);
+	letter-spacing: -0.03em;
+}
+
+.article-card-large.article-card-media .article-card-description {
+	max-width: 320px;
+	font: var(--cds-type-body-large-strong);
+	color: var(--cds-color-foreground-on-reverse);
+}
+
+/* Customer Article — a plain surface card with an eyebrow and a tag. */
+.article-card-large.article-card-flat {
+	max-width: 382px;
+	padding: var(--cds-size-padding-s);
+	border-radius: var(--cds-size-corner-small);
+	gap: var(--cds-size-gap-s);
+}
+
+.article-card-large.article-card-flat .article-card-body {
+	gap: var(--cds-size-gap-s);
+}
+
+/* Article Small — compact tile with a favourite toggle. */
+.article-card-small.article-card-media {
+	width: min(187px, 100%);
+	min-height: 260px;
+}
+
+.article-card-small .article-card-frame {
+	height: 148px;
+	border-bottom: var(--cds-size-border) solid var(--cds-color-border-default);
+	background: var(--accent-500);
+	--cds-icon-knockout: var(--accent-500);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.article-card-small .article-card-image {
+	width: 116px;
+	height: 116px;
+	object-fit: contain;
+}
+
+.article-card-small.article-card-media .article-card-body {
+	padding: var(--cds-size-padding-s);
+}
+
+/* Guide — a square brand tile with the copy pinned to the bottom. */
+.article-card-small.article-card-flat {
+	width: min(270px, 100%);
+	min-height: 270px;
+	padding: var(--cds-size-padding-m);
+	background: var(--cds-color-bg-brand-secondary);
+	color: var(--cds-color-foreground-on-reverse);
+}
+
+.article-card-small.article-card-flat .article-card-body {
+	flex: 1;
+}
+
+.article-card-small.article-card-flat .article-card-title {
+	max-width: 120px;
+	font: var(--cds-type-display-medium);
+	letter-spacing: var(--cds-type-display-medium-tracking);
+	letter-spacing: -0.03em;
+}
+
+.article-card-small.article-card-flat .article-card-description {
+	margin-top: auto;
+	font: var(--cds-type-body-large-strong);
+	color: var(--cds-color-foreground-on-reverse);
+}
+
+.article-card-small.article-card-flat .article-card-footer {
+	color: var(--cds-color-foreground-on-reverse-secondary);
+}
+
+/* ============================================================
+ * CompletedGoalCard
+ * ============================================================ */
+.completed-goal-card {
+	display: block;
+	width: min(159px, 100%);
+	padding: 0;
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-background-surface);
+	color: var(--cds-color-foreground-on-surface);
+	overflow: hidden;
+	text-align: left;
+}
+
+.completed-goal-card-tile {
+	height: 112px;
+	background: var(--accent-500);
+	--cds-icon-knockout: var(--accent-500);
+	color: var(--cds-color-foreground-primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.completed-goal-card-image {
+	width: 96px;
+	height: 96px;
+	object-fit: contain;
+}
+
+.completed-goal-card-body {
+	display: grid;
+	gap: 2px;
+	padding: var(--cds-size-padding-s);
+}
+
+.completed-goal-card-name {
+	font: var(--cds-type-body-large-strong);
+	color: var(--cds-color-foreground-primary);
+}
+
+.completed-goal-card-amount {
+	font: var(--cds-type-body-large);
+	color: var(--cds-color-foreground-secondary);
+}
+
+/* ============================================================
+ * ProfileCard
+ * ============================================================ */
+.profile-card {
+	width: min(382px, 100%);
+	min-height: 310px;
+	padding: var(--cds-size-padding-m);
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-bg-brand-secondary);
+	color: var(--cds-color-foreground-on-reverse);
+	--cds-icon-knockout: var(--cds-color-bg-brand-secondary);
+	display: grid;
+	justify-items: center;
+	align-content: center;
+	gap: var(--cds-size-padding-xs);
+	text-align: center;
+}
+
+.profile-card-avatar {
+	width: 96px;
+	height: 96px;
+	border-radius: var(--cds-size-corner-full);
+	background: var(--cds-color-brand-300);
+	color: var(--cds-color-brand-500);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.profile-card-name {
+	margin: var(--cds-size-padding-xs) 0 0;
+	font: var(--cds-type-display-medium);
+	letter-spacing: var(--cds-type-display-medium-tracking);
+}
+
+.profile-card-handle {
+	margin: 0;
+	font: var(--cds-type-body-large);
+	color: var(--cds-color-foreground-on-reverse-secondary);
+}
+
+.profile-card-actions {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--cds-size-padding-xs);
+}
+
+/* ============================================================
+ * BadgeCard
+ * ============================================================ */
+.badge-card {
+	width: min(382px, 100%);
+	min-height: 111px;
+	padding: var(--cds-size-padding-s);
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-background-surface);
+	color: var(--cds-color-foreground-on-surface);
+	display: flex;
+	align-items: center;
+	gap: var(--cds-size-padding-s);
+	text-align: left;
+}
+
+.badge-card-tile {
+	width: 64px;
+	height: 64px;
+	flex-shrink: 0;
+	border-radius: var(--cds-size-corner-xsmall);
+	background: var(--accent-500);
+	--cds-icon-knockout: var(--accent-500);
+	color: var(--cds-color-foreground-primary);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.badge-card-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.badge-card-content {
+	flex: 1;
+	min-width: 0;
+	display: grid;
+	gap: var(--cds-size-padding-xxs);
+}
+
+.badge-card-title {
+	font: var(--cds-type-body-large);
+}
+
+.badge-card-track {
+	display: block;
+	height: 6px;
+	border-radius: var(--cds-size-corner-full);
+	background: var(--cds-color-track-default);
+	overflow: hidden;
+}
+
+.badge-card-track-fill {
+	display: block;
+	height: 100%;
+	background: var(--accent-300);
+}
+
+.badge-card-caption {
+	font: var(--cds-type-body-large);
+	color: var(--cds-color-foreground-secondary);
+}
+
+/* ============================================================
+ * AccountCard
+ * ============================================================ */
+.account-card {
+	width: min(382px, 100%);
+	min-height: 75px;
+	padding: var(--cds-size-padding-s);
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-background-surface);
+	color: var(--cds-color-foreground-on-surface);
+	display: flex;
+	align-items: center;
+	gap: var(--cds-size-padding-xs);
+	text-align: left;
+}
+
+.account-card-tile {
+	width: 40px;
+	height: 40px;
+	flex-shrink: 0;
+	border-radius: var(--cds-size-corner-xsmall);
+	background: var(--accent-500);
+	--cds-icon-knockout: var(--accent-500);
+	color: var(--accent-300);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.account-card-tile .brand-logo,
+.account-card-tile .brand-logo svg {
+	width: 24px;
+	height: 18px;
+	color: currentcolor;
+}
+
+.account-card-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.account-card-copy {
+	flex: 1;
+	min-width: 0;
+	display: grid;
+	gap: 2px;
+}
+
+.account-card-name {
+	font: var(--cds-type-body-large-strong);
+}
+
+.account-card-subtitle {
+	font: var(--cds-type-body-large);
+	color: var(--cds-color-foreground-secondary);
+}
+
+.account-card-balance {
+	display: grid;
+	gap: 2px;
+	text-align: right;
+}
+
+.account-card-amount {
+	font: var(--cds-type-body-large-strong);
+}
+
+.account-card-meta {
+	font: var(--cds-type-body-large);
+	color: var(--cds-color-foreground-secondary);
+}
+
+/* ============================================================
+ * GoalSummaryCard
+ * ============================================================ */
+.goal-summary-card {
+	width: min(382px, 100%);
+	min-height: 164px;
+	padding: var(--cds-size-padding-s);
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-background-surface);
+	color: var(--cds-color-foreground-on-surface);
+	display: grid;
+	gap: var(--cds-size-padding-xs);
+}
+
+.goal-summary-card-title {
+	margin: 0;
+	font: var(--cds-type-body-large-strong);
+}
+
+.goal-summary-card-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: var(--cds-size-padding-xxs);
+}
+
+.goal-summary-card-list li {
+	display: flex;
+	justify-content: space-between;
+	gap: var(--cds-size-padding-xs);
+	font: var(--cds-type-body-large);
+}
+
+.goal-summary-card-list li strong,
+.goal-summary-card-total strong {
+	font: var(--cds-type-body-large-strong);
+}
+
+.goal-summary-card-total {
+	margin: 0;
+	padding-top: var(--cds-size-padding-xs);
+	border-top: var(--cds-size-border) solid var(--cds-color-border-default);
+	display: flex;
+	justify-content: space-between;
+	gap: var(--cds-size-padding-xs);
+}
+
+/* ============================================================
+ * SpendingChartPanel
+ * ============================================================ */
+.chart-panel {
+	width: min(382px, 100%);
+	padding: var(--cds-size-padding-m);
+	border: var(--cds-size-border) solid var(--cds-color-border-default);
+	border-radius: var(--cds-size-corner-large);
+	background: var(--cds-color-background-surface);
+	color: var(--cds-color-foreground-on-surface);
+	display: grid;
+	gap: var(--cds-size-padding-m);
+	align-content: start;
+}
+
+.chart-panel-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--cds-size-gap-s);
+}
+
+.chart-panel-title {
+	margin: 0;
+	font: var(--cds-type-body-large-strong);
+}
+
+.chart-panel-total {
+	margin: 0;
+	font: var(--cds-type-display-small);
+	letter-spacing: var(--cds-type-display-small-tracking);
+}
+
+.chart-panel-bar {
+	display: flex;
+	height: var(--cds-size-padding-m);
+	border-radius: var(--cds-size-corner-full);
+	background: var(--cds-color-track-default);
+	overflow: hidden;
+}
+
+.chart-panel-bar-segment {
+	display: block;
+	height: 100%;
+}
+
+.chart-panel-donut {
+	position: relative;
+	justify-self: center;
+	width: 180px;
+	height: 180px;
+}
+
+.chart-panel-donut-ring {
+	width: 100%;
+	height: 100%;
+	border-radius: var(--cds-size-corner-full);
+}
+
+.chart-panel-donut-hole {
+	position: absolute;
+	inset: 22%;
+	border-radius: var(--cds-size-corner-full);
+	background: var(--cds-color-background-surface);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.chart-panel-donut-total {
+	font: var(--cds-type-display-small);
+	letter-spacing: var(--cds-type-display-small-tracking);
+}
+
+.chart-panel-legend {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: var(--cds-size-padding-xs);
+}
+
+.chart-panel-legend li {
+	display: flex;
+	align-items: center;
+	gap: var(--cds-size-padding-xs);
+	font: var(--cds-type-body-large);
+}
+
+.chart-panel-swatch {
+	width: var(--cds-size-icon-small);
+	height: var(--cds-size-icon-small);
+	flex-shrink: 0;
+	border-radius: var(--cds-size-corner-xxsmall);
+}
+
+.chart-panel-legend-label {
+	flex: 1;
+	min-width: 0;
+}
+
+.chart-panel-legend-amount {
+	font: var(--cds-type-body-large-strong);
+}
+
+.chart-panel-empty {
+	margin: 0;
+	font: var(--cds-type-body-large);
+	color: var(--cds-color-foreground-secondary);
+}
+
+/* ============================================================
+ * SavingsStreak
+ * ============================================================ */
+.savings-streak {
+	width: min(382px, 100%);
+	display: grid;
+	gap: var(--cds-size-padding-s);
+}
+
+.savings-streak-title {
+	margin: 0;
+	font: var(--cds-type-body-large-strong);
+	color: var(--cds-color-foreground-primary);
+}
+
+.savings-streak-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: space-between;
+	gap: var(--cds-size-gap-xs);
+}
+
+.savings-streak-day {
+	display: grid;
+	justify-items: center;
+	gap: var(--cds-size-gap-xs);
+	font: var(--cds-type-body-small);
+	color: var(--cds-color-foreground-secondary);
+}
+
+.savings-streak-mark {
+	width: 32px;
+	height: 32px;
+	border: var(--cds-size-border) solid var(--cds-color-border-strong);
+	border-radius: var(--cds-size-corner-full);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.savings-streak-day-complete .savings-streak-mark {
+	border-color: transparent;
+	background: var(--cds-color-bg-brand-primary);
+	color: var(--cds-color-foreground-brand-primary);
+}
+
+.savings-streak-day-today {
+	color: var(--cds-color-foreground-primary);
+}
+
+.savings-streak-day-today .savings-streak-mark {
+	border-color: var(--cds-color-foreground-brand-primary);
+}

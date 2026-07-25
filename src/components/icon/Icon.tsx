@@ -464,8 +464,13 @@ export function Icon({ name, title, className, tone = 'mono', ...props }: IconPr
         }
       : {
           primary: 'currentColor',
-          secondary: 'var(--cds-color-background-surface)',
+          // Two-tone glyphs knock their counter shape out in the colour of
+          // whatever sits behind them. That is the page surface by default, but
+          // a coloured card has to say so or the counter reads as a light blob.
+          secondary: 'var(--cds-icon-knockout, var(--cds-color-background-surface))',
         }
+
+  const knocksOut = icon.paths.some((path) => path.fill === 'secondary')
 
   return (
     <svg
@@ -473,6 +478,10 @@ export function Icon({ name, title, className, tone = 'mono', ...props }: IconPr
       role="img"
       viewBox={icon.viewBox}
       className={className}
+      data-tone={tone}
+      /* Lets the knockout check find these even when the counter has collapsed
+       * into the glyph colour, which is the case that renders as a solid blob. */
+      data-knockout={knocksOut ? '' : undefined}
       {...props}
     >
       {title ? <title>{title}</title> : null}

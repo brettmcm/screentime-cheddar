@@ -1,12 +1,48 @@
-import { useState } from 'react'
+/**
+ * @deprecated `Card` is a demo artifact: a single component whose `variant`
+ * prop selects one of 24 hardcoded product cards. It cannot carry real app
+ * data. Use the prop-driven components in `../cards` instead:
+ *
+ * | Old variant                  | Replacement                        |
+ * | ---------------------------- | ---------------------------------- |
+ * | `article-large`, `guide`,    | `ArticleCard`                      |
+ * | `customer-article-*`,        |                                    |
+ * | `article-small-*`            |                                    |
+ * | `total-savings`              | `TotalSavingsCard`                 |
+ * | `goal-*` (progress)          | `GoalCard`                         |
+ * | `goal-finished*`             | `CompletedGoalCard`                |
+ * | `badge-*`                    | `BadgeCard`                        |
+ * | `account`                    | `AccountCard`                      |
+ * | `goal-summary`               | `GoalSummaryCard`                  |
+ * | `profile`                    | `ProfileCard`                      |
+ * | `activity`, `activity-feed`  | compose `ActivityItem` yourself    |
+ *
+ * This file is kept as the demo-data adapter: the literal copy below is the
+ * only thing it still owns. Every variant delegates to its replacement,
+ * except `activity` and `activity-feed`, whose layouts have no prop-driven
+ * equivalent and stay local (also deprecated).
+ */
+import type { ReactNode } from 'react'
 import { ActivityItem } from '../activity-item/ActivityItem'
-import { Avatar } from '../avatar/Avatar'
-import { Logo } from '../brand/Brand'
-import type { IconName } from '../icon/Icon'
+import type { AccountCardProps } from '../cards/AccountCard'
+import { AccountCard } from '../cards/AccountCard'
+import type { ArticleCardProps } from '../cards/ArticleCard'
+import { ArticleCard } from '../cards/ArticleCard'
+import type { BadgeCardProps } from '../cards/BadgeCard'
+import { BadgeCard } from '../cards/BadgeCard'
+import type { CompletedGoalCardProps } from '../cards/CompletedGoalCard'
+import { CompletedGoalCard } from '../cards/CompletedGoalCard'
+import type { GoalCardProps } from '../cards/GoalCard'
+import { GoalCard } from '../cards/GoalCard'
+import type { GoalSummaryCardProps } from '../cards/GoalSummaryCard'
+import { GoalSummaryCard } from '../cards/GoalSummaryCard'
+import type { ProfileCardProps } from '../cards/ProfileCard'
+import { ProfileCard } from '../cards/ProfileCard'
+import type { TotalSavingsCardProps } from '../cards/TotalSavingsCard'
+import { TotalSavingsCard } from '../cards/TotalSavingsCard'
 import { Icon } from '../icon/Icon'
-import { classNames } from '../utils/classNames'
-import { Button } from '../button/Button'
 
+/** @deprecated Pick the component that matches the shape you need — see the file header. */
 export type CardVariant =
   | 'article-large'
   | 'guide'
@@ -34,15 +70,40 @@ export type CardVariant =
   | 'goal-reached'
 
 export type CardProps = {
+  /**
+   * @deprecated Selects one of 24 hardcoded demo cards. Use the matching
+   * component from `../cards` and pass your own data instead.
+   */
   variant?: CardVariant
+  /**
+   * @deprecated Only used by `variant="activity-feed"`. Compose
+   * `ActivityItem` directly, or pass `children`.
+   */
   items?: ActivityEntry[]
+  /**
+   * @deprecated The image for the card. Every replacement component takes
+   * `image` / `imageAlt` props.
+   */
   illustration?: string
+  /**
+   * Rendered in place of `items` by `variant="activity-feed"` — the
+   * `contents` slot of Figma's `Recent activity list`.
+   */
+  children?: ReactNode
+}
+
+/** @deprecated Use `ActivityItemProps` and compose the list yourself. */
+export type ActivityEntry = {
+  id: string
+  type: 'deposit' | 'withdrawal'
+  time: string
+  amount: string
 }
 
 type GenericTone = 'brand' | 'green' | 'purple' | 'blue'
 
+/** The `activity` variant has no prop-driven equivalent; it stays local. */
 type GenericCardContent = {
-  kind: 'generic'
   eyebrow: string
   title: string
   description: string
@@ -52,270 +113,256 @@ type GenericCardContent = {
   tone: GenericTone
 }
 
-type ActivityType = 'deposit' | 'withdrawal'
-
-export type ActivityEntry = {
-  id: string
-  type: ActivityType
-  time: string
-  amount: string
-}
-
-type GoalIcon = 'headphones' | 'sneakers' | 'trip' | 'camera'
-
-type GoalCardContent = {
-  kind: 'goal-progress'
-  title: string
-  total: string
-  saved: string
-  left?: string
-  progress: number
-  tileTone: GenericTone
-  accentTone: GenericTone
-  illustration: GoalIcon
-}
-
-type ActivityCardContent = {
-  kind: 'activity-feed'
-}
-
-type FeatureKind = 'article-large' | 'guide' | 'total-savings' | 'profile' | 'article-small'
-
-type FeatureCardContent = {
-  kind: 'feature'
-  type: FeatureKind
-  title: string
-  description?: string
-  amount?: string
-  readTime?: string
-  tone?: GenericTone
-}
-
-type BadgeCardContent = {
-  kind: 'badge'
-  title: string
-  progress: number
-  progressLabel: string
-  tone: 'brand' | 'green' | 'purple'
-}
-
-type GoalFinishedCardContent = {
-  kind: 'goal-finished'
-  title: string
-  amount: string
-  tone: 'brand' | 'blue' | 'purple'
-}
-
-type AccountCardContent = {
-  kind: 'account'
-  title: string
-  subtitle: string
-  amount: string
-  updatedAt: string
-}
-
-type GoalSummaryCardContent = {
-  kind: 'goal-summary'
-  rows: { label: string; amount: string }[]
-  total: string
-}
-
 type CardContent =
-  | GenericCardContent
-  | GoalCardContent
-  | ActivityCardContent
-  | FeatureCardContent
-  | BadgeCardContent
-  | GoalFinishedCardContent
-  | AccountCardContent
-  | GoalSummaryCardContent
+  | { kind: 'article'; props: Omit<ArticleCardProps, 'image'> }
+  | { kind: 'total-savings'; props: TotalSavingsCardProps }
+  | { kind: 'profile'; props: ProfileCardProps }
+  | { kind: 'goal'; props: Omit<GoalCardProps, 'image'> }
+  | { kind: 'completed-goal'; props: Omit<CompletedGoalCardProps, 'image'> }
+  | { kind: 'badge'; props: BadgeCardProps }
+  | { kind: 'account'; props: AccountCardProps }
+  | { kind: 'goal-summary'; props: GoalSummaryCardProps }
+  | { kind: 'generic'; props: GenericCardContent }
+  | { kind: 'activity-feed' }
 
 const cardVariants: Record<CardVariant, CardContent> = {
   'article-large': {
-    kind: 'feature',
-    type: 'article-large',
-    title: 'How to decide what to save for',
-    description: 'With so much noise, figure out what is actually worth saving and what you can let go.',
+    kind: 'article',
+    props: {
+      size: 'large',
+      showMedia: true,
+      title: 'How to decide what to save for',
+      description:
+        'With so much noise, figure out what is actually worth saving and what you can let go.',
+      actionLabel: 'Read more',
+    },
   },
   guide: {
-    kind: 'feature',
-    type: 'guide',
-    title: 'Savings 101',
-    description: 'Learn how to get started with simple savings techniques.',
+    kind: 'article',
+    props: {
+      size: 'small',
+      showMedia: false,
+      title: 'Savings 101',
+      description: 'Learn how to get started with simple savings techniques.',
+      readTime: '20 min',
+      showFavorite: true,
+    },
   },
   activity: {
     kind: 'generic',
-    eyebrow: 'Activity',
-    title: 'Weekly spending recap',
-    description: 'Groceries and transport were below your average this week.',
-    amount: '$312.45',
-    footnote: 'Updated 2h ago',
-    tone: 'purple',
+    props: {
+      eyebrow: 'Activity',
+      title: 'Weekly spending recap',
+      description: 'Groceries and transport were below your average this week.',
+      amount: '$312.45',
+      footnote: 'Updated 2h ago',
+      tone: 'purple',
+    },
   },
   'total-savings': {
-    kind: 'feature',
-    type: 'total-savings',
-    title: 'Total savings',
-    amount: '$194.70',
+    kind: 'total-savings',
+    props: {
+      label: 'Total savings',
+      amount: '$194.70',
+      badge: (
+        <span className="total-savings-card-badge">
+          <Icon name="sparkle" width={20} height={20} aria-hidden="true" />
+        </span>
+      ),
+      actions: [
+        { label: 'Deposit', icon: 'receive' },
+        { label: 'Transfer', icon: 'send' },
+      ],
+    },
   },
   'customer-article-credit-card': {
-    kind: 'generic',
-    eyebrow: 'Customer Story',
-    title: 'Paying down credit card debt',
-    description: 'How Maya consolidated spending and rebuilt momentum.',
-    chip: 'Credit Card',
-    tone: 'brand',
+    kind: 'article',
+    props: {
+      size: 'large',
+      showMedia: false,
+      eyebrow: 'Customer Story',
+      title: 'Paying down credit card debt',
+      description: 'How Maya consolidated spending and rebuilt momentum.',
+      tag: 'Credit Card',
+      accent: 'magenta',
+    },
   },
   'customer-article-friends': {
-    kind: 'generic',
-    eyebrow: 'Customer Story',
-    title: 'Splitting expenses with friends',
-    description: 'A practical approach to shared costs without friction.',
-    chip: 'Friends',
-    tone: 'blue',
+    kind: 'article',
+    props: {
+      size: 'large',
+      showMedia: false,
+      eyebrow: 'Customer Story',
+      title: 'Splitting expenses with friends',
+      description: 'A practical approach to shared costs without friction.',
+      tag: 'Friends',
+      accent: 'blue',
+    },
   },
   'article-small-credit': {
-    kind: 'feature',
-    type: 'article-small',
-    title: 'How to choose your first credit card',
-    readTime: '5 min',
-    tone: 'green',
+    kind: 'article',
+    props: {
+      size: 'small',
+      showMedia: true,
+      title: 'How to choose your first credit card',
+      readTime: '5 min',
+      accent: 'green',
+    },
   },
   'article-small-expenses': {
-    kind: 'feature',
-    type: 'article-small',
-    title: 'Cut expenses without cutting joy',
-    readTime: '5 min',
-    tone: 'brand',
+    kind: 'article',
+    props: {
+      size: 'small',
+      showMedia: true,
+      title: 'Cut expenses without cutting joy',
+      readTime: '5 min',
+      accent: 'magenta',
+    },
   },
   'article-small-fifty-thirty': {
-    kind: 'feature',
-    type: 'article-small',
-    title: 'Save more with the 50/30/20 rule',
-    readTime: '5 min',
-    tone: 'blue',
+    kind: 'article',
+    props: {
+      size: 'small',
+      showMedia: true,
+      title: 'Save more with the 50/30/20 rule',
+      readTime: '5 min',
+      accent: 'blue',
+    },
   },
   'article-small-emergency': {
-    kind: 'feature',
-    type: 'article-small',
-    title: 'The importance of an emergency fund',
-    readTime: '5 min',
-    tone: 'purple',
+    kind: 'article',
+    props: {
+      size: 'small',
+      showMedia: true,
+      title: 'The importance of an emergency fund',
+      readTime: '5 min',
+      accent: 'purple',
+    },
   },
   profile: {
-    kind: 'feature',
-    type: 'profile',
-    title: 'Jamie K.',
-    description: '@jamieh',
+    kind: 'profile',
+    props: {
+      name: 'Jamie K.',
+      handle: '@jamieh',
+      actions: [{ label: 'Edit' }, { label: 'Share' }],
+    },
   },
   'goal-finished': {
-    kind: 'goal-finished',
-    title: 'Skateboard',
-    amount: '$120.00',
-    tone: 'brand',
+    kind: 'completed-goal',
+    props: { name: 'Skateboard', amount: '$120.00', accent: 'magenta' },
   },
   'goal-finished-variant-2': {
-    kind: 'goal-finished',
-    title: 'Camera',
-    amount: '$260.00',
-    tone: 'blue',
+    kind: 'completed-goal',
+    props: { name: 'Camera', amount: '$260.00', accent: 'blue' },
   },
   'goal-finished-variant-3': {
-    kind: 'goal-finished',
-    title: 'Art Book',
-    amount: '$80.00',
-    tone: 'purple',
+    kind: 'completed-goal',
+    props: { name: 'Art Book', amount: '$80.00', accent: 'purple' },
   },
   'badge-finance-nerd': {
     kind: 'badge',
-    title: 'Finance Nerd',
-    progress: 30,
-    progressLabel: '8 of 10 Articles read',
-    tone: 'brand',
+    // The legacy `tone="brand"` badge was styled from the green ramp, so the
+    // accent here keeps the rendered colour rather than the tone's name.
+    props: {
+      title: 'Finance Nerd',
+      caption: '8 of 10 Articles read',
+      progress: 30,
+      icon: 'sparkle',
+      accent: 'green',
+    },
   },
   'badge-double-down': {
     kind: 'badge',
-    title: 'Double Down',
-    progress: 62,
-    progressLabel: '5 of 8 Goals completed',
-    tone: 'green',
+    props: {
+      title: 'Double Down',
+      caption: '5 of 8 Goals completed',
+      progress: 62,
+      icon: 'sparkle',
+      accent: 'green',
+    },
   },
   'badge-stack-master': {
     kind: 'badge',
-    title: 'Stack Master',
-    progress: 84,
-    progressLabel: '11 of 12 Weeks complete',
-    tone: 'purple',
+    props: {
+      title: 'Stack Master',
+      caption: '11 of 12 Weeks complete',
+      progress: 84,
+      icon: 'sparkle',
+      accent: 'purple',
+    },
   },
   account: {
     kind: 'account',
-    title: 'Starter Account',
-    subtitle: 'Checking ••••0999',
-    amount: '$1,020.22',
-    updatedAt: '1 day ago',
+    props: {
+      name: 'Starter Account',
+      subtitle: 'Checking ••••0999',
+      amount: '$1,020.22',
+      meta: '1 day ago',
+    },
   },
   'goal-summary': {
     kind: 'goal-summary',
-    rows: [
-      { label: 'Headphones', amount: '$76.50' },
-      { label: 'Sneakers', amount: '$100.00' },
-      { label: 'Ski Trip', amount: '$18.20' },
-    ],
-    total: '$194.70',
+    props: {
+      items: [
+        { label: 'Headphones', amount: '$76.50' },
+        { label: 'Sneakers', amount: '$100.00' },
+        { label: 'Ski Trip', amount: '$18.20' },
+      ],
+      total: '$194.70',
+    },
   },
   'activity-feed': {
     kind: 'activity-feed',
   },
   'goal-headphones': {
-    kind: 'goal-progress',
-    title: 'Headphones',
-    total: '$280.00',
-    saved: '$76.50',
-    left: '$203.50',
-    progress: 27,
-    tileTone: 'brand',
-    accentTone: 'brand',
-    illustration: 'headphones',
+    kind: 'goal',
+    props: {
+      name: 'Headphones',
+      target: '$280.00',
+      saved: '$76.50',
+      remaining: '$203.50',
+      progress: 27,
+      icon: 'profile',
+      accent: 'magenta',
+    },
   },
   'goal-sneakers': {
-    kind: 'goal-progress',
-    title: 'Sneakers',
-    total: '$120.00',
-    saved: '$100.00',
-    left: '$20.00',
-    progress: 84,
-    tileTone: 'purple',
-    accentTone: 'purple',
-    illustration: 'sneakers',
+    kind: 'goal',
+    props: {
+      name: 'Sneakers',
+      target: '$120.00',
+      saved: '$100.00',
+      remaining: '$20.00',
+      progress: 84,
+      icon: 'piggybank',
+      accent: 'purple',
+    },
   },
   'goal-ski-trip': {
-    kind: 'goal-progress',
-    title: 'Freshman Trip',
-    total: '$500.00',
-    saved: '$18.20',
-    left: '$481.80',
-    progress: 6,
-    tileTone: 'green',
-    accentTone: 'green',
-    illustration: 'trip',
+    kind: 'goal',
+    props: {
+      name: 'Freshman Trip',
+      target: '$500.00',
+      saved: '$18.20',
+      remaining: '$481.80',
+      progress: 6,
+      icon: 'learn',
+      accent: 'green',
+    },
   },
   'goal-reached': {
-    kind: 'goal-progress',
-    title: 'Camera',
-    total: '$500.00',
-    saved: 'Goal reached!',
-    progress: 100,
-    tileTone: 'blue',
-    accentTone: 'blue',
-    illustration: 'camera',
+    kind: 'goal',
+    props: {
+      name: 'Camera',
+      target: '$500.00',
+      saved: '$500.00',
+      progress: 100,
+      complete: true,
+      completeLabel: 'Goal reached!',
+      icon: 'chart',
+      accent: 'blue',
+    },
   },
-}
-
-const goalProgressIcons: Record<GoalIcon, IconName> = {
-  camera: 'chart',
-  trip: 'learn',
-  sneakers: 'piggybank',
-  headphones: 'profile',
 }
 
 const defaultActivityItems: ActivityEntry[] = [
@@ -328,306 +375,58 @@ const defaultActivityItems: ActivityEntry[] = [
   { id: 'activity-7', type: 'deposit', time: 'Tue, 4:15pm', amount: '$32.00' },
 ]
 
+/**
+ * @deprecated Renders one of 24 hardcoded demo cards. Use the prop-driven
+ * component listed for your variant in the file header instead.
+ */
 export function Card({
   variant = 'article-large',
   items = defaultActivityItems,
   illustration,
+  children,
 }: CardProps) {
   const card = cardVariants[variant]
 
   switch (card.kind) {
-    case 'activity-feed':
-      return <ActivityFeedCard items={items} />
-    case 'goal-progress':
-      return <GoalProgressCard card={card} />
-    case 'feature':
-      return <FeatureCard card={card} illustration={illustration} />
-    case 'goal-finished':
-      return <GoalFinishedCard card={card} illustration={illustration} />
+    case 'article':
+      return <ArticleCard {...card.props} image={illustration} />
+    case 'total-savings':
+      return <TotalSavingsCard {...card.props} />
+    case 'profile':
+      return <ProfileCard {...card.props} />
+    case 'goal':
+      return <GoalCard {...card.props} image={illustration} />
+    case 'completed-goal':
+      return <CompletedGoalCard {...card.props} image={illustration} />
     case 'badge':
-      return <BadgeCard card={card} />
+      return <BadgeCard {...card.props} />
     case 'account':
-      return <AccountCard card={card} />
+      return <AccountCard {...card.props} />
     case 'goal-summary':
-      return <GoalSummaryCard card={card} />
+      return <GoalSummaryCard {...card.props} />
     case 'generic':
-      return <GenericCard card={card} />
+      return <GenericCard card={card.props} />
+    case 'activity-feed':
+      return <ActivityFeedCard items={items}>{children}</ActivityFeedCard>
   }
 }
 
-function ActivityFeedCard({ items }: { items: ActivityEntry[] }) {
+/**
+ * @deprecated Figma's `Recent activity list` is a plain list of
+ * `ActivityItem`s in a surface — compose it yourself.
+ */
+function ActivityFeedCard({ items, children }: { items: ActivityEntry[]; children?: ReactNode }) {
   return (
     <article className="activity-card">
       <div className="activity-card-content">
-        {items.map(({ id, ...rest }) => (
-          <ActivityItem key={id} {...rest} />
-        ))}
+        {children ??
+          items.map(({ id, ...rest }) => <ActivityItem key={id} {...rest} />)}
       </div>
     </article>
   )
 }
 
-function GoalProgressCard({ card }: { card: GoalCardContent }) {
-  return (
-    <article className="goal-card">
-      <div className={classNames('goal-illustration', `goal-illustration-${card.tileTone}`)}>
-        <Icon
-          aria-hidden="true"
-          name={goalProgressIcons[card.illustration]}
-          width={30}
-          height={30}
-        />
-      </div>
-      <div className="goal-content">
-        <div className="goal-line">
-          <strong>{card.title}</strong>
-          <strong>{card.total}</strong>
-        </div>
-        <div className="goal-track" aria-hidden="true">
-          <span className={`goal-track-fill-${card.accentTone}`} style={{ width: `${card.progress}%` }} />
-        </div>
-        <div className="goal-line goal-subtle">
-          <span>{card.saved}</span>
-          {card.left ? <span>{card.left}</span> : null}
-        </div>
-      </div>
-    </article>
-  )
-}
-
-function FeatureCard({
-  card,
-  illustration,
-}: {
-  card: FeatureCardContent
-  illustration?: string
-}) {
-  return (
-    <article className={classNames('card-feature', `card-feature-${card.type}`)}>
-      {card.type === 'article-large' ? (
-        <FeatureArticleLarge card={card} illustration={illustration} />
-      ) : null}
-      {card.type === 'guide' ? <FeatureGuide card={card} /> : null}
-      {card.type === 'total-savings' ? <FeatureTotalSavings card={card} /> : null}
-      {card.type === 'profile' ? <FeatureProfile card={card} /> : null}
-      {card.type === 'article-small' ? (
-        <FeatureArticleSmall card={card} illustration={illustration} />
-      ) : null}
-    </article>
-  )
-}
-
-function FeatureArticleLarge({
-  card,
-  illustration,
-}: {
-  card: FeatureCardContent
-  illustration?: string
-}) {
-  return (
-    <>
-      <div className="card-feature-hero">
-        {illustration ? (
-          <img src={illustration} alt="" className="card-feature-hero-image" aria-hidden="true" />
-        ) : null}
-      </div>
-      <h3 className="card-feature-title">{card.title}</h3>
-      <p className="card-feature-description">{card.description}</p>
-      <Button label="Read more" size="large" className="card-feature-action" />
-    </>
-  )
-}
-
-function FeatureGuide({ card }: { card: FeatureCardContent }) {
-  return (
-    <>
-      <h3 className="card-feature-guide-title">{card.title}</h3>
-      <p className="card-feature-guide-description">{card.description}</p>
-      <div className="card-feature-guide-footer">
-        <span>20 min</span>
-        <Icon aria-hidden="true" name="heart-outline" width={16} height={16} />
-      </div>
-    </>
-  )
-}
-
-function FeatureTotalSavings({ card }: { card: FeatureCardContent }) {
-  return (
-    <>
-      <div className="card-feature-header">
-        <p className="card-feature-kicker">{card.title}</p>
-        <span className="card-feature-sparkle" aria-hidden="true">
-          <Icon name="sparkle" width={20} height={20} />
-        </span>
-      </div>
-      <p className="card-feature-amount">{card.amount}</p>
-      <div className="card-feature-actions">
-        <Button
-          label="Deposit"
-          icon="receive"
-          variant="secondary"
-          size="large"
-          className="card-feature-action-secondary"
-        />
-        <Button
-          label="Transfer"
-          icon="send"
-          variant="secondary"
-          size="large"
-          className="card-feature-action-secondary"
-        />
-      </div>
-    </>
-  )
-}
-
-function FeatureProfile({ card }: { card: FeatureCardContent }) {
-  return (
-    <>
-      <div className="card-feature-profile-icon" aria-hidden="true">
-        <Avatar size="40" />
-      </div>
-      <h3 className="card-feature-profile-title">{card.title}</h3>
-      <p className="card-feature-profile-handle">{card.description}</p>
-      <div className="card-feature-actions">
-        <Button
-          label="Edit"
-          variant="secondary"
-          size="large"
-          className="card-feature-action-secondary"
-        />
-        <Button
-          label="Share"
-          variant="secondary"
-          size="large"
-          className="card-feature-action-secondary"
-        />
-      </div>
-    </>
-  )
-}
-
-function FeatureArticleSmall({
-  card,
-  illustration,
-}: {
-  card: FeatureCardContent
-  illustration?: string
-}) {
-  const [isSaved, setIsSaved] = useState(false)
-
-  return (
-    <>
-      <div className={`card-feature-small-hero card-feature-small-hero-${card.tone}`}>
-        {illustration ? (
-          <img src={illustration} alt="" className="card-feature-small-image" aria-hidden="true" />
-        ) : null}
-      </div>
-      <div className="card-feature-small-body">
-        <h3 className="card-feature-small-title">{card.title}</h3>
-        <div className="card-feature-small-footer">
-          <span>{card.readTime}</span>
-          <button
-            type="button"
-            className="card-feature-small-favorite"
-            aria-pressed={isSaved}
-            aria-label={isSaved ? 'Remove from favorites' : 'Save to favorites'}
-            onClick={() => {
-              setIsSaved((previous) => !previous)
-            }}
-          >
-            <Icon
-              aria-hidden="true"
-              name={isSaved ? 'heart-fill' : 'heart-outline'}
-              width={16}
-              height={16}
-            />
-          </button>
-        </div>
-      </div>
-    </>
-  )
-}
-
-function GoalFinishedCard({
-  card,
-  illustration,
-}: {
-  card: GoalFinishedCardContent
-  illustration?: string
-}) {
-  return (
-    <article className="card-goal-finished">
-      <div className={`card-goal-finished-hero card-goal-finished-hero-${card.tone}`}>
-        {illustration ? (
-          <img src={illustration} alt="" className="card-goal-finished-image" aria-hidden="true" />
-        ) : null}
-      </div>
-      <div className="card-goal-finished-body">
-        <p className="card-goal-finished-title">{card.title}</p>
-        <p className="card-goal-finished-amount">{card.amount}</p>
-      </div>
-    </article>
-  )
-}
-
-function BadgeCard({ card }: { card: BadgeCardContent }) {
-  return (
-    <article className="card-badge">
-      <div className={`card-badge-icon card-badge-icon-${card.tone}`}>
-        <Icon aria-hidden="true" name="sparkle" width={24} height={24} />
-      </div>
-      <div className="card-badge-content">
-        <p className="card-badge-title">{card.title}</p>
-        <div className="card-badge-progress" aria-hidden="true">
-          <span
-            className={`card-badge-progress-fill card-badge-progress-fill-${card.tone}`}
-            style={{ width: `${card.progress}%` }}
-          />
-        </div>
-        <p className="card-badge-label">{card.progressLabel}</p>
-      </div>
-    </article>
-  )
-}
-
-function AccountCard({ card }: { card: AccountCardContent }) {
-  return (
-    <article className="card-account">
-      <span className="card-account-icon" aria-hidden="true">
-        <Logo />
-      </span>
-      <div className="card-account-copy">
-        <p className="card-account-title">{card.title}</p>
-        <p className="card-account-subtitle">{card.subtitle}</p>
-      </div>
-      <div className="card-account-balance">
-        <p className="card-account-amount">{card.amount}</p>
-        <p className="card-account-updated">{card.updatedAt}</p>
-      </div>
-    </article>
-  )
-}
-
-function GoalSummaryCard({ card }: { card: GoalSummaryCardContent }) {
-  return (
-    <article className="card-goal-summary">
-      <ul className="card-goal-summary-list">
-        {card.rows.map((row) => (
-          <li key={row.label}>
-            <span>{row.label}</span>
-            <strong>{row.amount}</strong>
-          </li>
-        ))}
-      </ul>
-      <div className="card-goal-summary-total">
-        <strong>Total savings</strong>
-        <strong>{card.total}</strong>
-      </div>
-    </article>
-  )
-}
-
+/** @deprecated The `activity` variant's layout, kept for backward compatibility. */
 function GenericCard({ card }: { card: GenericCardContent }) {
   return (
     <article className={`card card-${card.tone}`}>

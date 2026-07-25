@@ -14,14 +14,51 @@ await mkdir(distStyles, { recursive: true })
 await mkdir(distTokens, { recursive: true })
 await mkdir(distFonts, { recursive: true })
 
-await cp(resolve(root, 'src/styles/tokens.css'), resolve(distStyles, 'tokens.css'))
-await cp(resolve(root, 'src/styles/foundation.css'), resolve(distStyles, 'foundation.css'))
-await cp(resolve(root, 'src/styles/components.css'), resolve(distStyles, 'components.css'))
+// src/styles/index.css is the one place the layer list lives — the gallery imports
+// it too. Deriving the publish order from it means adding a component stylesheet
+// there is all it takes; forgetting to register it here can't silently ship a
+// component with no styles.
+const layerList = await readFile(resolve(root, 'src/styles/index.css'), 'utf8')
+const layers = [...layerList.matchAll(/@import\s+'\.\/([^']+)';/g)].map(([, file]) => file)
+
+// tokens.css and foundation.css keep their own export paths. Everything else is
+// published as a single components.css, because that path is part of the exports map.
+const standalone = ['tokens.css', 'foundation.css']
+for (const file of standalone) {
+  await cp(resolve(root, 'src/styles', file), resolve(distStyles, file))
+}
+
+const componentSheets = layers.filter((file) => !standalone.includes(file))
+if (componentSheets.length === 0) {
+  throw new Error('copy-assets: no component stylesheets found in src/styles/index.css')
+}
+const componentCss = []
+for (const sheet of componentSheets) {
+  componentCss.push(
+    `/* src/styles/${sheet} */`,
+    await readFile(resolve(root, 'src/styles', sheet), 'utf8'),
+  )
+}
+await writeFile(resolve(distStyles, 'components.css'), componentCss.join('\n\n'))
 
 await cp(
   resolve(root, 'tokens/cheddar.tokens.json'),
   resolve(distTokens, 'cheddar.tokens.json'),
 )
+
+// `files.mjs` holds the demo-asset filename list as plain ESM so the build check
+// can read it without a build step. tsc does not copy non-TS inputs to outDir, so
+// the emitted verify.d.ts would import a `./files.mjs` that isn't there.
+const distDemoAssets = resolve(dist, 'demo-assets')
+await mkdir(distDemoAssets, { recursive: true })
+for (const file of ['files.mjs', 'files.d.mts']) {
+  await cp(resolve(root, 'src/demo-assets', file), resolve(distDemoAssets, file))
+}
+
+// Platform token outputs. Swift and React Native ship as source rather than
+// compiled artifacts — they are consumed by an Xcode package and a Metro
+// bundler respectively, neither of which wants our JS build output.
+await cp(resolve(root, 'platforms'), resolve(dist, 'platforms'), { recursive: true })
 
 // Font bundling: read each fontsource CSS entry, copy every referenced font file
 // into dist/fonts/, and rewrite url() to point there. The result is a single

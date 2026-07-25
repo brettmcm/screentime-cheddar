@@ -1,0 +1,186 @@
+/* Gallery-only layout. Component styles live in src/styles — nothing here
+ * restyles a component, it only arranges the specimens around them.
+ *
+ * `src/index.css` (the dev entry) loads tokens, foundation and components but
+ * not the three sheets the v1.2.0 components need, so they are pulled in here.
+ * The published bundle (`src/styles/index.css`) already lists all six. */
+@import "../styles/cards.css";
+@import "../styles/overlays.css";
+@import "../styles/text-link.css";
+
+.ds-controls {
+  display: grid;
+  gap: var(--cds-size-gap-s);
+  padding: var(--cds-size-padding-m);
+  border: 1px solid var(--cds-color-border-default);
+  border-radius: var(--cds-size-corner-large);
+  background: var(--cds-color-background-surface);
+}
+
+.ds-control-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cds-size-gap-s);
+}
+
+.ds-control-legend {
+  min-width: 96px;
+  font: var(--cds-type-body-medium-strong);
+  color: var(--cds-color-foreground-secondary);
+}
+
+.ds-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cds-size-gap-s) var(--cds-size-gap-m);
+}
+
+.ds-section-heading {
+  display: grid;
+  gap: var(--cds-size-gap-xs);
+}
+
+.ds-section-note {
+  font: var(--cds-type-body-medium);
+  color: var(--cds-color-foreground-secondary);
+}
+
+/* The themed canvas each section's specimens sit on. `appearance` is applied
+ * here rather than on <html> so the surrounding documentation chrome stays
+ * legible while the components render on the selected surface treatment. */
+.ds-specimen {
+  display: grid;
+  gap: var(--cds-size-padding-l);
+  padding: var(--cds-size-padding-l);
+  border: 1px solid var(--cds-color-border-default);
+  border-radius: var(--cds-size-corner-large);
+  background: var(--cds-color-background-default);
+  --cds-icon-knockout: var(--cds-color-background-default);
+  color: var(--cds-color-foreground-primary);
+}
+
+.ds-stack {
+  display: grid;
+  gap: var(--cds-size-gap-s);
+  align-content: start;
+}
+
+.ds-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cds-size-gap-s);
+  align-items: flex-start;
+}
+
+.ds-readout {
+  justify-self: start;
+  padding: var(--cds-size-padding-xxs) var(--cds-size-padding-xs);
+  border-radius: var(--cds-size-corner-xsmall);
+  background: var(--cds-color-background-muted);
+  color: var(--cds-color-foreground-primary);
+  font: var(--cds-type-body-medium-strong);
+}
+
+.ds-note {
+  padding: var(--cds-size-padding-s);
+  border-left: 3px solid var(--cds-color-border-strong);
+  border-radius: var(--cds-size-corner-xxsmall);
+  background: var(--cds-color-background-muted);
+  color: var(--cds-color-foreground-primary);
+  font: var(--cds-type-body-medium);
+}
+
+/* Phone-sized frame for the app-shell composition. */
+.ds-phone {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--cds-size-gap-m);
+  width: min(390px, 100%);
+  min-height: 660px;
+  padding: var(--cds-size-padding-m);
+  background: var(--cds-color-background-default);
+  --cds-icon-knockout: var(--cds-color-background-default);
+  color: var(--cds-color-foreground-primary);
+}
+
+.ds-phone-body {
+  display: grid;
+  gap: var(--cds-size-gap-m);
+  align-content: start;
+}
+
+/* A light island inside the branded canvas — the documented way to place a
+ * white content surface on the app shell. */
+.ds-phone-island {
+  display: grid;
+  gap: var(--cds-size-gap-m);
+  padding: var(--cds-size-padding-s);
+  border-radius: var(--cds-size-corner-large);
+  background: var(--cds-color-background-default);
+  --cds-icon-knockout: var(--cds-color-background-default);
+}
+
+.ds-phone-amount {
+  margin: 0;
+  text-align: center;
+  font: var(--cds-type-display-medium);
+  color: var(--cds-color-foreground-primary);
+}
+
+.ds-token-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--cds-size-gap-s);
+}
+
+.ds-token-swatch {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--cds-size-gap-s);
+}
+
+.ds-token-swatch span {
+  height: 40px;
+  border-radius: var(--cds-size-corner-xsmall);
+  border: 1px solid var(--cds-color-border-default);
+}
+
+.ds-token-swatch code {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  color: var(--cds-color-foreground-secondary);
+}
+
+.ds-asset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--cds-size-gap-m);
+}
+
+.ds-asset {
+  display: grid;
+  justify-items: center;
+  gap: var(--cds-size-gap-xs);
+  margin: 0;
+}
+
+.ds-asset img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.ds-asset code {
+  font-size: 11px;
+  text-align: center;
+  color: var(--cds-color-foreground-secondary);
+}
+
+.ds-carousel {
+  display: flex;
+  gap: var(--cds-size-gap-s);
+  overflow-x: auto;
+  padding-bottom: var(--cds-size-padding-xxs);
+}

@@ -1,6 +1,6 @@
-@import './styles/tokens.css';
-@import './styles/foundation.css';
-@import './styles/components.css';
+/* Delegate to the published layer list so the gallery can never drift from what
+ * consumers get. Adding a component stylesheet to styles/index.css is enough. */
+@import './styles/index.css';
 
 *,
 *::before,

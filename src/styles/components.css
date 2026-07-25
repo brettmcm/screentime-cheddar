@@ -58,7 +58,7 @@
   border: 1px solid transparent;
   border-radius: var(--cds-size-corner-full);
   font-family: inherit;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: filter 120ms ease, transform 120ms ease;
 }
@@ -66,7 +66,7 @@
 .btn:focus-visible,
 .icon-btn:focus-visible,
 .nav-icon:focus-visible {
-  outline: 3px solid var(--token-color-blue-300);
+  outline: 3px solid var(--cds-color-border-focus);
   outline-offset: 2px;
 }
 
@@ -76,6 +76,9 @@
   justify-content: center;
   gap: 8px;
   line-height: 1.3;
+  /* Large and medium are rounded rectangles in Figma; only small is a pill. The
+   * shared rule above starts from corner-full for the circular icon controls. */
+  border-radius: var(--cds-size-corner-large);
 }
 
 .btn-large {
@@ -93,11 +96,13 @@
 .btn-small {
   padding: var(--cds-size-padding-xs) var(--cds-size-padding-m);
   font-size: var(--cds-size-font-xs);
+  border-radius: var(--cds-size-corner-full);
 }
 
 .btn-primary {
   background: var(--cds-color-foreground-brand-primary);
   color: var(--cds-color-bg-on-brand);
+  --cds-icon-knockout: var(--cds-color-foreground-brand-primary);
 }
 
 .btn-secondary {
@@ -108,7 +113,11 @@
 
 .btn-secondary-small-fill {
   background: var(--cds-color-bg-brand-primary);
-  border-color: transparent;
+  --cds-icon-knockout: var(--cds-color-bg-brand-primary);
+  /* Outlined like secondary at every other size. With a transparent border the
+   * button vanished under appearance="brand", where the subtle brand fill is the
+   * same colour as the canvas it sits on — no fill and no boundary. */
+  border-color: var(--cds-color-foreground-brand-primary);
 }
 
 .btn:disabled,
@@ -139,6 +148,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* The size classes set the button's box outright, so the UA's 1px/6px padding
+   * only eats into it — at the 24px neutral size it squeezed a 16px glyph down
+   * to 10px. The transparent border keeps the ring the outline variant colours
+   * in from changing the box. */
+  padding: 0;
+  border: var(--cds-size-border) solid transparent;
 }
 
 .icon-btn-medium {
@@ -165,6 +180,7 @@
 .icon-btn-primary {
   color: var(--cds-color-bg-on-brand);
   background: var(--cds-color-foreground-brand-primary);
+  --cds-icon-knockout: var(--cds-color-foreground-brand-primary);
 }
 
 .icon-btn-outline {
@@ -179,7 +195,7 @@
 }
 
 .icon-btn-ghost {
-  color: var(--cds-color-foreground-tertiary);
+  color: var(--cds-color-foreground-secondary);
   background: transparent;
   border-color: transparent;
 }
@@ -196,7 +212,7 @@
 }
 
 .input-shell {
-  background: var(--token-color-white-300);
+  background: var(--cds-color-bg-on-brand);
   border: 1px solid var(--cds-color-border-strong);
   border-radius: var(--cds-size-corner-xsmall);
   padding: var(--cds-size-padding-s);
@@ -216,6 +232,12 @@
 .textarea-input:focus-visible,
 .search-field:focus-within {
   border-color: var(--cds-color-foreground-brand-primary);
+}
+
+.input-shell:has(input:focus-visible),
+.input-shell:has(select:focus-visible) {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
 }
 
 .input-shell input,
@@ -269,15 +291,15 @@
   padding: var(--cds-size-padding-s);
   min-height: 96px;
   resize: vertical;
-  color: var(--cds-color-foreground-primary);
+  color: var(--cds-color-foreground-on-surface);
   font-family: inherit;
   font-size: var(--cds-size-font-s);
   line-height: 1.3;
 }
 
 .textarea-input:focus-visible {
-  outline: 3px solid var(--token-color-blue-300);
-  outline-offset: 2px;
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
 }
 
 .search-field {
@@ -292,9 +314,9 @@
   border-radius: var(--cds-size-corner-full);
 }
 
-.search-field:focus-within {
-  outline: 3px solid var(--token-color-blue-300);
-  outline-offset: 2px;
+.search-field:has(input:focus-visible) {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
 }
 
 .search-icon {
@@ -382,12 +404,12 @@
   height: 16px;
   border-radius: var(--cds-size-corner-full);
   background: var(--token-color-white-100);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--cds-shadow-control);
 }
 
-.switch-field:focus-within .switch-track {
-  outline: 3px solid var(--token-color-blue-300);
-  outline-offset: 2px;
+.switch-field:has(input:focus-visible) .switch-track {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
 }
 
 .switch-field:hover .switch-track {
@@ -459,10 +481,10 @@
   color: var(--cds-color-foreground-secondary);
 }
 
-.check-field:focus-within .check-box,
-.check-field:focus-within .check-circle {
-  outline: 3px solid var(--token-color-blue-300);
-  outline-offset: 2px;
+.check-field:has(input:focus-visible) .check-box,
+.check-field:has(input:focus-visible) .check-circle {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
 }
 
 .check-field:hover .check-off {
@@ -551,22 +573,30 @@
   flex-shrink: 0;
   width: 80px;
   height: 80px;
+}
+
+/* Figma sits the illustration straight on the card. The tinted tile is only for
+ * an `icon` override, which is too small to read on the card unaided. */
+.notif-illustration-tile {
   border-radius: var(--cds-size-corner-small);
   color: var(--cds-color-foreground-primary);
 }
 
 .notif-illo-default {
   background: var(--token-color-brand-500);
+  --cds-icon-knockout: var(--token-color-brand-500);
   color: var(--token-color-brand-100);
 }
 
 .notif-illo-trend {
   background: var(--token-color-purple-500);
+  --cds-icon-knockout: var(--token-color-purple-500);
   color: var(--token-color-purple-300);
 }
 
 .notif-illo-opportunity {
   background: var(--token-color-green-500);
+  --cds-icon-knockout: var(--token-color-green-500);
   color: var(--token-color-green-300);
 }
 
@@ -582,7 +612,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--cds-size-padding-xs);
+  gap: var(--cds-size-padding-m);
+  min-height: 24px;
 }
 
 .notif-title {
@@ -606,8 +637,7 @@
 .notif-link {
   display: inline-flex;
   align-items: center;
-  gap: var(--cds-size-padding-xs);
-  margin-top: 4px;
+  gap: var(--cds-size-gap-s);
   padding: 0;
   background: transparent;
   border: 0;
@@ -629,13 +659,13 @@
 }
 
 .notif-link:focus-visible {
-  outline: 3px solid var(--token-color-blue-300);
+  outline: 3px solid var(--cds-color-border-focus);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 .notification .icon-btn-neutral {
-  background: var(--token-color-black-600);
+  background: var(--cds-color-bg-scrim);
 }
 
 .toast {
@@ -699,27 +729,43 @@
 
 .page-header {
   display: grid;
-  grid-template-columns: 32px 1fr 32px;
+  /* Content-sized rather than a fixed 32px: the slots hold anything from nothing
+   * to a back control plus an Avatar, and fixed tracks both crushed a populated
+   * slot and stole 80px from the title when both slots were empty. */
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 8px;
 }
 
-.page-header h3 {
+.page-header h3,
+.page-header .page-header-title {
   margin: 0;
   font: var(--cds-type-heading);
 }
 
-.page-header-left h3 {
+.page-header-left h3,
+.page-header-left .page-header-title {
   text-align: left;
 }
 
-.page-header-center h3 {
+.page-header-center h3,
+.page-header-center .page-header-title {
   text-align: center;
 }
 
 .header-spacer {
   width: 32px;
   height: 32px;
+}
+
+.page-header-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cds-size-gap-xs);
+}
+
+.page-header-trailing {
+  justify-content: flex-end;
 }
 
 .page-header-back {
@@ -733,6 +779,16 @@
   align-items: center;
   justify-content: center;
   transition: filter 120ms ease, transform 120ms ease;
+}
+
+.page-header-back:disabled {
+  cursor: default;
+}
+
+.page-header-back:focus-visible {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
+  border-radius: var(--cds-size-corner-xxsmall);
 }
 
 .goal-card {
@@ -807,7 +863,7 @@
 }
 
 .nav-icon {
-  color: var(--cds-color-foreground-tertiary);
+  color: var(--cds-color-foreground-secondary);
 }
 
 .nav-icon-active {
@@ -833,7 +889,7 @@
 }
 
 .slider-pill {
-  background: var(--token-color-brand-400);
+  background: var(--cds-color-brand-400);
   border-radius: var(--cds-size-corner-full);
   height: 120px;
   padding: 12px;
@@ -876,7 +932,7 @@
   border-radius: var(--cds-size-corner-full);
   border: 0;
   background: var(--cds-color-bg-brand-primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--cds-shadow-control-raised);
   cursor: grab;
   transform: none;
 }
@@ -907,7 +963,7 @@
   border-radius: var(--cds-size-corner-small);
   border: 1px solid var(--cds-color-border-default);
   background: var(--cds-color-background-surface);
-  color: var(--cds-color-foreground-primary);
+  color: var(--cds-color-foreground-on-surface);
   box-shadow: none;
 }
 
@@ -1034,6 +1090,7 @@
   height: 48px;
   border-radius: var(--cds-size-corner-full);
   background: var(--cds-color-bg-brand-primary);
+  --cds-icon-knockout: var(--cds-color-bg-brand-primary);
   color: var(--cds-color-foreground-brand-primary);
   display: inline-flex;
   align-items: center;
@@ -1123,7 +1180,7 @@
   width: 4px;
   height: 4px;
   border-radius: 999px;
-  background: var(--token-color-brand-400);
+  background: var(--cds-color-brand-400);
   opacity: 0;
 }
 
@@ -1141,7 +1198,8 @@
 
 .card-feature-article-large {
   min-height: 535px;
-  padding: var(--cds-size-padding-l) var(--cds-size-padding-m) var(--cds-size-padding-m);
+  padding: var(--cds-size-padding-l) var(--cds-size-padding-m)
+    var(--cds-size-padding-m);
   display: grid;
   gap: var(--cds-size-padding-s);
   justify-items: center;
@@ -1169,6 +1227,7 @@
   margin: 0;
   max-width: 320px;
   font: var(--cds-type-display-medium);
+  letter-spacing: var(--cds-type-display-medium-tracking);
   letter-spacing: -0.03em;
 }
 
@@ -1203,6 +1262,7 @@
   margin: 0;
   max-width: 120px;
   font: var(--cds-type-display-medium);
+  letter-spacing: var(--cds-type-display-medium-tracking);
   letter-spacing: -0.03em;
 }
 
@@ -1253,6 +1313,7 @@
 .card-feature-amount {
   margin: 0;
   font: var(--cds-type-display-large);
+  letter-spacing: var(--cds-type-display-large-tracking);
 }
 
 .card-feature-actions {
@@ -1299,6 +1360,7 @@
 .card-feature-profile-title {
   margin: var(--cds-size-padding-xs) 0 0;
   font: var(--cds-type-display-medium);
+  letter-spacing: var(--cds-type-display-medium-tracking);
 }
 
 .card-feature-profile-handle {
@@ -1313,7 +1375,7 @@
   border-radius: var(--cds-size-corner-large);
   border: 1px solid var(--cds-color-border-default);
   background: var(--cds-color-background-surface);
-  color: var(--cds-color-foreground-primary);
+  color: var(--cds-color-foreground-on-surface);
   overflow: hidden;
 }
 
@@ -1377,7 +1439,7 @@
   cursor: pointer;
 }
 
-.card-feature-small-favorite[aria-pressed='true'] {
+.card-feature-small-favorite[aria-pressed="true"] {
   color: var(--token-color-brand-200);
 }
 
@@ -1615,4 +1677,144 @@
   display: flex;
   justify-content: space-between;
   gap: var(--cds-size-padding-xs);
+}
+
+.avatar-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--cds-color-bg-brand-primary);
+  color: var(--cds-color-foreground-brand-primary);
+  font: var(--cds-type-body-small-strong);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.avatar-40 .avatar-initials {
+  font: var(--cds-type-body-medium-strong);
+}
+
+.avatar-24 .avatar-initials {
+  font-size: 11px;
+}
+
+.nav-item > a.icon-btn {
+  text-decoration: none;
+}
+
+.bottom-nav .icon-btn:focus-visible {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
+}
+
+.nav-item-label {
+  font: var(--cds-type-body-small);
+  line-height: 1.2;
+  text-align: center;
+  color: var(--cds-color-foreground-secondary);
+}
+
+.nav-icon-active + .nav-item-label,
+.nav-icon-add + .nav-item-label {
+  color: var(--cds-color-foreground-primary);
+}
+
+.input-shell-error,
+.input-shell-error:focus-within {
+  border-color: var(--cds-color-border-danger);
+  background: var(--cds-color-bg-danger);
+}
+
+.textarea-input-error,
+.textarea-input-error:focus-visible,
+.search-field-error,
+.search-field-error:focus-within {
+  border-color: var(--cds-color-border-danger);
+}
+
+.check-field-error .check-off {
+  border-color: var(--cds-color-border-danger);
+}
+
+.switch-field-error .switch-off {
+  background: var(--cds-color-border-danger);
+}
+
+.input-error-message {
+  font: var(--cds-type-body-small);
+  color: var(--cds-color-foreground-danger);
+}
+
+.check-description.input-error-message,
+.switch-description.input-error-message {
+  color: var(--cds-color-foreground-danger);
+}
+
+.input-shell-disabled,
+.search-field-disabled {
+  opacity: 0.6;
+}
+
+.input-shell-disabled select,
+.input-shell-disabled input,
+.search-field-disabled input,
+.textarea-input:disabled {
+  cursor: not-allowed;
+}
+
+.search-field-group {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+}
+
+.activity-item-interactive {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--cds-size-corner-xsmall);
+}
+
+.activity-item-interactive:hover .activity-item-icon {
+  filter: brightness(0.96);
+}
+
+.activity-item-interactive:focus-visible {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
+}
+
+.notif-image {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.notif-link:focus-visible {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
+  border-radius: var(--cds-size-corner-xxsmall);
+}
+
+.slider-track:focus-visible {
+  box-shadow: var(--cds-shadow-focus-ring);
+  outline: none;
+}
+
+.slider-field-disabled {
+  opacity: 0.6;
+}
+
+.slider-field-disabled .slider-track,
+.slider-field-disabled .slider-thumb {
+  cursor: not-allowed;
 }

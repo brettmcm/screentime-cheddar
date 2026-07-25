@@ -1,694 +1,132 @@
 import { useEffect, useState } from 'react'
-import {
-  ActivityItem,
-  Avatar,
-  Button,
-  Card,
-  Checkbox,
-  EmptyState,
-  IconButton,
-  InputField,
-  Logo,
-  Nav,
-  Notification,
-  PageHeader,
-  Radio,
-  Search,
-  Slider,
-  SwitchField,
-  Tag,
-  Textarea,
-  ThemeScope,
-  Toast,
-  Wordmark,
-  type BrandTheme,
-} from './components'
-import { Icon } from './components/icon/Icon'
+import { Button, TextLink, Wordmark } from './components'
 import { runA11yTokenChecks } from './a11y/contrast'
-import chromeBook from './assets/chrome-illustrations/book.png'
-import chromeCamera from './assets/chrome-illustrations/camera.png'
-import chromeCoin2 from './assets/chrome-illustrations/coin-2.png'
-import chromeParty from './assets/chrome-illustrations/party.png'
-import chromePieChart from './assets/chrome-illustrations/pie-chart.png'
-import chromePiggyBank from './assets/chrome-illustrations/piggy-bank.png'
-import chromeSkateboard from './assets/chrome-illustrations/skateboard.png'
-import chromeWallet from './assets/chrome-illustrations/wallet.png'
-
-const cardIllustrations: Record<string, string> = {
-  'article-large': chromePiggyBank,
-  'article-small-credit': chromeCoin2,
-  'article-small-expenses': chromeParty,
-  'article-small-fifty-thirty': chromePieChart,
-  'article-small-emergency': chromeWallet,
-  'goal-finished': chromeSkateboard,
-  'goal-finished-variant-2': chromeCamera,
-  'goal-finished-variant-3': chromeBook,
-}
+import { GallerySection } from './gallery/GallerySection'
+import type { GalleryTheme } from './gallery/galleryTheme'
+import {
+  GalleryThemeContext,
+  appearanceOptions,
+  brandOptions,
+  defaultGalleryTheme,
+  galleryThemeSearch,
+  readGalleryTheme,
+  schemeOptions,
+} from './gallery/galleryTheme'
+import { gallerySections } from './gallery/sections'
+import './gallery/gallery.css'
 
 if (import.meta.env.DEV) {
   runA11yTokenChecks()
 }
 
-const typeScale = [
-  { name: 'display-xlarge', token: 'var(--cds-type-display-xlarge)', sample: '$672.80' },
-  { name: 'display-large', token: 'var(--cds-type-display-large)', sample: '$1,042.75' },
-  { name: 'display-medium', token: 'var(--cds-type-display-medium)', sample: '$850.00' },
-  { name: 'display-small', token: 'var(--cds-type-display-small)', sample: '$850.00' },
-  { name: 'display-xsmall', token: 'var(--cds-type-display-xsmall)', sample: '$850.00' },
-  { name: 'heading', token: 'var(--cds-type-heading)', sample: 'Your Spending' },
-  { name: 'body-large', token: 'var(--cds-type-body-large)', sample: 'Deposit made' },
-  {
-    name: 'body-large-strong',
-    token: 'var(--cds-type-body-large-strong)',
-    sample: 'Deposit made',
-  },
-  { name: 'body-medium', token: 'var(--cds-type-body-medium)', sample: 'Today, 11:17AM' },
-  {
-    name: 'body-medium-strong',
-    token: 'var(--cds-type-body-medium-strong)',
-    sample: 'Today, 11:17AM',
-  },
-]
+function prefersDarkScheme() {
+  if (typeof window === 'undefined') {
+    return false
+  }
 
-const colorFamilies = [
-  { name: 'Black', prefix: 'black', steps: ['100', '200', '300', '400', '500', '600'] },
-  { name: 'White', prefix: 'white', steps: ['100', '200', '300', '400', '500', '600'] },
-  { name: 'Green', prefix: 'green', steps: ['100', '200', '300', '400', '500', '600'] },
-  { name: 'Purple', prefix: 'purple', steps: ['100', '200', '300', '400', '500', '600'] },
-  { name: 'Magenta', prefix: 'brand', steps: ['100', '200', '300', '400', '500', '600'] },
-  { name: 'Blue', prefix: 'blue', steps: ['100', '200', '300', '400', '500', '600'] },
-]
-
-const brandRampSteps = ['100', '200', '300', '400', '500', '600'] as const
-
-const brandThemes: { name: string; brand: BrandTheme }[] = [
-  { name: 'Magenta (default)', brand: 'magenta' },
-  { name: 'Blue', brand: 'blue' },
-  { name: 'Green', brand: 'green' },
-  { name: 'Purple', brand: 'purple' },
-]
-
-const cardVariants = [
-  'account',
-  'activity',
-  'activity-feed',
-  'article-large',
-  'badge-double-down',
-  'badge-finance-nerd',
-  'badge-stack-master',
-  'customer-article-credit-card',
-  'customer-article-friends',
-  'goal-finished',
-  'goal-finished-variant-2',
-  'goal-finished-variant-3',
-  'goal-headphones',
-  'goal-reached',
-  'goal-ski-trip',
-  'goal-sneakers',
-  'goal-summary',
-  'guide',
-  'profile',
-  'total-savings',
-] as const
-
-const smallArticleCardVariants = [
-  'article-small-credit',
-  'article-small-expenses',
-  'article-small-fifty-thirty',
-  'article-small-emergency',
-] as const
-
-const iconShowcase = [
-  { name: 'home', label: 'home' },
-  { name: 'wallet', label: 'wallet' },
-  { name: 'learn', label: 'learn' },
-  { name: 'profile', label: 'profile' },
-  { name: 'search', label: 'search' },
-  { name: 'notification', label: 'notification' },
-  { name: 'caret-left', label: 'caret-left' },
-  { name: 'caret-right', label: 'caret-right' },
-  { name: 'caret-down', label: 'caret-down' },
-  { name: 'x', label: 'x' },
-  { name: 'plus', label: 'plus' },
-  { name: 'sparkle', label: 'sparkle' },
-] as const
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches === true
+}
 
 function App() {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window === 'undefined') {
-      return 'light'
-    }
-
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  })
-
-  const [inputValue, setInputValue] = useState('Value')
-  const [inputDropdownValue, setInputDropdownValue] = useState('Value')
-  const [notesValue, setNotesValue] = useState(
-    'Bought groceries on the way home - split with roommate.',
+  const [theme, setTheme] = useState<GalleryTheme>(() =>
+    readGalleryTheme(typeof window === 'undefined' ? '' : window.location.search, {
+      ...defaultGalleryTheme,
+      scheme: prefersDarkScheme() ? 'dark' : 'light',
+    }),
   )
-  const [searchValue, setSearchValue] = useState('')
-  const [activeSearchValue, setActiveSearchValue] = useState('How to')
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true)
-  const [roundUpsEnabled, setRoundUpsEnabled] = useState(false)
-  const [subscribeChecked, setSubscribeChecked] = useState(true)
-  const [autoInvestChecked, setAutoInvestChecked] = useState(false)
-  const [goalChoice, setGoalChoice] = useState<'vacation' | 'emergency'>('vacation')
 
+  // brand and scheme go on <html> so the whole page — including the
+  // documentation chrome — re-themes. `appearance` is applied per section
+  // instead (see GallerySection): it is a canvas treatment for product
+  // surfaces, and on the root it would paint white chrome text onto white
+  // panels. The URL carries all three so a screenshot run can pin the theme.
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
+    const root = document.documentElement
+    root.dataset.brand = theme.brand
+    root.dataset.theme = theme.scheme
+    window.history.replaceState(
+      null,
+      '',
+      `${window.location.pathname}${galleryThemeSearch(theme)}${window.location.hash}`,
+    )
   }, [theme])
 
-  const isDark = theme === 'dark'
-
   return (
-    <main className="app-shell ds-page">
-      <header className="brand-hero ds-page-header">
-        <Wordmark />
-        <div className="brand-hero-actions">
-          <Button
-            label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            variant="secondary"
-            size="small"
-            aria-pressed={isDark}
-            onClick={() => setTheme(isDark ? 'light' : 'dark')}
-          />
-        </div>
-      </header>
+    <GalleryThemeContext value={theme}>
+      <main className="app-shell ds-page">
+        {/* Deliberately not sticky: a sticky header overlaps the top of every
+            locator screenshot the visual suite takes. */}
+        <header className="brand-hero">
+          <Wordmark />
+        </header>
 
-      <section className="ds-section">
-        <h1>Design System Overview</h1>
-        <p>
-          Foundations are listed first from the Figma library (Type + Color), followed by
-          component examples in alphabetical order with variant labels.
-        </p>
-      </section>
+        <section className="ds-section">
+          <h1>Design System Overview</h1>
+          <p>
+            Foundations first (type, colour, theming), then the app-shell composition, then one
+            section per component with a specimen for every documented variant and state. Every
+            section carries a stable <code>id</code> and <code>data-gallery-section</code>{' '}
+            attribute — <code>tests/visual</code> screenshots them one at a time.
+          </p>
 
-      <section className="ds-section">
-        <h2>Foundations</h2>
-        <div className="ds-foundation-grid">
-          <section className="panel ds-subsection">
-            <h3>Type</h3>
-            <ul className="ds-type-list">
-              {typeScale.map((item) => (
-                <li key={item.name} className="ds-type-row">
-                  <code>{item.name}</code>
-                  <span className="ds-type-sample" style={{ font: item.token }}>
-                    {item.sample}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-          <section className="panel ds-subsection">
-            <h3>Color</h3>
-            <div className="ds-color-list">
-              {colorFamilies.map((family) => (
-                <div key={family.name} className="ds-color-family">
-                  <p>{family.name}</p>
-                  <div className="ds-color-swatches">
-                    {family.steps.map((step) => (
-                      <div key={`${family.prefix}-${step}`} className="ds-color-swatch">
-                        <span
-                          style={{
-                            backgroundColor: `var(--token-color-${family.prefix}-${step})`,
-                          }}
-                        />
-                        <code>{step}</code>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Brand themes (extended collections)</h2>
-        <p>
-          Figma's Blue / Green / Purple collections are theme layers over Brand. In code
-          each maps to <code>[data-brand]</code>, re-pointing <code>--cds-color-brand-100…600</code>{' '}
-          for a subtree via <code>&lt;ThemeScope brand scheme&gt;</code>. Every tile below is the
-          same markup — only the wrapper's <code>brand</code> and <code>scheme</code> differ.
-        </p>
-        <div className="ds-variant-grid ds-variant-grid-wide">
-          {brandThemes.map(({ name, brand }) => (
-            <article key={brand} className="panel ds-variant-card">
-              <p className="ds-variant-label">brand = {brand}</p>
-              <div className="ds-theme-pair">
-                {(['light', 'dark'] as const).map((scheme) => (
-                  <ThemeScope
-                    key={scheme}
-                    brand={brand}
-                    scheme={scheme}
-                    className="ds-theme-tile"
-                  >
-                    <p className="ds-theme-tile-caption">{scheme}</p>
-                    <div className="ds-theme-ramp">
-                      {brandRampSteps.map((step) => (
-                        <span
-                          key={step}
-                          style={{ background: `var(--cds-color-brand-${step})` }}
-                        />
-                      ))}
-                    </div>
-                    <div className="ds-theme-controls">
-                      <Button label="Save" variant="primary" size="small" />
-                      <Tag color={brand} label={name.split(' ')[0]} dismissible={false} />
-                      <Icon name="sparkle" width={24} height={24} tone="brand" />
-                    </div>
-                  </ThemeScope>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
-        <article className="panel ds-variant-card">
-          <p className="ds-variant-label">Nesting — a light green frame inside a dark purple shell</p>
-          <ThemeScope brand="purple" scheme="dark" className="ds-theme-nested">
-            <div className="ds-theme-controls">
-              <Button label="Purple / dark" variant="primary" size="small" />
-              <Icon name="sparkle" width={24} height={24} tone="brand" />
-            </div>
-            <ThemeScope brand="green" scheme="light" as="section" className="ds-theme-tile">
-              <p className="ds-theme-tile-caption">green / light (nested)</p>
-              <div className="ds-theme-controls">
-                <Button label="Save" variant="primary" size="small" />
-                <Tag color="green" label="Nested" dismissible={false} />
-                <Icon name="sparkle" width={24} height={24} tone="brand" />
-              </div>
-            </ThemeScope>
-          </ThemeScope>
-        </article>
-      </section>
-
-      <section className="ds-section">
-        <h2>ActivityItem</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Type = Deposit</p>
-            <ActivityItem type="deposit" />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Type = Withdrawal</p>
-            <ActivityItem type="withdrawal" time="Mon, 8:22am" amount="$13.75" />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Avatar</h2>
-        <div className="ds-variant-grid ds-variant-grid-tight">
-          {(['40', '32', '24'] as const).map((size) => (
-            <article key={size} className="panel ds-variant-card ds-center">
-              <p className="ds-variant-label">Size = {size}</p>
-              <Avatar size={size} />
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Brand</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Logo</p>
-            <Logo />
-          </article>
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Wordmark</p>
-            <Wordmark />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Button</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Primary / Large / Default</p>
-            <Button label="Save" variant="primary" size="large" />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Primary / Large / Disabled</p>
-            <Button label="Save" variant="primary" size="large" disabled />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Secondary / Large / Default</p>
-            <Button label="Share" variant="secondary" size="large" />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Secondary / Large / Disabled</p>
-            <Button label="Share" variant="secondary" size="large" disabled />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Primary / Medium / Default</p>
-            <Button label="Add Funds" variant="primary" size="medium" />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Secondary / Medium / Default</p>
-            <Button label="Details" variant="secondary" size="medium" />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Primary / Small / Default</p>
-            <Button label="Done" variant="primary" size="small" />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Secondary / Small / Default</p>
-            <Button label="Skip" variant="secondary" size="small" />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Card</h2>
-        <div className="ds-variant-grid ds-card-grid">
-          {cardVariants.map((variant) => (
-            <article key={variant} className="panel ds-variant-card">
-              <p className="ds-variant-label">Variant = {variant}</p>
-              <Card variant={variant} illustration={cardIllustrations[variant]} />
-            </article>
-          ))}
-          <article className="panel ds-variant-card ds-card-small-row">
-            <p className="ds-variant-label">Article Small variants (single row)</p>
-            <div className="ds-card-inline-row">
-              {smallArticleCardVariants.map((variant) => (
-                <Card
-                  key={variant}
-                  variant={variant}
-                  illustration={cardIllustrations[variant]}
+          <div className="ds-controls" id="gallery-controls" data-gallery-section="controls">
+            <div className="ds-control-row">
+              <span className="ds-control-legend">brand</span>
+              {brandOptions.map((brand) => (
+                <Button
+                  key={brand}
+                  label={brand}
+                  size="small"
+                  variant={theme.brand === brand ? 'primary' : 'secondary'}
+                  aria-pressed={theme.brand === brand}
+                  onClick={() => setTheme((current) => ({ ...current, brand }))}
                 />
               ))}
             </div>
-          </article>
-        </div>
-      </section>
+            <div className="ds-control-row">
+              <span className="ds-control-legend">scheme</span>
+              {schemeOptions.map((scheme) => (
+                <Button
+                  key={scheme}
+                  label={scheme}
+                  size="small"
+                  variant={theme.scheme === scheme ? 'primary' : 'secondary'}
+                  aria-pressed={theme.scheme === scheme}
+                  onClick={() => setTheme((current) => ({ ...current, scheme }))}
+                />
+              ))}
+            </div>
+            <div className="ds-control-row">
+              <span className="ds-control-legend">appearance</span>
+              {appearanceOptions.map((appearance) => (
+                <Button
+                  key={appearance}
+                  label={appearance}
+                  size="small"
+                  variant={theme.appearance === appearance ? 'primary' : 'secondary'}
+                  aria-pressed={theme.appearance === appearance}
+                  onClick={() => setTheme((current) => ({ ...current, appearance }))}
+                />
+              ))}
+            </div>
+          </div>
 
-      <section className="ds-section">
-        <h2>Checkbox</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Selected = True</p>
-            <Checkbox
-              label="Subscribe"
-              description="Send me weekly insights"
-              checked={subscribeChecked}
-              onCheckedChange={setSubscribeChecked}
-            />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Selected = False</p>
-            <Checkbox
-              label="Auto-invest"
-              description="Move spare change to savings"
-              checked={autoInvestChecked}
-              onCheckedChange={setAutoInvestChecked}
-            />
-          </article>
-        </div>
-      </section>
+          <nav className="ds-toc" aria-label="Sections">
+            {gallerySections.map(({ id, title }) => (
+              <TextLink key={id} href={`#section-${id}`} size="small" icon={null}>
+                {title}
+              </TextLink>
+            ))}
+          </nav>
+        </section>
 
-      <section className="ds-section">
-        <h2>EmptyState</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Variant = error</p>
-            <EmptyState variant="error" />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Icon</h2>
-        <div className="ds-variant-grid ds-variant-grid-tight">
-          {iconShowcase.map((icon) => (
-            <article key={icon.name} className="panel ds-variant-card ds-center">
-              <p className="ds-variant-label">Icon = {icon.label}</p>
-              <div className="ds-icon-row">
-                <Icon name={icon.name} width={24} height={24} />
-                <Icon name={icon.name} width={24} height={24} tone="brand" />
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>IconButton</h2>
-        <div className="ds-variant-grid ds-variant-grid-tight">
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Primary / Medium / Default</p>
-            <IconButton variant="primary" size="medium" icon="x" />
-          </article>
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Primary / Medium / Disabled</p>
-            <IconButton variant="primary" size="medium" icon="x" disabled />
-          </article>
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Outline / Medium / Default</p>
-            <IconButton variant="outline" size="medium" icon="x" />
-          </article>
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Neutral / Medium / Default</p>
-            <IconButton variant="neutral" size="medium" icon="x" />
-          </article>
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Primary / Small / Default</p>
-            <IconButton variant="primary" size="small" icon="plus" />
-          </article>
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Outline / Small / Default</p>
-            <IconButton variant="outline" size="small" icon="plus" />
-          </article>
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Neutral / Small / Default</p>
-            <IconButton variant="neutral" size="small" icon="plus" />
-          </article>
-          <article className="panel ds-variant-card ds-center">
-            <p className="ds-variant-label">Ghost / Medium / Default</p>
-            <IconButton variant="ghost" size="medium" icon="home" />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>InputField</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">State = Default</p>
-            <InputField
-              label="Label"
-              value={inputValue}
-              description="Description"
-              onValueChange={setInputValue}
-            />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">State = Placeholder</p>
-            <InputField
-              label="Label"
-              value=""
-              description="Description"
-              onValueChange={setInputValue}
-            />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Dropdown = True</p>
-            <InputField
-              label="Label"
-              value={inputDropdownValue}
-              description="Description"
-              dropdown
-              onValueChange={setInputDropdownValue}
-            />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Nav</h2>
-        <div className="ds-variant-grid ds-variant-grid-wide">
-          {(['home', 'wallet', 'learn', 'profile'] as const).map((activeItem) => (
-            <article key={activeItem} className="panel ds-variant-card ds-center">
-              <p className="ds-variant-label">Active item = {activeItem}</p>
-              <Nav activeItem={activeItem} />
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Notification</h2>
-        <div className="ds-variant-grid ds-variant-grid-wide">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Variant = default</p>
-            <Notification variant="default" />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Variant = trend</p>
-            <Notification variant="trend" />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Variant = opportunity</p>
-            <Notification variant="opportunity" />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>PageHeader</h2>
-        <div className="ds-variant-grid ds-variant-grid-wide">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Variant = left</p>
-            <PageHeader title="Header" variant="left" />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Variant = center</p>
-            <PageHeader title="Header" variant="center" />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Radio</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Selected = True</p>
-            <Radio
-              name="goal"
-              label="Vacation"
-              description="Save toward your next trip"
-              checked={goalChoice === 'vacation'}
-              onCheckedChange={(isChecked) => {
-                if (isChecked) {
-                  setGoalChoice('vacation')
-                }
-              }}
-            />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Selected = False</p>
-            <Radio
-              name="goal"
-              label="Emergency"
-              description="Build a safety net"
-              checked={goalChoice === 'emergency'}
-              onCheckedChange={(isChecked) => {
-                if (isChecked) {
-                  setGoalChoice('emergency')
-                }
-              }}
-            />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Search</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">State = Placeholder</p>
-            <Search
-              value={searchValue}
-              placeholder="Search anything"
-              onValueChange={setSearchValue}
-            />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">State = Active</p>
-            <Search value={activeSearchValue} onValueChange={setActiveSearchValue} />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Slider</h2>
-        <div className="ds-variant-grid ds-variant-grid-wide">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Default</p>
-            <Slider />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Custom value</p>
-            <Slider label="Emergency fund target" value={760} />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>SwitchField</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Selected = True</p>
-            <SwitchField
-              label="Notifications"
-              description="Get a push when a deposit clears"
-              checked={notificationsEnabled}
-              onCheckedChange={setNotificationsEnabled}
-            />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Selected = False</p>
-            <SwitchField
-              label="Round-ups"
-              description="Round purchases to the nearest dollar"
-              checked={roundUpsEnabled}
-              onCheckedChange={setRoundUpsEnabled}
-            />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Tag</h2>
-        <div className="ds-variant-grid ds-variant-grid-tight">
-          {(
-            [
-              { color: 'green', label: 'Travel' },
-              { color: 'blue', label: 'Entertainment' },
-              { color: 'magenta', label: 'Food' },
-              { color: 'purple', label: 'Clothes' },
-            ] as const
-          ).map(({ color, label }) => (
-            <article key={color} className="panel ds-variant-card ds-center">
-              <p className="ds-variant-label">Color = {color}</p>
-              <Tag color={color} label={label} />
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Textarea</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">State = Default</p>
-            <Textarea
-              label="Notes"
-              value={notesValue}
-              description="Add context for this transaction"
-              onValueChange={setNotesValue}
-            />
-          </article>
-        </div>
-      </section>
-
-      <section className="ds-section">
-        <h2>Toast</h2>
-        <div className="ds-variant-grid">
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Default</p>
-            <Toast />
-          </article>
-          <article className="panel ds-variant-card">
-            <p className="ds-variant-label">Custom message</p>
-            <Toast message="Saved to your wallet" />
-          </article>
-        </div>
-      </section>
-    </main>
+        {gallerySections.map(({ id, title, note, appearance, Body }) => (
+          <GallerySection key={id} id={id} title={title} note={note} appearance={appearance}>
+            <Body />
+          </GallerySection>
+        ))}
+      </main>
+    </GalleryThemeContext>
   )
 }
 

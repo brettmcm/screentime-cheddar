@@ -1,6 +1,6 @@
 {
 	"name": "@screentime/cheddar-ds",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "Cheddar Design System — React component library, styles, and design tokens.",
 	"repository": {
 		"type": "git",
@@ -15,6 +15,16 @@
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
 		},
+		"./demo-assets": {
+			"types": "./dist/demo-assets/index.d.ts",
+			"import": "./dist/demo-assets.js"
+		},
+		"./tokens": {
+			"types": "./dist/tokens/tokens.d.ts",
+			"import": "./dist/tokens/tokens.js"
+		},
+		"./platforms/swift/CheddarTokens.swift": "./dist/platforms/swift/CheddarTokens.swift",
+		"./platforms/react-native": "./dist/platforms/react-native/tokens.ts",
 		"./styles.css": "./dist/styles/index.css",
 		"./styles/fonts.css": "./dist/styles/fonts.css",
 		"./styles/tokens.css": "./dist/styles/tokens.css",
@@ -34,10 +44,20 @@
 	},
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+		"build": "npm run tokens:build && vite build && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
 		"prepare": "npm run build",
 		"lint": "eslint .",
-		"release:check": "npm run lint && npm run build && npm pack",
+		"typecheck": "tsc -b tsconfig.json --force",
+		"tokens:build": "node scripts/build-tokens.mjs",
+		"tokens:check": "node scripts/build-tokens.mjs --check",
+		"assets:check": "node scripts/check-demo-assets.mjs",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:a11y": "vitest run --project a11y",
+		"test:visual": "playwright test",
+		"test:visual:update": "playwright test --update-snapshots",
+		"verify": "npm run tokens:check && npm run assets:check && npm run lint && npm run typecheck && npm run test",
+		"release:check": "npm run verify && npm run build && npm run figma:check-urls && npm run figma:publish:dry-run && npm pack --dry-run",
 		"preview": "vite preview",
 		"prepublishOnly": "npm run build",
 		"publish:figma": "npm publish --registry=https://registry.figma.com/npm/397d59b6-95ce-4b9e-8e24-db9b498f7374/registry/",
@@ -58,19 +78,26 @@
 		"@figma/code-connect": "^1.4.8",
 		"@fontsource-variable/mona-sans": "^5.2.8",
 		"@fontsource/oswald": "^5.2.8",
+		"@playwright/test": "^1.62.0",
+		"@testing-library/jest-dom": "^7.0.0",
+		"@testing-library/react": "^16.3.2",
+		"@testing-library/user-event": "^14.6.1",
 		"@types/node": "^24.12.2",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
-		"@vitejs/plugin-react": "^6.0.1",
+		"@vitejs/plugin-react": "^6.0.4",
+		"axe-core": "^4.12.1",
 		"dotenv-cli": "^11.0.0",
 		"eslint": "^10.2.1",
 		"eslint-plugin-react-hooks": "^7.1.1",
 		"eslint-plugin-react-refresh": "^0.5.2",
 		"globals": "^17.5.0",
+		"jsdom": "^29.1.1",
 		"react": "^19.2.5",
 		"react-dom": "^19.2.5",
 		"typescript": "~6.0.2",
 		"typescript-eslint": "^8.58.2",
-		"vite": "^8.0.10"
+		"vite": "^8.0.10",
+		"vitest": "^3.2.7"
 	}
 }

@@ -24,9 +24,16 @@ export default defineConfig(({ command }) => ({
   publicDir: command === 'build' ? false : 'public',
   build: {
     lib: {
-      entry: 'src/index.ts',
+      // Additional entries are published as their own subpaths so consumers can
+      // pull demo fixtures or raw token values without dragging in every
+      // component. See the "exports" map in package.json.
+      entry: {
+        index: 'src/index.ts',
+        'demo-assets': 'src/demo-assets/index.ts',
+        'tokens/tokens': 'src/tokens/tokens.ts',
+      },
       formats: ['es'],
-      fileName: () => 'index.js',
+      fileName: (_format, entryName) => `${entryName}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],

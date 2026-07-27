@@ -1,124 +1,169 @@
 import SwiftUI
 
-public struct CDSSearchField: View {
+/// `Search` — the collapsible search field on the Learn screen. A DS surface, so it re-scopes
+/// to the light island palette and stays a white pill on the branded canvas.
+public struct CDSSearch: View {
+    @Environment(\.cheddarTheme) private var theme
+
     @Binding private var text: String
     private let placeholder: String
+    private let label: String
 
-    public init(text: Binding<String>, placeholder: String = "Search") {
+    public init(text: Binding<String>, label: String = "Search", placeholder: String = "Search anything") {
         _text = text
+        self.label = label
         self.placeholder = placeholder
     }
 
     public var body: some View {
-        HStack(spacing: CheddarSpacing.s) {
-            Image(systemName: "magnifyingglass")
-                .font(.system(size: 18, weight: .medium))
-                .foregroundStyle(CheddarColors.surface.foregroundSecondary)
-            TextField(placeholder, text: $text)
-                .font(CheddarFonts.monaSans(size: 16, weight: .medium))
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-            if !text.isEmpty {
-                Button {
-                    text = ""
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(CheddarColors.surface.foregroundSecondary)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Clear search")
-            }
+        let palette = theme.island
+
+        HStack(spacing: CheddarSpacing.xs) {
+            CDSIcon(.search, size: CheddarSpacing.iconMedium)
+                .foregroundStyle(palette.foregroundSecondary)
+            TextField(
+                "",
+                text: $text,
+                prompt: Text(placeholder).foregroundColor(palette.foregroundSecondary)
+            )
+            .font(CheddarFonts.monaSans(size: CheddarSize.fontS, weight: .medium))
+            .foregroundStyle(palette.foregroundPrimary)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .accessibilityLabel(label)
         }
         .padding(.horizontal, CheddarSpacing.m)
         .frame(height: 48)
-        .background(CheddarColors.surface.backgroundSurface)
-        .clipShape(RoundedRectangle(cornerRadius: CheddarSpacing.cornerMedium, style: .continuous))
+        .background(palette.backgroundSurface)
+        .clipShape(Capsule())
+        .overlay {
+            Capsule().strokeBorder(palette.borderStrong, lineWidth: CheddarSpacing.border)
+        }
+        .cheddarIsland()
     }
 }
 
-public struct CDSAmountKeypad: View {
-    @Binding private var value: String
-    private let allowsDecimal: Bool
+/// `InputField` — a labelled text input.
+///
+/// Not one of the DS surfaces, so it follows whatever it is nested in: white inside a sheet,
+/// brand-100 when it sits straight on the shell as it does on the add-goal screen.
+public struct CDSInputField: View {
+    @Environment(\.cheddarPalette) private var palette
 
-    public init(value: Binding<String>, allowsDecimal: Bool = true) {
-        _value = value
-        self.allowsDecimal = allowsDecimal
+    @Binding private var text: String
+    private let label: String
+    private let placeholder: String
+    private let description: String?
+    private let textContentType: UITextContentType?
+
+    public init(
+        label: String,
+        text: Binding<String>,
+        placeholder: String = "",
+        description: String? = nil,
+        textContentType: UITextContentType? = nil
+    ) {
+        self.label = label
+        _text = text
+        self.placeholder = placeholder
+        self.description = description
+        self.textContentType = textContentType
     }
 
     public var body: some View {
-        VStack(spacing: CheddarSpacing.xs) {
-            ForEach(keys, id: \.self) { row in
-                HStack(spacing: CheddarSpacing.xs) {
-                    ForEach(row, id: \.self) { key in
-                        Button {
-                            handle(key)
-                        } label: {
-                            Group {
-                                if key == "⌫" {
-                                    Image(systemName: "delete.left")
-                                } else {
-                                    Text(key)
-                                }
-                            }
-                            .font(CheddarFonts.monaSans(size: 24, weight: .medium))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 54)
-                            .foregroundStyle(CheddarColors.surface.foregroundPrimary)
-                            .background(CheddarColors.surface.backgroundSurface)
-                            .clipShape(RoundedRectangle(cornerRadius: CheddarSpacing.cornerMedium, style: .continuous))
-                        }
-                        .buttonStyle(.plain)
-                        .disabled(key == "." && !allowsDecimal)
-                        .opacity(key == "." && !allowsDecimal ? 0 : 1)
-                    }
-                }
+        VStack(alignment: .leading, spacing: CheddarSpacing.xxs) {
+            Text(label)
+                .font(CheddarFonts.monaSans(size: CheddarSize.fontS, weight: .semibold))
+                .foregroundStyle(palette.foregroundPrimary)
+
+            TextField(
+                "",
+                text: $text,
+                prompt: Text(placeholder).foregroundColor(palette.foregroundSecondary)
+            )
+            .font(CheddarFonts.monaSans(size: CheddarSize.fontS, weight: .medium))
+            .foregroundStyle(palette.foregroundPrimary)
+            .textContentType(textContentType)
+            // The input carries the text ramp's 1.3 line box, which is taller than the field
+            // a bare `TextField` asks for.
+            .frame(minHeight: CheddarSize.fontS * 1.3)
+            .padding(CheddarSpacing.s)
+            .background(palette.bgOnBrand)
+            .clipShape(RoundedRectangle(
+                cornerRadius: CheddarSpacing.cornerXsmall,
+                style: .continuous
+            ))
+            .overlay {
+                RoundedRectangle(cornerRadius: CheddarSpacing.cornerXsmall, style: .continuous)
+                    .strokeBorder(palette.borderStrong, lineWidth: CheddarSpacing.border)
+            }
+            .accessibilityLabel(label)
+
+            if let description {
+                Text(description)
+                    .font(CheddarFonts.monaSans(size: CheddarSize.fontS, weight: .medium))
+                    .foregroundStyle(palette.foregroundSecondary)
             }
         }
     }
-
-    private var keys: [[String]] {
-        [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"], [".", "0", "⌫"]]
-    }
-
-    private func handle(_ key: String) {
-        if key == "⌫" {
-            if !value.isEmpty { value.removeLast() }
-            return
-        }
-        if key == "." {
-            guard allowsDecimal, !value.contains(".") else { return }
-            value = value.isEmpty ? "0." : value + "."
-            return
-        }
-        guard value.count < 9 else { return }
-        if let dot = value.firstIndex(of: "."),
-           value.distance(from: dot, to: value.endIndex) > 2 {
-            return
-        }
-        value.append(key)
-    }
 }
 
-public struct CDSToast: View {
-    private let message: String
+/// `Radio` — a labelled circular choice with an optional description beneath.
+public struct CDSRadio: View {
+    @Environment(\.cheddarPalette) private var palette
 
-    public init(_ message: String) {
-        self.message = message
+    private let label: String
+    private let description: String?
+    private let isSelected: Bool
+    private let onSelect: () -> Void
+
+    public init(
+        label: String,
+        description: String? = nil,
+        isSelected: Bool,
+        onSelect: @escaping () -> Void
+    ) {
+        self.label = label
+        self.description = description
+        self.isSelected = isSelected
+        self.onSelect = onSelect
     }
 
     public var body: some View {
-        HStack(spacing: CheddarSpacing.xs) {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(CheddarColors.green300)
-            Text(message)
-                .font(CheddarFonts.monaSans(size: 14, weight: .semibold))
+        Button(action: onSelect) {
+            VStack(alignment: .leading, spacing: CheddarSpacing.xxs) {
+                HStack(spacing: CheddarSpacing.xs) {
+                    indicator
+                    Text(label)
+                        .font(CheddarFonts.monaSans(size: CheddarSize.fontS, weight: .semibold))
+                        .foregroundStyle(palette.foregroundPrimary)
+                    Spacer(minLength: 0)
+                }
+                if let description {
+                    Text(description)
+                        .font(CheddarFonts.monaSans(size: CheddarSize.fontS, weight: .medium))
+                        .foregroundStyle(palette.foregroundSecondary)
+                        // Indents past the 20pt mark and its 8pt gap, so the description
+                        // lines up with the label rather than the control.
+                        .padding(.leading, 28)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
         }
-        .padding(.horizontal, CheddarSpacing.m)
-        .frame(height: 42)
-        .background(CheddarColors.cheddarBlackCherry)
-        .foregroundStyle(CheddarColors.white100)
-        .clipShape(Capsule())
-        .shadow(color: .black.opacity(0.15), radius: 12, y: 6)
-        .accessibilityElement(children: .combine)
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+    }
+
+    private var indicator: some View {
+        ZStack {
+            if isSelected {
+                Circle().fill(palette.foregroundBrandPrimary)
+                Circle().fill(palette.bgOnBrand).frame(width: 10, height: 10)
+            } else {
+                Circle().strokeBorder(palette.foregroundBrandPrimary, lineWidth: 1.25)
+            }
+        }
+        .frame(width: 20, height: 20)
     }
 }

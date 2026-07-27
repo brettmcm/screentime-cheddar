@@ -14,7 +14,7 @@ public struct CDSSpendingSegment: Identifiable {
 }
 
 public enum CDSChartType {
-    /// A row of proportionally sized blocks, each labelled with its own amount.
+    /// A row of proportionally sized columns, each labelled with its own amount.
     case segmented
     /// A single stacked bar under the total.
     case bar
@@ -22,13 +22,15 @@ public enum CDSChartType {
     case pie
 }
 
-/// The design system's spending panel. It is a light island on the branded canvas, so
-/// everything inside reads from `CheddarColors.surface`.
+/// `SpendingChartPanel` — the spending breakdown, in three shapes.
 ///
-/// The chart type drives both the accent step and where amounts live: `segmented` fills
-/// blocks with the 500 step and labels them in place, while `bar` and `pie` draw data marks
-/// at the 300 step and move amounts into the legend.
+/// The chart type drives both the accent step and where the amounts live: `segmented` fills
+/// columns with the 500 step and labels them in place, so its legend collapses to an inline
+/// key; `bar` and `pie` draw data marks at the 300 step and move the amounts into a stacked
+/// legend. One of the always-light components.
 public struct CDSSpendingChartPanel<Badge: View>: View {
+    @Environment(\.cheddarTheme) private var theme
+
     private let type: CDSChartType
     private let title: String?
     private let segments: [CDSSpendingSegment]
@@ -47,16 +49,16 @@ public struct CDSSpendingChartPanel<Badge: View>: View {
     }
 
     private var total: Decimal { segments.reduce(0) { $0 + $1.amount } }
-
     private var hasHeader: Bool { title != nil || Badge.self != EmptyView.self }
 
     public var body: some View {
+        let palette = theme.island
+
         VStack(alignment: .leading, spacing: type == .segmented ? CheddarSpacing.s : CheddarSpacing.m) {
             if hasHeader {
-                HStack(spacing: CheddarSpacing.s) {
+                HStack(spacing: CheddarSpacing.gapS) {
                     if let title {
-                        Text(title)
-                            .font(CheddarFonts.font(for: CheddarType.bodyLargeStrong))
+                        Text(title).cdsType(CheddarType.bodyLargeStrong)
                     }
                     Spacer(minLength: 0)
                     badge
@@ -68,54 +70,54 @@ public struct CDSSpendingChartPanel<Badge: View>: View {
                 segmentedChart
             case .bar:
                 totalText
-                stackedBar
+                stackedBar(palette: palette)
             case .pie:
                 donut
             }
 
-            legend
+            legend(palette: palette)
         }
-        .foregroundStyle(CheddarColors.surface.foregroundOnSurface)
         .padding(CheddarSpacing.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(CheddarColors.surface.backgroundSurface)
-        .clipShape(RoundedRectangle(cornerRadius: CheddarSpacing.cornerLarge, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: CheddarSpacing.cornerLarge, style: .continuous)
-                .stroke(CheddarColors.surface.borderDefault, lineWidth: 1)
-        }
+        .foregroundStyle(palette.foregroundOnSurface)
+        .cdsCard(background: palette.backgroundSurface, border: palette.borderDefault)
+        .cheddarIsland()
     }
 
     private var totalText: some View {
-        Text(formatCurrency(total))
-            .font(CheddarFonts.font(for: CheddarType.displaySmall))
-            .tracking(CheddarType.displaySmall.tracking)
+        Text(CDSCurrency.format(total)).cdsType(CheddarType.displaySmall)
     }
 
+    // MARK: - Segmented
+
     private var segmentedChart: some View {
-        GeometryReader { geo in
-            let gaps = CheddarSpacing.s * CGFloat(max(0, segments.count - 1))
-            let widths = segmentWidths(in: max(0, geo.size.width - gaps))
-            HStack(spacing: CheddarSpacing.s) {
+        GeometryReader { geometry in
+            let gaps = CheddarSpacing.gapS * CGFloat(max(0, segments.count - 1))
+            let widths = segmentWidths(in: max(0, geometry.size.width - gaps))
+            HStack(spacing: CheddarSpacing.gapS) {
                 ForEach(Array(segments.enumerated()), id: \.element.id) { index, segment in
-                    Text(formatCurrency(segment.amount))
-                        .font(CheddarFonts.font(for: CheddarType.bodyMedium))
+                    Text(CDSCurrency.format(segment.amount))
+                        .cdsType(CheddarType.bodyMedium)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
+                        .foregroundStyle(segment.accent.step100)
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                        .padding(CheddarSpacing.xs)
+                        .padding(CheddarSpacing.s)
                         .frame(width: widths[index])
                         .background(segment.accent.step500)
-                        .clipShape(RoundedRectangle(cornerRadius: CheddarSpacing.cornerMedium, style: .continuous))
+                        .clipShape(RoundedRectangle(
+                            cornerRadius: CheddarSpacing.cornerLarge,
+                            style: .continuous
+                        ))
                 }
             }
         }
         .frame(height: 104)
     }
 
-    /// Shares drive the widths, but a small share still has to fit its own amount label —
-    /// the web gets this from `min-width: min-content`, so reserve a floor here and take the
-    /// difference back from the segments that have room to give.
+    /// Shares drive the widths, but a small share still has to fit its own amount label — the
+    /// web gets that from `min-width: min-content`. Reserve a floor here and take the
+    /// difference back from the columns that have room to give.
     private func segmentWidths(in available: CGFloat) -> [CGFloat] {
         let floor: CGFloat = 68
         var widths = segments.map { available * share(of: $0) }
@@ -135,18 +137,20 @@ public struct CDSSpendingChartPanel<Badge: View>: View {
         return widths
     }
 
-    private var stackedBar: some View {
-        GeometryReader { geo in
+    // MARK: - Bar and donut
+
+    private func stackedBar(palette: CheddarPalette) -> some View {
+        GeometryReader { geometry in
             HStack(spacing: 0) {
                 ForEach(segments) { segment in
                     Rectangle()
                         .fill(segment.accent.step300)
-                        .frame(width: geo.size.width * share(of: segment))
+                        .frame(width: geometry.size.width * share(of: segment))
                 }
             }
         }
         .frame(height: CheddarSpacing.m)
-        .background(CheddarColors.surface.trackDefault)
+        .background(palette.trackDefault)
         .clipShape(Capsule())
     }
 
@@ -156,29 +160,32 @@ public struct CDSSpendingChartPanel<Badge: View>: View {
         return ZStack {
             ForEach(Array(segments.enumerated()), id: \.element.id) { index, segment in
                 Circle()
-                    .trim(from: startFraction(before: index), to: startFraction(before: index) + share(of: segment))
+                    .trim(
+                        from: startFraction(before: index),
+                        to: startFraction(before: index) + share(of: segment)
+                    )
                     .stroke(segment.accent.step300, lineWidth: thickness)
                     .rotationEffect(.degrees(-90))
                     .padding(thickness / 2)
             }
-            Text(formatCurrency(total))
-                .font(CheddarFonts.font(for: CheddarType.displaySmall))
-                .tracking(CheddarType.displaySmall.tracking)
+            Text(CDSCurrency.format(total)).cdsType(CheddarType.displaySmall)
         }
         .frame(width: diameter, height: diameter)
         .frame(maxWidth: .infinity)
     }
 
+    // MARK: - Legend
+
     @ViewBuilder
-    private var legend: some View {
+    private func legend(palette: CheddarPalette) -> some View {
         if type == .segmented {
-            // Labels only: the segmented blocks already carry their amounts. The web lets these
-            // wrap, so fall back to two rows when four do not fit the narrower phone width.
-            ViewThatFits(in: .horizontal) {
-                legendRow(Array(segments))
-                VStack(alignment: .leading, spacing: CheddarSpacing.xxs) {
-                    legendRow(Array(segments.prefix(2)))
-                    legendRow(Array(segments.dropFirst(2)))
+            // Labels only: the columns already carry their amounts.
+            CDSWrapLayout(spacing: CheddarSpacing.gapM, lineSpacing: CheddarSpacing.gapXs) {
+                ForEach(segments) { segment in
+                    HStack(spacing: CheddarSpacing.gapXs) {
+                        swatch(segment)
+                        Text(segment.label).cdsType(CheddarType.bodyMedium)
+                    }
                 }
             }
         } else {
@@ -186,34 +193,26 @@ public struct CDSSpendingChartPanel<Badge: View>: View {
                 ForEach(segments) { segment in
                     HStack(spacing: CheddarSpacing.xs) {
                         swatch(segment)
-                        Text(segment.label)
-                            .font(CheddarFonts.font(for: CheddarType.bodyLarge))
-                        Spacer(minLength: CheddarSpacing.s)
-                        Text(formatCurrency(segment.amount))
-                            .font(CheddarFonts.font(for: CheddarType.bodyLargeStrong))
+                        Text(segment.label).cdsType(CheddarType.bodyLarge)
+                        Spacer(minLength: CheddarSpacing.gapS)
+                        Text(CDSCurrency.format(segment.amount))
+                            .cdsType(CheddarType.bodyLargeStrong)
                     }
                 }
             }
         }
     }
 
-    private func legendRow(_ items: [CDSSpendingSegment]) -> some View {
-        HStack(spacing: CheddarSpacing.m) {
-            ForEach(items) { segment in
-                HStack(spacing: CheddarSpacing.xxs) {
-                    swatch(segment)
-                    Text(segment.label)
-                        .font(CheddarFonts.font(for: CheddarType.bodyMedium))
-                        .lineLimit(1)
-                }
-            }
-        }
-    }
-
+    @ViewBuilder
     private func swatch(_ segment: CDSSpendingSegment) -> some View {
-        RoundedRectangle(cornerRadius: CheddarSpacing.cornerXxsmall, style: .continuous)
-            .fill(type == .segmented ? segment.accent.step500 : segment.accent.step300)
-            .frame(width: 12, height: 12)
+        let side = CheddarSpacing.iconSmall
+        if type == .segmented {
+            Circle().fill(segment.accent.step500).frame(width: side, height: side)
+        } else {
+            RoundedRectangle(cornerRadius: CheddarSpacing.cornerXxsmall, style: .continuous)
+                .fill(segment.accent.step300)
+                .frame(width: side, height: side)
+        }
     }
 
     private func share(of segment: CDSSpendingSegment) -> CGFloat {
@@ -223,10 +222,6 @@ public struct CDSSpendingChartPanel<Badge: View>: View {
 
     private func startFraction(before index: Int) -> CGFloat {
         segments.prefix(index).reduce(0) { $0 + share(of: $1) }
-    }
-
-    private func formatCurrency(_ value: Decimal) -> String {
-        String(format: "$%.2f", NSDecimalNumber(decimal: value).doubleValue)
     }
 }
 

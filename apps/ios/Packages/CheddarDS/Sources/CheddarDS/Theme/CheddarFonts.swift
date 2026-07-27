@@ -6,6 +6,10 @@ public enum CheddarFontRegistration {
     private static var didRegister = false
 
     /// Registers DS fonts from the CheddarDS resource bundle.
+    ///
+    /// The package is the only place the faces live: an app-side copy declared in
+    /// `UIAppFonts` would be registered first and win, and the two would drift — which they
+    /// did, silently, over the retuned line metrics.
     /// SPM flattens `Resources/Fonts/*.ttf` into the bundle root (no `Fonts/` subdirectory).
     public static func registerFontsIfNeeded() {
         guard !didRegister else { return }
@@ -79,6 +83,14 @@ public enum CheddarFonts {
         default:
             return monaSans(size: style.size, weight: style.weight)
         }
+    }
+
+    /// The same resolution as `font(for:)`, in the UIKit type the text measurement needs.
+    static func uiFont(for style: CheddarTextStyle) -> UIFont {
+        let name = style.family == "Oswald"
+            ? oswaldPostScriptName(for: style.weight)
+            : monaPostScriptName(for: style.weight)
+        return UIFont(name: name, size: style.size) ?? .systemFont(ofSize: style.size)
     }
 
     private static func monaPostScriptName(for weight: Font.Weight) -> String {

@@ -29,14 +29,5 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>MonaSans-Medium.ttf</string>
-		<string>MonaSans-SemiBold.ttf</string>
-		<string>MonaSans-Bold.ttf</string>
-		<string>Oswald-Regular.ttf</string>
-		<string>Oswald-Medium.ttf</string>
-		<string>Oswald-SemiBold.ttf</string>
-	</array>
 </dict>
 </plist>

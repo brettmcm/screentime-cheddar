@@ -1,5 +1,5 @@
-import SwiftUI
 import CheddarDS
+import SwiftUI
 
 @main
 struct CheddarApp: App {
@@ -11,9 +11,7 @@ struct CheddarApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environmentObject(appState)
-                .preferredColorScheme(.light)
+            AppRoot().environmentObject(appState)
         }
     }
 }

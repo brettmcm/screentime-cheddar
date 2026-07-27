@@ -72,6 +72,8 @@ public struct CDSBrandLobe: Shape {
 /// and the artwork 343 — so the whole thing scales from a single `size`. The
 /// artwork deliberately overhangs the lobes rather than being clipped to them.
 public struct CDSBrandIllustration<Artwork: View>: View {
+    @Environment(\.cheddarPalette) private var palette
+
     private let size: CGFloat
     private let artwork: Artwork
 
@@ -83,21 +85,15 @@ public struct CDSBrandIllustration<Artwork: View>: View {
     public var body: some View {
         ZStack {
             CDSBrandLobe()
-                .fill(CheddarColors.shell.bgBrandTertiary)
+                .fill(palette.bgBrandTertiary)
                 .frame(width: size, height: size)
             CDSBrandLobe()
-                .fill(CheddarColors.shell.bgBrandShade)
+                .fill(palette.bgBrandShade)
                 .frame(width: size * (273.0 / 370.0), height: size * (273.0 / 370.0))
             artwork
                 .frame(width: size * (343.0 / 370.0), height: size * (343.0 / 370.0))
         }
         .frame(width: size, height: size)
         .accessibilityHidden(true)
-    }
-}
-
-public extension CDSBrandIllustration where Artwork == CDSGoalImage {
-    init(goal: CDSGoal, size: CGFloat = 280) {
-        self.init(size: size) { CDSGoalImage(goal: goal, symbolSize: size * 0.3) }
     }
 }

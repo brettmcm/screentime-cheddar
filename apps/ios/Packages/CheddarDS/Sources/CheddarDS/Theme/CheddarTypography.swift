@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 public extension CheddarTextStyle {
     /// Letter spacing for the display styles. The design system expresses tracking in `em`,
@@ -15,44 +16,38 @@ public extension CheddarTextStyle {
     }
 }
 
-public enum CheddarTypography {
-    public static func displayLarge(_ text: String) -> some View {
-        Text(text)
-            .font(CheddarFonts.font(for: CheddarType.displayLarge))
-            .tracking(CheddarType.displayLarge.tracking)
-            .lineLimit(nil)
-            .multilineTextAlignment(.center)
-    }
+/// Applies one of the design system's type presets — face, size, weight, tracking and
+/// leading together, the way `font: var(--cds-type-*)` does on the web.
+public struct CheddarTypeModifier: ViewModifier {
+    let style: CheddarTextStyle
+    /// The CSS `line-height`, in points, for the few places the app sets its own: the
+    /// landing headline is set solid, the article body runs looser.
+    let lineHeight: CGFloat?
 
-    public static func displayMedium(_ text: String) -> some View {
-        Text(text)
-            .font(CheddarFonts.font(for: CheddarType.displayMedium))
-            .tracking(CheddarType.displayMedium.tracking)
+    public func body(content: Content) -> some View {
+        // The bundled faces are retuned to the ramp's own leading (see `sync-ios-fonts`), so
+        // a line box is already the right height and only the looser styles — `heading`, the
+        // article body — have anything left to add. SwiftUI ignores a negative `lineSpacing`,
+        // which is why the tightening cannot happen here.
+        let extra = (lineHeight ?? style.lineHeight) - CheddarFonts.uiFont(for: style).lineHeight
+        return content
+            .font(CheddarFonts.font(for: style))
+            .tracking(style.tracking)
+            .lineSpacing(max(0, extra))
     }
+}
 
-    public static func heading(_ text: String) -> some View {
-        Text(text)
-            .font(CheddarFonts.font(for: CheddarType.heading))
-            .lineSpacing(4)
+public extension View {
+    /// - Parameter lineHeight: Overrides the preset's leading, in points.
+    func cdsType(_ style: CheddarTextStyle, lineHeight: CGFloat? = nil) -> some View {
+        modifier(CheddarTypeModifier(style: style, lineHeight: lineHeight))
     }
+}
 
-    public static func bodyLarge(_ text: String) -> some View {
-        Text(text)
-            .font(CheddarFonts.font(for: CheddarType.bodyLarge))
-    }
-
-    public static func bodyLargeStrong(_ text: String) -> some View {
-        Text(text)
-            .font(CheddarFonts.font(for: CheddarType.bodyLargeStrong))
-    }
-
-    public static func bodyMedium(_ text: String) -> some View {
-        Text(text)
-            .font(CheddarFonts.font(for: CheddarType.bodyMedium))
-    }
-
-    public static func sectionTitle(_ text: String) -> some View {
-        Text(text)
-            .font(CheddarFonts.font(for: CheddarType.bodyLarge))
+public extension Text {
+    /// The `Text`-returning form, for the cases that need to concatenate runs — the
+    /// notification body's bolded category, or the goal readout's smaller cents.
+    func cdsFont(_ style: CheddarTextStyle) -> Text {
+        font(CheddarFonts.font(for: style)).tracking(style.tracking)
     }
 }

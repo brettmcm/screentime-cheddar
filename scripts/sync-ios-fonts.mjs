@@ -29,6 +29,34 @@ for f in os.listdir(out):
     os.remove(os.path.join(out, f))
 tmp = tempfile.mkdtemp()
 
+def set_line_metrics(font, ratio):
+    """Retunes the face's vertical metrics so one line occupies \`ratio\` ems.
+
+    CSS sizes a line box from \`line-height\` and centres the glyphs in it; CoreText stacks
+    lines at the face's own height, which Oswald draws at 1.48em and Mona Sans at 1.4em.
+    SwiftUI will open that up (\`lineSpacing\`) but never close it — a negative value is
+    ignored — so the design system's leading has to be the metric the face reports.
+
+    Both families are used at a single leading throughout the ramp (1.0em for the Oswald
+    display styles, 1.3em for the Mona Sans text styles), which is what makes baking it in
+    possible; the one style that runs looser asks for the difference as \`lineSpacing\`.
+
+    The trim comes off the ascent and the descent evenly, which leaves the baseline where
+    CSS's half-leading would put it.
+    """
+    upem = font['head'].unitsPerEm
+    hhea, os2 = font['hhea'], font['OS/2']
+    height = hhea.ascent - hhea.descent + hhea.lineGap
+    trim = (height - round(ratio * upem)) / 2
+    ascent = round(hhea.ascent + hhea.lineGap / 2 - trim)
+    descent = round(hhea.descent - hhea.lineGap / 2 + trim)
+    hhea.ascent, hhea.descent, hhea.lineGap = ascent, descent, 0
+    os2.sTypoAscender, os2.sTypoDescender, os2.sTypoLineGap = ascent, descent, 0
+    # The Windows metrics are the ink bounds rather than the line box; leaving them at the
+    # face's own values keeps the glyphs from being clipped by their now-shorter line.
+    os2.usWinAscent = max(os2.usWinAscent, ascent)
+    os2.usWinDescent = max(os2.usWinDescent, -descent)
+
 def set_names(font, family, style, ps):
     name = font['name']
     for rec in list(name.names):
@@ -51,6 +79,7 @@ for weight, style, ps, filename in [
 ]:
     inst = instancer.instantiateVariableFont(mona, {'wght': weight}, inplace=False)
     set_names(inst, 'Mona Sans', style, ps)
+    set_line_metrics(inst, 1.3)
     for tag in ('fvar','avar'):
         if tag in inst: del inst[tag]
     inst.save(os.path.join(out, filename))
@@ -64,6 +93,7 @@ for src, style, ps, filename in [
     decompress(os.path.join(ds, src), ttf)
     font = TTFont(ttf)
     set_names(font, 'Oswald', style, ps)
+    set_line_metrics(font, 1.0)
     font.save(os.path.join(out, filename))
     print('Wrote', filename)
 
@@ -75,6 +105,7 @@ try:
     )
     f = TTFont(dest)
     set_names(f, 'Oswald', 'SemiBold', 'Oswald-SemiBold')
+    set_line_metrics(f, 1.0)
     f.save(dest)
     print('Wrote Oswald-SemiBold.ttf')
 except Exception as e:
@@ -82,6 +113,7 @@ except Exception as e:
     shutil.copy(os.path.join(out,'Oswald-Medium.ttf'), dest)
     f = TTFont(dest)
     set_names(f, 'Oswald', 'SemiBold', 'Oswald-SemiBold')
+    set_line_metrics(f, 1.0)
     f.save(dest)
 shutil.rmtree(tmp)
 `

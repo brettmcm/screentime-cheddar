@@ -1,40 +1,67 @@
 import SwiftUI
 
-/// The profile header card. It follows the branded shell rather than being a light island,
-/// so it reads as a tinted panel: brand-secondary fill with reversed type.
-public struct CDSProfileCard<Actions: View>: View {
+/// `ProfileCard` — the profile header.
+///
+/// Follows the shell rather than pinning to light: it is a brand-tinted panel with reversed
+/// type, the same treatment as `TotalSavingsCard`.
+public struct CDSProfileCard: View {
+    @Environment(\.cheddarPalette) private var palette
+
     private let name: String
     private let handle: String
-    private let actions: Actions
+    private let avatarAsset: String?
+    private let actions: [CDSCardAction]
 
-    public init(name: String, handle: String, @ViewBuilder actions: () -> Actions) {
+    public init(
+        name: String,
+        handle: String,
+        avatarAsset: String? = nil,
+        actions: [CDSCardAction] = []
+    ) {
         self.name = name
         self.handle = handle
-        self.actions = actions()
+        self.avatarAsset = avatarAsset
+        self.actions = actions
     }
 
     public var body: some View {
-        VStack(spacing: CheddarSpacing.m) {
-            CDSAvatar(size: .xlarge)
+        VStack(spacing: CheddarSpacing.xs) {
+            // A 96pt brand-300 disc with the 40pt avatar centred in it — the DS sizes the
+            // ring and the portrait independently.
+            CDSAvatar(size: .large, asset: avatarAsset, name: name)
+                .frame(width: 96, height: 96)
+                .background(palette.ramp.step300)
+                .clipShape(Circle())
+
             Text(name)
-                .font(CheddarFonts.font(for: CheddarType.displayMedium))
-                .tracking(CheddarType.displayMedium.tracking)
-                .foregroundStyle(CheddarColors.shell.foregroundOnReverse)
+                .cdsType(CheddarType.displayMedium)
+                .padding(.top, CheddarSpacing.xs)
             Text(handle)
-                .font(CheddarFonts.font(for: CheddarType.bodyLarge))
-                .foregroundStyle(CheddarColors.shell.foregroundOnReverseSecondary)
-            HStack(spacing: CheddarSpacing.xs) {
-                actions
+                .cdsType(CheddarType.bodyLarge)
+                .foregroundStyle(palette.foregroundOnReverseSecondary)
+
+            if !actions.isEmpty {
+                HStack(spacing: CheddarSpacing.xs) {
+                    ForEach(actions) { action in
+                        CDSCardActionButton(
+                            action.label,
+                            icon: action.icon,
+                            knockout: palette.bgBrandSecondary,
+                            action: action.action
+                        )
+                    }
+                }
+                .padding(.top, CheddarSpacing.xs)
             }
         }
+        .multilineTextAlignment(.center)
+        .padding(CheddarSpacing.m)
         .frame(maxWidth: .infinity)
-        .padding(CheddarSpacing.l)
-        .background(CheddarColors.shell.bgBrandSecondary)
-        .clipShape(RoundedRectangle(cornerRadius: CheddarSpacing.cornerLarge, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: CheddarSpacing.cornerLarge, style: .continuous)
-                .stroke(CheddarColors.shell.borderDefault, lineWidth: 1)
-        }
+        // `box-sizing: border-box`: the floor covers the padding rather than sitting inside it.
+        .frame(minHeight: 310)
+        .foregroundStyle(palette.foregroundOnReverse)
+        .cdsCard(background: palette.bgBrandSecondary, border: palette.borderDefault)
+        .cheddarIconKnockout(palette.bgBrandSecondary)
     }
 }
 
@@ -51,98 +78,126 @@ public struct CDSStreakDay: Identifiable {
     }
 }
 
+/// `SavingsStreak` — a week of marks, one per day.
 public struct CDSSavingsStreak: View {
+    @Environment(\.cheddarTheme) private var theme
+
     private let title: String
     private let days: [CDSStreakDay]
 
-    public init(title: String, days: [CDSStreakDay]) {
+    public init(title: String = "Savings streak", days: [CDSStreakDay]) {
         self.title = title
         self.days = days
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: CheddarSpacing.m) {
+        let palette = theme.island
+        VStack(alignment: .leading, spacing: CheddarSpacing.s) {
             Text(title)
-                .font(CheddarFonts.font(for: CheddarType.bodyLargeStrong))
-                .foregroundStyle(CheddarColors.surface.foregroundOnSurface)
-            HStack(spacing: CheddarSpacing.xs) {
+                .cdsType(CheddarType.bodyLargeStrong)
+                .foregroundStyle(palette.foregroundOnSurface)
+
+            HStack(spacing: CheddarSpacing.gapXs) {
                 ForEach(days) { day in
-                    VStack(spacing: CheddarSpacing.xxs) {
-                        mark(for: day)
+                    VStack(spacing: CheddarSpacing.gapXs) {
+                        mark(for: day, palette: palette)
                         Text(day.label)
-                            .font(CheddarFonts.font(for: CheddarType.bodyMedium))
-                            .foregroundStyle(CheddarColors.surface.foregroundSecondary)
+                            .cdsType(CheddarType.bodySmall)
+                            .foregroundStyle(palette.foregroundSecondary)
                     }
                     .frame(maxWidth: .infinity)
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(day.name): \(day.isComplete ? "saved" : "no saving")")
+                    .accessibilityLabel("\(day.name): \(day.isComplete ? "saved" : "not saved")")
                 }
             }
         }
-        .cdsSurfaceCard()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(CheddarSpacing.s)
+        .cdsCard(background: palette.backgroundSurface, border: palette.borderDefault)
+        .cheddarIsland()
     }
 
-    private func mark(for day: CDSStreakDay) -> some View {
-        Circle()
-            .fill(day.isComplete ? CheddarColors.surface.bgBrandPrimary : .clear)
-            .frame(width: 32, height: 32)
-            .overlay {
-                if day.isComplete {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(CheddarColors.surface.foregroundBrandPrimary)
-                } else {
-                    Circle().stroke(CheddarColors.surface.borderStrong, lineWidth: 1)
-                }
+    private func mark(for day: CDSStreakDay, palette: CheddarPalette) -> some View {
+        ZStack {
+            if day.isComplete {
+                Circle().fill(palette.bgBrandPrimary)
+                CDSIcon(.check, size: CheddarSpacing.iconMedium)
+                    .foregroundStyle(palette.foregroundBrandPrimary)
+            } else {
+                Circle().strokeBorder(palette.borderStrong, lineWidth: CheddarSpacing.border)
             }
+        }
+        .frame(width: 32, height: 32)
     }
 }
 
+/// `BadgeCard` — an achievement with its progress toward the next step.
 public struct CDSBadgeCard: View {
+    @Environment(\.cheddarTheme) private var theme
+
     private let title: String
     private let caption: String
     /// Percent complete, 0–100.
     private let progress: Double
+    private let icon: CheddarIconName
     private let accent: CDSAccent
-    private let systemImage: String
 
-    public init(title: String, caption: String, progress: Double, accent: CDSAccent, systemImage: String) {
+    public init(
+        title: String,
+        caption: String,
+        progress: Double,
+        icon: CheddarIconName,
+        accent: CDSAccent
+    ) {
         self.title = title
         self.caption = caption
         self.progress = progress
+        self.icon = icon
         self.accent = accent
-        self.systemImage = systemImage
     }
 
     public var body: some View {
-        HStack(spacing: CheddarSpacing.m) {
-            Image(systemName: systemImage)
-                .font(.system(size: 26))
-                .foregroundStyle(CheddarColors.surface.foregroundPrimary)
+        let palette = theme.island
+        HStack(spacing: CheddarSpacing.s) {
+            CDSIcon(icon, size: CheddarSpacing.iconLarge, knockout: accent.step500)
+                .foregroundStyle(palette.foregroundPrimary)
                 .frame(width: 64, height: 64)
                 .background(accent.step500)
-                .clipShape(RoundedRectangle(cornerRadius: CheddarSpacing.cornerXsmall, style: .continuous))
+                .clipShape(RoundedRectangle(
+                    cornerRadius: CheddarSpacing.cornerXsmall,
+                    style: .continuous
+                ))
 
             VStack(alignment: .leading, spacing: CheddarSpacing.xxs) {
                 Text(title)
-                    .font(CheddarFonts.font(for: CheddarType.bodyLargeStrong))
-                    .foregroundStyle(CheddarColors.surface.foregroundOnSurface)
+                    .cdsType(CheddarType.bodyLarge)
+                    .foregroundStyle(palette.foregroundOnSurface)
                 CDSProgressTrack(progress: progress / 100, fill: accent.step300)
                 Text(caption)
-                    .font(CheddarFonts.font(for: CheddarType.bodyLarge))
-                    .foregroundStyle(CheddarColors.surface.foregroundSecondary)
+                    .cdsType(CheddarType.bodyLarge)
+                    .foregroundStyle(palette.foregroundSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            Spacer(minLength: 0)
+            // `flex: 1` — the column takes the rest of the row outright. A trailing spacer
+            // would cost it the stack's gap and wrap the caption a word early.
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .cdsSurfaceCard()
+        .padding(CheddarSpacing.s)
+        .frame(maxWidth: .infinity, minHeight: 111)
+        .cdsCard(background: palette.backgroundSurface, border: palette.borderDefault)
+        .cheddarIsland()
     }
 }
 
+/// `AccountCard` — a linked bank account and its balance.
 public struct CDSAccountCard: View {
+    @Environment(\.cheddarTheme) private var theme
+
     private let name: String
     private let subtitle: String
     private let amount: Decimal
     private let meta: String
+    private let icon: CheddarIconName
     private let accent: CDSAccent
 
     public init(
@@ -150,45 +205,50 @@ public struct CDSAccountCard: View {
         subtitle: String,
         amount: Decimal,
         meta: String,
+        icon: CheddarIconName = .wallet,
         accent: CDSAccent = .magenta
     ) {
         self.name = name
         self.subtitle = subtitle
         self.amount = amount
         self.meta = meta
+        self.icon = icon
         self.accent = accent
     }
 
     public var body: some View {
-        HStack(spacing: CheddarSpacing.m) {
-            Image(systemName: "building.columns.fill")
-                .font(.system(size: 18))
+        let palette = theme.island
+        HStack(spacing: CheddarSpacing.xs) {
+            CDSIcon(icon, size: CheddarSpacing.iconLarge, knockout: accent.step500)
                 .foregroundStyle(accent.step300)
                 .frame(width: 40, height: 40)
                 .background(accent.step500)
-                .clipShape(RoundedRectangle(cornerRadius: CheddarSpacing.cornerXsmall, style: .continuous))
+                .clipShape(RoundedRectangle(
+                    cornerRadius: CheddarSpacing.cornerXsmall,
+                    style: .continuous
+                ))
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(name)
-                    .font(CheddarFonts.font(for: CheddarType.bodyLargeStrong))
-                    .foregroundStyle(CheddarColors.surface.foregroundOnSurface)
+                Text(name).cdsType(CheddarType.bodyLargeStrong)
                 Text(subtitle)
-                    .font(CheddarFonts.font(for: CheddarType.bodyLarge))
-                    .foregroundStyle(CheddarColors.surface.foregroundSecondary)
+                    .cdsType(CheddarType.bodyLarge)
+                    .foregroundStyle(palette.foregroundSecondary)
             }
-
-            Spacer(minLength: CheddarSpacing.s)
+            // `flex: 1`, which is what pushes the balance to the trailing edge.
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             VStack(alignment: .trailing, spacing: 2) {
-                Text(formatCurrency(amount))
-                    .font(CheddarFonts.font(for: CheddarType.bodyLargeStrong))
-                    .foregroundStyle(CheddarColors.surface.foregroundOnSurface)
+                Text(CDSCurrency.format(amount)).cdsType(CheddarType.bodyLargeStrong)
                 Text(meta)
-                    .font(CheddarFonts.font(for: CheddarType.bodyLarge))
-                    .foregroundStyle(CheddarColors.surface.foregroundSecondary)
+                    .cdsType(CheddarType.bodyLarge)
+                    .foregroundStyle(palette.foregroundSecondary)
             }
         }
-        .cdsSurfaceCard()
+        .padding(CheddarSpacing.s)
+        .frame(maxWidth: .infinity, minHeight: 75)
+        .foregroundStyle(palette.foregroundOnSurface)
+        .cdsCard(background: palette.backgroundSurface, border: palette.borderDefault)
+        .cheddarIsland()
     }
 }
 
@@ -204,81 +264,60 @@ public struct CDSGoalSummaryItem: Identifiable {
     }
 }
 
+/// `GoalSummaryCard` — every goal's balance with a ruled total beneath.
 public struct CDSGoalSummaryCard: View {
+    @Environment(\.cheddarTheme) private var theme
+
+    private let title: String?
     private let items: [CDSGoalSummaryItem]
     private let totalLabel: String
     private let total: Decimal
 
-    public init(items: [CDSGoalSummaryItem], totalLabel: String, total: Decimal) {
+    public init(
+        title: String? = nil,
+        items: [CDSGoalSummaryItem],
+        totalLabel: String = "Total savings",
+        total: Decimal
+    ) {
+        self.title = title
         self.items = items
         self.totalLabel = totalLabel
         self.total = total
     }
 
     public var body: some View {
+        let palette = theme.island
         VStack(alignment: .leading, spacing: CheddarSpacing.xs) {
+            if let title {
+                Text(title).cdsType(CheddarType.bodyLargeStrong)
+            }
+
             VStack(alignment: .leading, spacing: CheddarSpacing.xxs) {
                 ForEach(items) { item in
-                    HStack {
-                        Text(item.label)
-                        Spacer(minLength: CheddarSpacing.s)
-                        Text(formatCurrency(item.amount))
+                    HStack(spacing: CheddarSpacing.xs) {
+                        Text(item.label).cdsType(CheddarType.bodyLarge)
+                        Spacer(minLength: 0)
+                        Text(CDSCurrency.format(item.amount))
+                            .cdsType(CheddarType.bodyLargeStrong)
                     }
-                    .font(CheddarFonts.font(for: CheddarType.bodyLarge))
                 }
             }
 
-            Divider().overlay(CheddarColors.surface.borderDefault)
+            Divider()
+                .overlay(palette.borderDefault)
+                .padding(.top, CheddarSpacing.xs)
 
-            HStack {
+            HStack(spacing: CheddarSpacing.xs) {
                 Text(totalLabel)
-                Spacer(minLength: CheddarSpacing.s)
-                Text(formatCurrency(total))
+                Spacer(minLength: 0)
+                Text(CDSCurrency.format(total))
             }
-            .font(CheddarFonts.font(for: CheddarType.bodyLargeStrong))
+            .cdsType(CheddarType.bodyLargeStrong)
         }
-        .foregroundStyle(CheddarColors.surface.foregroundOnSurface)
-        .cdsSurfaceCard()
+        .padding(CheddarSpacing.s)
+        .frame(maxWidth: .infinity, minHeight: 164, alignment: .topLeading)
+        .foregroundStyle(palette.foregroundOnSurface)
+        .cdsCard(background: palette.backgroundSurface, border: palette.borderDefault)
+        .cheddarIsland()
     }
-}
-
-/// The DS progress track shared by the badge and goal cards.
-public struct CDSProgressTrack: View {
-    private let progress: Double
-    private let fill: Color
-
-    public init(progress: Double, fill: Color) {
-        self.progress = progress
-        self.fill = fill
-    }
-
-    public var body: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .leading) {
-                Capsule().fill(CheddarColors.surface.trackDefault)
-                Capsule()
-                    .fill(fill)
-                    .frame(width: geo.size.width * min(1, max(0, progress)))
-            }
-        }
-        .frame(height: 6)
-    }
-}
-
-private extension View {
-    /// The shared recipe for the cards the DS pins to the light palette.
-    func cdsSurfaceCard() -> some View {
-        padding(CheddarSpacing.m)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(CheddarColors.surface.backgroundSurface)
-            .clipShape(RoundedRectangle(cornerRadius: CheddarSpacing.cornerLarge, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: CheddarSpacing.cornerLarge, style: .continuous)
-                    .stroke(CheddarColors.surface.borderDefault, lineWidth: 1)
-            }
-    }
-}
-
-func formatCurrency(_ value: Decimal) -> String {
-    String(format: "$%.2f", NSDecimalNumber(decimal: value).doubleValue)
 }

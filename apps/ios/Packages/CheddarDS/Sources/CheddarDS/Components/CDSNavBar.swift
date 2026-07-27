@@ -1,6 +1,8 @@
 import SwiftUI
 
-public enum CDSNavItem: String, CaseIterable, Identifiable {
+/// The four destinations the tab bar routes to. The design system calls the savings tab
+/// "wallet"; the app routes it as savings.
+public enum CDSNavItem: String, CaseIterable, Identifiable, Sendable {
     case home
     case wallet
     case learn
@@ -11,87 +13,95 @@ public enum CDSNavItem: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .home: "Home"
-        case .wallet: "Savings"
+        case .wallet: "Wallet"
         case .learn: "Learn"
         case .profile: "Profile"
         }
     }
 
-    var icon: String {
+    var icon: CheddarIconName {
         switch self {
-        case .home: "house.fill"
-        case .wallet: "banknote.fill"
-        case .learn: "book.fill"
-        case .profile: "person.fill"
+        case .home: .home
+        case .wallet: .wallet
+        case .learn: .learn
+        case .profile: .profile
         }
     }
 }
 
+/// `Nav` — the bottom tab bar, with the add action sitting in the middle of the run.
+///
+/// Labels are off by default in the DS and the app does not turn them on, so a tab is a
+/// ghost icon button over a 4pt indicator dot. The add action is a filled primary button and
+/// carries no dot, since it is not a destination.
+///
+/// The bar owns no padding of its own on the web — the app insets it to the 16pt gutter and
+/// reserves the home indicator's safe area, which together give the 108pt height in Figma.
 public struct CDSNavBar: View {
-    @Binding var activeItem: CDSNavItem
-    var onAddTapped: () -> Void
+    @Environment(\.cheddarPalette) private var palette
 
-    public init(activeItem: Binding<CDSNavItem>, onAddTapped: @escaping () -> Void) {
+    @Binding private var activeItem: CDSNavItem
+    private let addLabel: String
+    private let onAddTapped: () -> Void
+
+    public init(
+        activeItem: Binding<CDSNavItem>,
+        addLabel: String = "Add goal",
+        onAddTapped: @escaping () -> Void
+    ) {
         _activeItem = activeItem
+        self.addLabel = addLabel
         self.onAddTapped = onAddTapped
     }
 
     public var body: some View {
         HStack(spacing: 0) {
-            navButton(.home)
-            navButton(.wallet)
+            tab(.home)
+            tab(.wallet)
             addButton
-            navButton(.learn)
-            navButton(.profile)
-        }
-        .padding(.horizontal, CheddarSpacing.m)
-        .padding(.top, CheddarSpacing.s)
-        .padding(.bottom, CheddarSpacing.xs)
-        .background(CheddarColors.shell.backgroundDefault)
-        .overlay(alignment: .top) {
-            Rectangle()
-                .fill(CheddarColors.shell.borderDefault)
-                .frame(height: 1)
+            tab(.learn)
+            tab(.profile)
         }
     }
 
-    private func navButton(_ item: CDSNavItem) -> some View {
-        Button {
-            activeItem = item
-        } label: {
-            VStack(spacing: 4) {
-                Image(systemName: item.icon)
-                    .font(.system(size: 22))
-                if activeItem == item {
-                    Circle()
-                        .fill(CheddarColors.shell.foregroundBrandPrimary)
-                        .frame(width: 4, height: 4)
-                } else {
-                    Circle().fill(.clear).frame(width: 4, height: 4)
-                }
+    private func tab(_ item: CDSNavItem) -> some View {
+        let isActive = activeItem == item
+        return VStack(spacing: CheddarSpacing.gapXs) {
+            Button { activeItem = item } label: {
+                CDSIcon(item.icon, size: CheddarSpacing.iconLarge)
+                    .frame(width: 48, height: 48)
+                    .foregroundStyle(
+                        isActive ? palette.foregroundPrimary : palette.foregroundSecondary
+                    )
             }
-            .frame(maxWidth: .infinity)
-            .foregroundStyle(
-                activeItem == item
-                    ? CheddarColors.shell.foregroundBrandPrimary
-                    : CheddarColors.shell.foregroundSecondary
-            )
+            .buttonStyle(.plain)
+            .accessibilityLabel(item.title)
+            .accessibilityAddTraits(isActive ? [.isSelected] : [])
+
+            Circle()
+                .fill(palette.ramp.step400)
+                .frame(width: 4, height: 4)
+                .opacity(isActive ? 1 : 0)
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(item.title)
+        .frame(maxWidth: .infinity)
     }
 
     private var addButton: some View {
-        Button(action: onAddTapped) {
-            Image(systemName: "plus")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(CheddarColors.shell.bgOnBrand)
-                .frame(width: 56, height: 56)
-                .background(CheddarColors.shell.foregroundBrandPrimary)
-                .clipShape(Circle())
+        VStack(spacing: CheddarSpacing.gapXs) {
+            Button(action: onAddTapped) {
+                CDSIcon(.plus, size: CheddarSpacing.iconLarge, knockout: palette.foregroundBrandPrimary)
+                    .frame(width: 48, height: 48)
+                    .foregroundStyle(palette.bgOnBrand)
+                    .background(palette.foregroundBrandPrimary)
+                    .clipShape(Circle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(addLabel)
+
+            // The add action is not a destination, so it reserves the dot's space
+            // without ever painting one.
+            Color.clear.frame(width: 4, height: 4)
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel("Add goal")
-        .offset(y: -8)
+        .frame(maxWidth: .infinity)
     }
 }

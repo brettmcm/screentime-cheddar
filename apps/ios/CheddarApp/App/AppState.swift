@@ -1,275 +1,205 @@
-import Foundation
-import SwiftUI
 import CheddarDS
+import SwiftUI
+import UIKit
 
-struct AppActivity: Identifiable {
-    let id: String
-    let type: CDSActivityType
-    let amount: Decimal
-    let date: String
-    let time: String
-    let goalID: String?
+private let toastDuration: TimeInterval = 2.2
 
-    var timestamp: String { "\(date), \(time)" }
-}
-
-struct UserProfile {
-    var name: String
-    var handle: String
-}
-
-enum CheddarThemeName: String, CaseIterable, Identifiable {
-    case berry = "Berry"
-    case blue = "Blue"
-    case green = "Green"
-    case purple = "Purple"
-
-    var id: String { rawValue }
+/// Money is held in dollars, so every arithmetic result is re-rounded to cents.
+private func toCents(_ value: Decimal) -> Decimal {
+    var input = value
+    var rounded = Decimal()
+    NSDecimalRound(&rounded, &input, 2, .plain)
+    return rounded
 }
 
 @MainActor
 final class AppState: ObservableObject {
-    enum Route: Equatable {
-        case landing
-        case main
-    }
+    @Published private(set) var screen: AppScreenID = .stack(.landing)
+    @Published private(set) var activeTab: MainTab = .home
+    @Published private(set) var selectedGoalID: String?
+    @Published private(set) var goals = DemoData.goals
+    @Published private(set) var completedGoals = DemoData.completedGoals
+    @Published private(set) var activities = DemoData.activities
+    @Published private(set) var profile = Profile(name: "Jamie K.", handle: "@jamieh")
+    @Published private(set) var brand: Brand = .magenta
+    @Published private(set) var mode: Mode = .dark
+    @Published private(set) var toast: String?
 
-    @Published var route: Route = .landing
-    @Published var selectedTab: CDSNavItem = .home
-    @Published var showAddGoal = false
-    @Published var selectedGoal: CDSGoal?
-    @Published var showTrendNotification = true
-    @Published var goals: [CDSGoal] = DemoData.goals
-    @Published var completedGoals: [CDSGoal] = [
-        CDSGoal(
-            id: "skateboard",
-            name: "Skateboard",
-            target: 120,
-            saved: 120,
-            accent: CheddarColors.brand300,
-            iconName: "figure.skating"
-        ),
-        CDSGoal(
-            id: "camera",
-            name: "Camera",
-            target: 260,
-            saved: 260,
-            accent: CheddarColors.blue400,
-            iconName: "camera.fill"
-        ),
-    ]
-    @Published var activities: [AppActivity] = [
-        AppActivity(id: "a1", type: .deposit, amount: 20, date: "Today", time: "1:34pm", goalID: "sneakers"),
-        AppActivity(id: "a2", type: .deposit, amount: 45, date: "Today", time: "11:17am", goalID: "headphones"),
-        AppActivity(id: "a3", type: .withdrawal, amount: 13.75, date: "Mon", time: "8:22am", goalID: nil),
-        AppActivity(id: "a4", type: .deposit, amount: 16, date: "Sat", time: "11:00am", goalID: "trip"),
-        AppActivity(id: "a5", type: .withdrawal, amount: 7, date: "Thu", time: "1:15pm", goalID: nil),
-        AppActivity(id: "a6", type: .deposit, amount: 25, date: "Wed", time: "9:02am", goalID: "sneakers"),
-        AppActivity(id: "a7", type: .deposit, amount: 32, date: "Tue", time: "4:15pm", goalID: "headphones"),
-    ]
-    @Published var profile = UserProfile(name: "Jamie K.", handle: "@jamieh")
-    @Published var selectedTheme: CheddarThemeName = .berry
-    @Published var toastMessage: String?
+    private var toastTask: Task<Void, Never>?
+    private var activitySequence = 0
+
+    /// The screenshot harness's way in: `CHEDDAR_START_SCREEN` says which screen the app opens
+    /// on, `CHEDDAR_START_SHEET` opens the money sheet over it.
+    let startMoneyMode: MoneySheetMode?
 
     init() {
-        #if DEBUG
-        // Lets the snapshot tooling open a tab directly, the way the web app's test routes do.
-        if let screen = ProcessInfo.processInfo.environment["CHEDDAR_UI_SCREEN"] {
-            route = .main
-            switch screen {
-            case "savings": selectedTab = .wallet
-            case "learn": selectedTab = .learn
-            case "profile": selectedTab = .profile
-            case "goal":
-                selectedTab = .wallet
-                selectedGoal = goals.first
-            default: selectedTab = .home
-            }
+        let env = ProcessInfo.processInfo.environment
+        startMoneyMode = env["CHEDDAR_START_SHEET"].flatMap(MoneySheetMode.init(rawValue:))
+        guard let start = env["CHEDDAR_START_SCREEN"] else { return }
+        switch start {
+        case "home": screen = .tab(.home)
+        case "savings": screen = .tab(.savings); activeTab = .savings
+        case "learn": screen = .tab(.learn); activeTab = .learn
+        case "profile": screen = .tab(.profile); activeTab = .profile
+        case "add-goal": screen = .stack(.addGoal)
+        case "goal-detail": screen = .stack(.goalDetail); selectedGoalID = "headphones"
+        case "goal-reached": screen = .stack(.goalReached); selectedGoalID = "sneakers"
+        case "theme-settings": screen = .stack(.themeSettings)
+        default: break
         }
-        #endif
     }
+
+    var theme: CheddarTheme { CheddarTheme(brand: brand, mode: mode) }
 
     var totalSavings: Decimal {
-        goals.reduce(Decimal.zero) { $0 + $1.saved }
+        toCents(goals.reduce(0) { $0 + $1.saved })
     }
 
-    var totalSavingsText: String {
-        Self.currency(totalSavings)
+    // MARK: - Navigation
+
+    func goTab(_ tab: MainTab) {
+        activeTab = tab
+        screen = .tab(tab)
+        selectedGoalID = nil
     }
 
-    var firstName: String {
-        profile.name.split(separator: " ").first.map(String.init) ?? profile.name
+    func push(_ next: StackScreen, goalID: String? = nil) {
+        selectedGoalID = goalID
+        screen = .stack(next)
     }
 
-    func signUp() {
-        route = .main
+    /// Stack screens never change the active tab, so returning is always to that tab.
+    func back() {
+        selectedGoalID = nil
+        screen = .tab(activeTab)
     }
 
-    func signIn() {
-        route = .main
+    func goal(id: String?) -> Goal? {
+        goals.first { $0.id == id } ?? completedGoals.first { $0.id == id }
     }
 
-    func openGoal(_ goal: CDSGoal) {
-        selectedGoal = goal
-    }
+    // MARK: - Money
 
-    func goal(id: String) -> CDSGoal? {
-        goals.first(where: { $0.id == id })
-            ?? completedGoals.first(where: { $0.id == id })
-    }
-
-    func activities(for goalID: String) -> [AppActivity] {
-        activities.filter { $0.goalID == goalID }
-    }
-
-    func addGoal(
-        name: String,
-        target: Decimal,
-        startingSaved: Decimal,
-        icon: String,
-        imageAsset: String?,
-        accent: Color
-    ) {
-        let goal = CDSGoal(
-            id: "goal-\(UUID().uuidString)",
-            name: name,
-            target: target,
-            saved: min(startingSaved, target),
-            accent: accent,
-            imageAsset: imageAsset,
-            iconName: icon
+    func addGoal(name: String, target: Decimal, saved: Decimal, illustration: GoalIllustration, accent: CDSAccent) {
+        let id = "goal-\(Date().timeIntervalSince1970)"
+        goals.append(
+            Goal(id: id, name: name, target: target, saved: saved, illustration: illustration, accent: accent)
         )
-        goals.append(goal)
-        if startingSaved > 0 {
-            activities.insert(
-                makeActivity(type: .deposit, amount: min(startingSaved, target), goalID: goal.id),
-                at: 0
-            )
-        }
+        if saved > 0 { addActivity(.deposit, amount: saved, goalID: id) }
         showToast("Goal added")
+        goTab(.home)
     }
 
+    /// Returns the id of a goal that reached its target, if this deposit finished one.
     @discardableResult
-    func deposit(_ amount: Decimal, into goalID: String) -> Bool {
-        guard amount > 0, let current = goals.first(where: { $0.id == goalID }) else {
-            return false
-        }
-        let updated = copy(current, saved: current.saved + amount)
-        activities.insert(makeActivity(type: .deposit, amount: amount, goalID: goalID), at: 0)
+    func deposit(goalID: String, amount: Decimal) -> String? {
+        guard let index = goals.firstIndex(where: { $0.id == goalID }), amount > 0 else { return nil }
+        var updated = goals[index]
+        updated.saved = toCents(updated.saved + amount)
+        addActivity(.deposit, amount: amount, goalID: goalID)
 
         if updated.saved >= updated.target {
-            goals.removeAll { $0.id == goalID }
+            goals.remove(at: index)
             completedGoals.insert(updated, at: 0)
-            selectedGoal = updated
             showToast("Goal reached!")
-            return true
+            return goalID
         }
 
-        replaceGoal(updated)
-        selectedGoal = updated
+        goals[index] = updated
         showToast("Deposit added")
-        return false
+        return nil
     }
 
-    /// Moves money between two goals, debiting the source and crediting the target.
-    /// Returns whether the transfer completed the target goal.
+    /// Moves money between two goals. Never routes through `deposit`.
     @discardableResult
-    func transfer(_ amount: Decimal, from sourceID: String, to targetID: String) -> Bool {
+    func transfer(from fromGoalID: String, to toGoalID: String, amount: Decimal) -> String? {
         guard
-            amount > 0,
-            sourceID != targetID,
-            let source = goals.first(where: { $0.id == sourceID }),
-            let target = goals.first(where: { $0.id == targetID })
-        else {
-            return false
-        }
+            let fromIndex = goals.firstIndex(where: { $0.id == fromGoalID }),
+            let toIndex = goals.firstIndex(where: { $0.id == toGoalID }),
+            fromGoalID != toGoalID,
+            amount > 0
+        else { return nil }
 
-        let moved = min(amount, source.saved)
-        guard moved > 0 else { return false }
+        let moved = min(amount, goals[fromIndex].saved)
+        guard moved > 0 else { return nil }
 
-        let debited = copy(source, saved: source.saved - moved)
-        let credited = copy(target, saved: target.saved + moved)
+        var debited = goals[fromIndex]
+        var credited = goals[toIndex]
+        debited.saved = toCents(debited.saved - moved)
+        credited.saved = toCents(credited.saved + moved)
 
-        activities.insert(makeActivity(type: .withdrawal, amount: moved, goalID: sourceID), at: 0)
-        activities.insert(makeActivity(type: .deposit, amount: moved, goalID: targetID), at: 0)
-
-        replaceGoal(debited)
+        activities.insert(contentsOf: [
+            makeActivity(.deposit, amount: moved, goalID: credited.id),
+            makeActivity(.withdrawal, amount: moved, goalID: debited.id),
+        ], at: 0)
 
         if credited.saved >= credited.target {
-            goals.removeAll { $0.id == targetID }
+            goals[fromIndex] = debited
+            goals.removeAll { $0.id == credited.id }
             completedGoals.insert(credited, at: 0)
-            selectedGoal = credited
             showToast("Goal reached!")
-            return true
+            return credited.id
         }
 
-        replaceGoal(credited)
-        selectedGoal = credited
+        goals[fromIndex] = debited
+        goals[toIndex] = credited
         showToast("Transferred to \(credited.name)")
-        return false
+        return nil
     }
 
+    // MARK: - Profile and theme
+
     func updateProfile(name: String, handle: String) {
-        let cleanName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        let cleanHandle = handle.trimmingCharacters(in: .whitespacesAndNewlines)
-        profile = UserProfile(
-            name: cleanName.isEmpty ? profile.name : cleanName,
-            handle: cleanHandle.isEmpty ? profile.handle : cleanHandle
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedHandle = handle.trimmingCharacters(in: .whitespacesAndNewlines)
+        profile = Profile(
+            name: trimmedName.isEmpty ? profile.name : trimmedName,
+            handle: trimmedHandle.isEmpty ? profile.handle : trimmedHandle
         )
         showToast("Profile updated")
     }
 
+    func shareProfile() {
+        UIPasteboard.general.string = "I'm saving with Cheddar!"
+        showToast("Copied to clipboard")
+    }
+
+    func setBrand(_ next: Brand) {
+        brand = next
+        showToast("\(next.label) theme selected")
+    }
+
+    func setMode(_ next: Mode) {
+        mode = next
+        showToast(next == .dark ? "Dark mode on" : "Light mode on")
+    }
+
+    // MARK: - Toast
+
     func showToast(_ message: String) {
-        toastMessage = message
-        Task {
-            try? await Task.sleep(for: .seconds(2))
-            if toastMessage == message {
-                toastMessage = nil
-            }
+        toastTask?.cancel()
+        toast = message
+        toastTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(toastDuration))
+            guard !Task.isCancelled else { return }
+            self?.toast = nil
         }
     }
 
-    static func currency(_ amount: Decimal) -> String {
-        String(format: "$%.2f", NSDecimalNumber(decimal: amount).doubleValue)
+    // MARK: - Activity
+
+    private func addActivity(_ type: CDSActivityType, amount: Decimal, goalID: String) {
+        activities.insert(makeActivity(type, amount: amount, goalID: goalID), at: 0)
     }
 
-    /// Splits a formatted amount so callers can set the cents smaller than the dollars.
-    static func splitCurrency(_ amount: Decimal) -> (dollars: String, cents: String) {
-        let text = currency(amount)
-        guard let dot = text.lastIndex(of: ".") else { return (text, "") }
-        return (String(text[..<dot]), String(text[dot...]))
-    }
-
-    private func replaceGoal(_ updated: CDSGoal) {
-        guard let index = goals.firstIndex(where: { $0.id == updated.id }) else { return }
-        goals[index] = updated
-    }
-
-    private func copy(_ goal: CDSGoal, saved: Decimal) -> CDSGoal {
-        CDSGoal(
-            id: goal.id,
-            name: goal.name,
-            target: goal.target,
-            saved: saved,
-            accent: goal.accent,
-            imageAsset: goal.imageAsset,
-            iconName: goal.iconName
-        )
-    }
-
-    private func makeActivity(
-        type: CDSActivityType,
-        amount: Decimal,
-        goalID: String?
-    ) -> AppActivity {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mma"
-        return AppActivity(
-            id: UUID().uuidString,
+    private func makeActivity(_ type: CDSActivityType, amount: Decimal, goalID: String) -> Activity {
+        activitySequence += 1
+        let time = Date().formatted(.dateTime.hour(.defaultDigits(amPM: .abbreviated)).minute())
+        return Activity(
+            id: "activity-\(activitySequence)",
             type: type,
             amount: amount,
-            date: "Today",
-            time: formatter.string(from: Date()).lowercased(),
+            time: "Today, \(time.lowercased().replacingOccurrences(of: " ", with: ""))",
             goalID: goalID
         )
     }

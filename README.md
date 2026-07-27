@@ -15,6 +15,7 @@ React 19 + TypeScript + Vite component library for the Cheddar product, with Fig
 | `tokens/cheddar.tokens.json` | **Source of truth** for every design token (DTCG) |
 | `platforms/` | Generated Swift token output |
 | `docs/` | Parity audit and migration notes |
+| `docs/make-kit/` | Guidelines shipped to the Figma Make kit, plus the prompt that tests them |
 | `tests/visual/` | Playwright screenshot suite — **local-only**, not committed (see below) |
 | `**/*.figma.ts` | Figma Code Connect mapping files |
 
@@ -168,6 +169,12 @@ import { ThemeScope } from '@screentime/cheddar-ds'
 Because each layer only redefines CSS custom properties, scopes nest arbitrarily and a descendant always
 wins over its ancestor.
 
+`ThemeScope` sets the attributes and nothing else — it does not paint. Add `cds-app-canvas` to the
+outermost scope to apply the canvas background and its paired foreground, or paint them yourself from
+`--cds-color-background-default` / `--cds-color-foreground-primary`. Without either, `appearance="brand"`
+flips the foregrounds to light over an unpainted canvas, which is white text on white. See
+[`docs/migration-1.2.md`](docs/migration-1.2.md) §12.
+
 ## Publishing / distribution
 
 The DS reaches consumers through two channels, both under the package name `@screentime/cheddar-ds`:
@@ -198,8 +205,8 @@ There is no upload step — consumers install from a git ref and the `prepare` s
 2. Tag the commit so apps can pin to it:
 
 ```sh
-git tag v1.2.2
-git push origin v1.2.2
+git tag v1.2.3
+git push origin v1.2.3
 ```
 
 Recommended preflight before any release:
@@ -221,7 +228,7 @@ Add the DS to your app's `package.json`, pinned to a tag (or branch/commit):
 ```json
 {
   "dependencies": {
-    "@screentime/cheddar-ds": "git+ssh://git@github.com/figma/screentime-cheddar-ds.git#v1.2.2"
+    "@screentime/cheddar-ds": "git+ssh://git@github.com/figma/screentime-cheddar-ds.git#v1.2.3"
   }
 }
 ```
@@ -230,7 +237,7 @@ Then run `npm install`. npm clones the repo over SSH, runs the `prepare` script 
 
 To update, bump the tag/ref in your app's `package.json` and reinstall.
 
-npm also accepts a range here — `…screentime-cheddar-ds.git#semver:^1.2.2` resolves against the repo's tags — but an explicit tag is the documented form on purpose. This package's version numbers do not strictly track semver: `1.2.2` removed public exports, and a caret range would have delivered that as an automatic upgrade. Pinning keeps every DS bump a visible, reviewable line in the consuming app's diff. Either form records the resolved commit in `package-lock.json`, so committed lockfiles install identically; the range only drifts when the lockfile is regenerated.
+npm also accepts a range here — `…screentime-cheddar-ds.git#semver:^1.2.3` resolves against the repo's tags — but an explicit tag is the documented form on purpose. This package's version numbers do not strictly track semver: `1.2.2` removed public exports, and a caret range would have delivered that as an automatic upgrade. Pinning keeps every DS bump a visible, reviewable line in the consuming app's diff. Either form records the resolved commit in `package-lock.json`, so committed lockfiles install identically; the range only drifts when the lockfile is regenerated.
 
 ### Option B — Figma registry (`@screentime`, for Figma Make)
 
@@ -239,12 +246,14 @@ Add the dependency to your Make project's `package.json` and Make resolves it ag
 ```json
 {
   "dependencies": {
-    "@screentime/cheddar-ds": "^1.2.2"
+    "@screentime/cheddar-ds": "^1.2.3"
   }
 }
 ```
 
 This channel is for Figma Make only. For app code outside Make, use Option A.
+
+The guidelines that ship alongside the package in the Make kit live in [`docs/make-kit/`](docs/make-kit/) — `Guidelines.md` is the entry point Make always loads, with `setup.md`, `styles.md`, `tokens.md`, and `components.md` behind it. [`docs/make-kit/test-prompt.md`](docs/make-kit/test-prompt.md) is the prompt and checklist for testing whether Make actually uses the package correctly; run it after every guidelines edit or release.
 
 ### Usage (both channels)
 

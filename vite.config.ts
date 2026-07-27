@@ -19,6 +19,16 @@ const emitRasterAssets = (): Plugin => ({
 
 export default defineConfig(({ command }) => ({
   plugins: [react(), emitRasterAssets()],
+  // Asset URLs default to the origin root (`/assets/foo.png`), which only
+  // resolves when the consumer happens to serve this package's dist from their
+  // web root. Anywhere else — a Figma Make project, any app installing from
+  // npm — every image 404s. Resolve them against the module instead.
+  experimental: {
+    renderBuiltUrl(filename, { hostType }) {
+      if (hostType !== 'js') return { relative: true }
+      return { runtime: `new URL(${JSON.stringify(`./${filename}`)}, import.meta.url).href` }
+    },
+  },
   // The /public dir only contains assets for the gallery demo (`vite dev`).
   // Don't ship them in the library tarball.
   publicDir: command === 'build' ? false : 'public',

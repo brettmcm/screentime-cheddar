@@ -622,3 +622,65 @@ circular mask and the feathered edge repainted in the circle's own `brand-200`.
 - **The `TotalSavingsCard` logo mark is inverted relative to Figma.** Figma shows a pink
   ellipse with a dark star; the implementation nests the mark in a pale pill, giving a dark
   ellipse with a pale star. Pre-existing and untouched by this pass.
+
+---
+
+## 12. `1.2.3` — two defects a Figma Make consumer found
+
+Nothing was removed or renamed. Both items below were invisible to `apps/web` and to the
+gallery, and broke immediately in an app that installs the package normally. Details of the
+Make kit test that found them are in [`make-kit/test-prompt.md`](./make-kit/test-prompt.md).
+
+### Bundled images 404'd outside this repo
+
+Every raster the package ships was referenced by a root-absolute URL — `dist/demo-assets.js`
+held literals like `/assets/headphones-DUTuBv5S.png`, and `dist/index.js` held three for the
+`Avatar` fallbacks. Vite's default `base` of `/` produced them. That resolves only when the
+consumer happens to serve this package's `dist` from their own web root, which is exactly what
+the gallery dev server does and nothing else does. Everywhere else all 25 images 404'd, so
+demo artwork rendered as empty accent tiles and `Avatar` lost its bundled fallback.
+
+`vite.config.ts` now emits them as module-relative instead:
+
+```ts
+experimental: {
+  renderBuiltUrl(filename, { hostType }) {
+    if (hostType !== 'js') return { relative: true }
+    return { runtime: `new URL(${JSON.stringify(`./${filename}`)}, import.meta.url).href` }
+  },
+},
+```
+
+The consuming bundler picks the `new URL(…, import.meta.url)` pattern up, re-emits the asset
+into its own output, and rewrites the reference. Verified in both dev and production builds of
+a scratch Vite app installing the packed tarball. Nothing changes for this repo's own dev
+server.
+
+Worth knowing for future asset work: the `emitRasterAssets` plugin appends `?no-inline` to
+every raster so none of them inline, which is why even the 1.3 KB avatar PNGs were affected.
+
+### The brand appearance painted no canvas
+
+`[data-appearance="brand"]` redefines `--cds-color-background-default` to `brand-100` and
+flips the foregrounds to light, but nothing ever applied that background: `ThemeScope` renders
+a bare element with data attributes, and no shipped rule paints `body`, `html`, or the scope
+itself. `apps/web` never noticed because it painted its own `--app-bg`, and the gallery paints
+its phone frame.
+
+So `<ThemeScope appearance="brand">` on its own gave a white page with white text — headings
+and links outside a card vanished. New in `foundation.css`:
+
+```css
+.cds-app-canvas {
+  min-height: 100dvh;
+  background: var(--cds-color-background-default);
+  color: var(--cds-color-foreground-primary);
+}
+```
+
+Put it on the outermost scope: `<ThemeScope appearance="brand" className="cds-app-canvas">`.
+It works for all three modes, since it only reads the tokens the active appearance resolved.
+
+A blanket `[data-appearance] { background: … }` rule would have been more foolproof and needs
+no consumer change, but it would repaint every nested scope in `apps/web` and the gallery.
+Worth revisiting if the explicit class keeps getting missed.

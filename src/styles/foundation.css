@@ -9,6 +9,17 @@
   border: 0;
 }
 
+/* The page canvas. Every appearance redefines --cds-color-background-default
+ * and the foreground that pairs with it, but nothing applies them — a
+ * ThemeScope is a bare element. Without this class, appearance="brand" flips
+ * the foregrounds to light and leaves the canvas unpainted, which is white
+ * text on white. */
+.cds-app-canvas {
+  min-height: 100dvh;
+  background: var(--cds-color-background-default);
+  color: var(--cds-color-foreground-primary);
+}
+
 .app-shell {
   width: min(1440px, 100%);
   margin: 0 auto;

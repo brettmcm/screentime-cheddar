@@ -1,6 +1,6 @@
 {
 	"name": "@screentime/cheddar-ds",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"description": "Cheddar Design System — React component library, styles, and design tokens.",
 	"repository": {
 		"type": "git",

@@ -1,0 +1,296 @@
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* The page canvas. Every appearance redefines --cds-color-background-default
+ * and the foreground that pairs with it, but nothing applies them — a
+ * ThemeScope is a bare element. Without this class, appearance="brand" flips
+ * the foregrounds to light and leaves the canvas unpainted, which is white
+ * text on white. */
+.cds-app-canvas {
+  min-height: 100dvh;
+  background: var(--cds-color-background-default);
+  color: var(--cds-color-foreground-primary);
+}
+
+.app-shell {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: var(--cds-size-padding-l);
+  background: var(--cds-color-background-surface);
+  border-radius: var(--cds-size-corner-medium);
+  display: grid;
+  gap: var(--cds-size-padding-m);
+}
+
+.ds-page {
+  gap: var(--cds-size-padding-xl);
+}
+
+.ds-page-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.ds-section {
+  display: grid;
+  gap: var(--cds-size-padding-m);
+  align-content: start;
+  padding-top: var(--cds-size-padding-s);
+  border-top: 1px solid var(--cds-color-border-default);
+}
+
+.ds-section h1,
+.ds-section h2,
+.ds-section h3,
+.ds-section p {
+  margin: 0;
+}
+
+.ds-section h1 {
+  font: var(--cds-type-display-xsmall);
+  letter-spacing: var(--cds-type-display-xsmall-tracking);
+}
+
+.ds-section h2 {
+  font: var(--cds-type-heading);
+}
+
+.ds-section h3 {
+  font: var(--cds-type-body-large-strong);
+}
+
+.ds-foundation-grid {
+  display: grid;
+  gap: var(--cds-size-padding-m);
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+.ds-subsection {
+  gap: var(--cds-size-padding-m);
+}
+
+.ds-type-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--cds-size-padding-s);
+}
+
+.ds-type-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--cds-size-padding-s);
+  border-bottom: 1px solid var(--cds-color-border-default);
+  padding-bottom: var(--cds-size-padding-xs);
+}
+
+.ds-type-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.ds-type-row code {
+  color: var(--cds-color-foreground-secondary);
+}
+
+.ds-type-sample {
+  color: var(--cds-color-foreground-primary);
+}
+
+.ds-color-list {
+  display: grid;
+  gap: var(--cds-size-padding-s);
+}
+
+.ds-color-family {
+  display: grid;
+  gap: var(--cds-size-padding-xs);
+}
+
+.ds-color-family p {
+  font: var(--cds-type-body-large-strong);
+}
+
+.ds-color-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: var(--cds-size-padding-xs);
+}
+
+.ds-color-swatch {
+  display: grid;
+  gap: 6px;
+}
+
+.ds-color-swatch span {
+  height: 44px;
+  border-radius: var(--cds-size-corner-xsmall);
+  border: 1px solid var(--cds-color-border-default);
+}
+
+.ds-color-swatch code {
+  color: var(--cds-color-foreground-secondary);
+  text-align: center;
+}
+
+.ds-variant-grid {
+  display: grid;
+  gap: var(--cds-size-padding-l);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.ds-variant-grid-tight {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.ds-variant-grid-wide {
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+}
+
+.ds-card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+}
+
+.ds-card-small-row {
+  grid-column: 1 / -1;
+}
+
+.ds-card-inline-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cds-size-padding-s);
+  align-items: flex-start;
+}
+
+.ds-variant-card {
+  gap: var(--cds-size-padding-xs);
+  align-content: start;
+}
+
+.ds-page .ds-variant-card.panel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+.ds-variant-label {
+  font: var(--cds-type-body-medium-strong);
+  color: var(--cds-color-foreground-secondary);
+}
+
+.ds-center {
+  justify-items: center;
+}
+
+.ds-icon-row {
+  display: flex;
+  align-items: center;
+  gap: var(--cds-size-padding-s);
+}
+
+.ds-theme-pair {
+  display: grid;
+  gap: var(--cds-size-padding-s);
+  grid-template-columns: 1fr 1fr;
+}
+
+.ds-theme-tile {
+  display: grid;
+  gap: var(--cds-size-padding-s);
+  padding: var(--cds-size-padding-m);
+  border-radius: var(--cds-size-corner-medium);
+  border: 1px solid var(--cds-color-border-default);
+  background: var(--cds-color-background-surface);
+  color: var(--cds-color-foreground-on-surface);
+  box-shadow: var(--cds-shadow-surface);
+}
+
+.ds-theme-tile-caption {
+  font: var(--cds-type-body-small-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--cds-color-foreground-secondary);
+}
+
+.ds-theme-ramp {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.ds-theme-ramp span {
+  height: 28px;
+  border-radius: var(--cds-size-corner-xxsmall);
+  border: 1px solid var(--cds-color-border-default);
+}
+
+.ds-theme-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cds-size-padding-xs);
+}
+
+.ds-theme-nested {
+  display: grid;
+  gap: var(--cds-size-padding-s);
+  padding: var(--cds-size-padding-l);
+  border-radius: var(--cds-size-corner-large);
+  background: var(--cds-color-background-default);
+  color: var(--cds-color-foreground-primary);
+}
+
+.demo-layout {
+  display: grid;
+  gap: var(--cds-size-padding-xl);
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+}
+
+.demo-section {
+  display: grid;
+  gap: var(--cds-size-padding-m);
+  align-content: start;
+  padding-top: var(--cds-size-padding-s);
+  border-top: 1px solid var(--cds-color-border-default);
+}
+
+.demo-section h2 {
+  margin: 0;
+  font: var(--cds-type-display-xsmall);
+  letter-spacing: var(--cds-type-display-xsmall-tracking);
+}
+
+.demo-section-wide {
+  grid-column: 1 / -1;
+}
+
+.demo-stack {
+  display: grid;
+  gap: var(--cds-size-padding-s);
+}
+
+.demo-card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cds-size-padding-s);
+  align-items: flex-start;
+}
+
+.demo-notification-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cds-size-padding-s);
+  align-items: flex-start;
+}

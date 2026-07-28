@@ -1,0 +1,43 @@
+/* TextLink — the Figma `Text Link` component (node 4991:6585). */
+
+.text-link {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--cds-size-gap-xs);
+	padding: 0;
+	border: 0;
+	border-radius: var(--cds-size-corner-xxsmall);
+	background: none;
+	color: var(--cds-color-foreground-brand-primary);
+	font: var(--cds-type-body-medium-strong);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.text-link-small {
+	font: var(--cds-type-body-small-strong);
+}
+
+.text-link:hover .text-link-label {
+	text-decoration: underline;
+}
+
+.text-link:focus-visible {
+	outline: none;
+	box-shadow: var(--cds-shadow-focus-ring);
+}
+
+.text-link:disabled {
+	color: var(--cds-color-foreground-secondary);
+	cursor: not-allowed;
+}
+
+.text-link:disabled .text-link-label {
+	text-decoration: none;
+}
+
+.text-link-icon {
+	flex: none;
+	width: var(--cds-size-icon-small);
+	height: var(--cds-size-icon-small);
+}

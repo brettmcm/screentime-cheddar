@@ -1,0 +1,2020 @@
+{
+  "$description": "Cheddar design tokens (DTCG 2025.10). This document is the source of truth: src/styles/tokens.css, src/tokens/tokens.ts and the Swift package are all generated from it by scripts/build-tokens.mjs. Names mirror the web code syntax — primitives are --token-color-*, everything else is --cds-*.",
+  "color": {
+    "$description": "Color tokens. Primitive ramps mirror the Figma \"Colors\" collection; the neutral and red ramps are code-only additions noted below.",
+    "black": {
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "hex": "#000000"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "hex": "#000000",
+          "alpha": 0.8
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "hex": "#000000",
+          "alpha": 0.56
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "hex": "#000000",
+          "alpha": 0.4
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "hex": "#000000",
+          "alpha": 0.2
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "hex": "#000000",
+          "alpha": 0.08
+        }
+      },
+      "$type": "color"
+    },
+    "white": {
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff",
+          "alpha": 0.8
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff",
+          "alpha": 0.6
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff",
+          "alpha": 0.4
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff",
+          "alpha": 0.2
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff",
+          "alpha": 0.1
+        }
+      },
+      "$type": "color"
+    },
+    "brand": {
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.39216,
+            0,
+            0.17647
+          ],
+          "hex": "#64002d"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.52157,
+            0,
+            0.33725
+          ],
+          "hex": "#850056"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.78824,
+            0.06275,
+            0.60784
+          ],
+          "hex": "#c9109b"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            0.56863,
+            0.94902
+          ],
+          "hex": "#ff91f2"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            0.77647,
+            0.97255
+          ],
+          "hex": "#ffc6f8"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            0.92157,
+            0.99216
+          ],
+          "hex": "#ffebfd"
+        }
+      },
+      "$type": "color"
+    },
+    "green": {
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.03922,
+            0.23529,
+            0
+          ],
+          "hex": "#0a3c00"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.05882,
+            0.36471,
+            0
+          ],
+          "hex": "#0f5d00"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.35294,
+            0.72941,
+            0
+          ],
+          "hex": "#5aba00"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6902,
+            0.99608,
+            0
+          ],
+          "hex": "#b0fe00"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.83137,
+            1,
+            0.44706
+          ],
+          "hex": "#d4ff72"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.94902,
+            1,
+            0.81961
+          ],
+          "hex": "#f2ffd1"
+        }
+      },
+      "$type": "color"
+    },
+    "purple": {
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.19608,
+            0,
+            0.56078
+          ],
+          "hex": "#32008f"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.31373,
+            0.03529,
+            0.82745
+          ],
+          "hex": "#5009d3"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.46667,
+            0.27843,
+            1
+          ],
+          "hex": "#7747ff"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.66667,
+            0.5451,
+            1
+          ],
+          "hex": "#aa8bff"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.80784,
+            0.7451,
+            1
+          ],
+          "hex": "#cebeff"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.91765,
+            0.89804,
+            1
+          ],
+          "hex": "#eae5ff"
+        }
+      },
+      "$type": "color"
+    },
+    "blue": {
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.03922,
+            0,
+            0.56078
+          ],
+          "hex": "#0a008f"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0.18824,
+            0.8
+          ],
+          "hex": "#0030cc"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0.48235,
+            0.93333
+          ],
+          "hex": "#007bee"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.33725,
+            0.84314,
+            1
+          ],
+          "hex": "#56d7ff"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.6,
+            0.93333,
+            1
+          ],
+          "hex": "#99eeff"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.83922,
+            0.97255,
+            1
+          ],
+          "hex": "#d6f8ff"
+        }
+      },
+      "$type": "color"
+    },
+    "red": {
+      "100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.2902,
+            0.01569,
+            0.06275
+          ],
+          "hex": "#4a0410"
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.54902,
+            0.03922,
+            0.12941
+          ],
+          "hex": "#8c0a21"
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.84706,
+            0.10588,
+            0.23529
+          ],
+          "hex": "#d81b3c"
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            0.42745,
+            0.52157
+          ],
+          "hex": "#ff6d85"
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            0.70196,
+            0.75294
+          ],
+          "hex": "#ffb3c0"
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            0.89412,
+            0.91373
+          ],
+          "hex": "#ffe4e9"
+        }
+      },
+      "$type": "color",
+      "$description": "Feedback ramp — code-only, no Figma variable. Required for form validation states, which the Figma library does not define."
+    },
+    "neutral": {
+      "700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.14902,
+            0.13725,
+            0.14902
+          ],
+          "hex": "#262326"
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.11765,
+            0.1098,
+            0.11765
+          ],
+          "hex": "#1e1c1e"
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.06667,
+            0.06275,
+            0.06667
+          ],
+          "hex": "#111011"
+        }
+      },
+      "$type": "color",
+      "$description": "Neutral dark bases — code-only, no Figma variable. Used as the un-tinted substrate that the brand ramp is mixed into for dark-mode surfaces."
+    },
+    "cheddar": {
+      "$type": "color",
+      "$description": "Cheddar product-brand colors — code-only, no Figma variable.",
+      "black-cherry": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.1451,
+            0.12157,
+            0.13725
+          ],
+          "hex": "#251f23"
+        }
+      },
+      "orange": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            0.5451,
+            0
+          ],
+          "hex": "#ff8b00"
+        }
+      }
+    },
+    "semantic": {
+      "$description": "Semantic colors. $value is the Light mode. Dark mode and the branded app-shell appearance live under $extensions[\"com.cheddar.mode\"] as \"dark\" and \"brand\".",
+      "brand": {
+        "100": {
+          "$value": "{color.brand.100}"
+        },
+        "200": {
+          "$value": "{color.brand.200}"
+        },
+        "300": {
+          "$value": "{color.brand.300}"
+        },
+        "400": {
+          "$value": "{color.brand.400}"
+        },
+        "500": {
+          "$value": "{color.brand.500}"
+        },
+        "600": {
+          "$value": "{color.brand.600}"
+        },
+        "$type": "color",
+        "$description": "The active brand ramp. Defaults to magenta; [data-brand] re-points it to one of the ramps under semantic.brand-theme."
+      },
+      "foreground": {
+        "$type": "color",
+        "primary": {
+          "$value": "{color.black.100}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.100}"
+              },
+              "brand": {
+                "$value": "{color.white.100}"
+              }
+            }
+          }
+        },
+        "secondary": {
+          "$value": "{color.black.300}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.300}"
+              },
+              "brand": {
+                "$value": "{color.white.300}"
+              }
+            }
+          }
+        },
+        "tertiary": {
+          "$value": "{color.black.600}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.600}"
+              },
+              "brand": {
+                "$value": "{color.white.600}"
+              }
+            }
+          },
+          "$description": "Decorative tone for hairlines, dividers and disabled controls. At 8% black it measures 1.61:1 on a surface, so it must not be used for text or for a meaningful icon — reach for foreground.secondary there. WCAG 1.4.3 exempts inactive controls, which is the one place it is correct."
+        },
+        "brand-primary": {
+          "$value": "{color.semantic.brand.200}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.400}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.400}"
+              }
+            }
+          }
+        },
+        "brand-secondary": {
+          "$value": "{color.semantic.brand.100}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.600}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.600}"
+              }
+            }
+          }
+        },
+        "brand-tertiary": {
+          "$value": "{color.semantic.brand.600}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.100}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.100}"
+              }
+            }
+          }
+        },
+        "brand-highlight": {
+          "$value": "{color.semantic.brand.400}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.400}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.400}"
+              }
+            }
+          }
+        },
+        "on-reverse": {
+          "$value": "{color.white.100}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.100}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.100}"
+              }
+            }
+          }
+        },
+        "on-reverse-secondary": {
+          "$value": "{color.white.300}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.200}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.200}"
+              }
+            }
+          }
+        },
+        "brand-reverse": {
+          "$value": "{color.semantic.brand.100}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.600}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.600}"
+              }
+            }
+          }
+        },
+        "brand-reverse-secondary": {
+          "$value": "{color.semantic.brand.400}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.200}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.200}"
+              }
+            }
+          }
+        },
+        "brand-reverse-tertiary": {
+          "$value": "{color.semantic.brand.200}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.400}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.400}"
+              }
+            }
+          }
+        },
+        "danger": {
+          "$value": "{color.red.200}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.red.400}"
+              },
+              "brand": {
+                "$value": "{color.red.400}"
+              }
+            }
+          }
+        },
+        "success": {
+          "$value": "{color.green.200}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.green.400}"
+              },
+              "brand": {
+                "$value": "{color.green.400}"
+              }
+            }
+          }
+        },
+        "warning": {
+          "$value": "{color.cheddar.orange}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.cheddar.orange}"
+              },
+              "brand": {
+                "$value": "{color.cheddar.orange}"
+              }
+            }
+          }
+        },
+        "on-surface": {
+          "$value": "{color.black.100}",
+          "$description": "Foreground for content on background.surface. Matches foreground.primary in the light and dark schemes; under the branded appearance it stays light-scheme because the shell keeps white surfaces on a dark brand canvas.",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.100}"
+              },
+              "brand": {
+                "$value": "{color.black.100}"
+              }
+            }
+          }
+        },
+        "on-surface-secondary": {
+          "$value": "{color.black.300}",
+          "$description": "Foreground for content on background.surface. Matches foreground.secondary in the light and dark schemes; under the branded appearance it stays light-scheme because the shell keeps white surfaces on a dark brand canvas.",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.300}"
+              },
+              "brand": {
+                "$value": "{color.black.300}"
+              }
+            }
+          }
+        },
+        "on-surface-tertiary": {
+          "$value": "{color.black.600}",
+          "$description": "Foreground for content on background.surface. Matches foreground.tertiary in the light and dark schemes; under the branded appearance it stays light-scheme because the shell keeps white surfaces on a dark brand canvas.",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.600}"
+              },
+              "brand": {
+                "$value": "{color.black.600}"
+              }
+            }
+          }
+        }
+      },
+      "bg": {
+        "$type": "color",
+        "brand-primary": {
+          "$value": "{color.semantic.brand.600}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.100}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.100}"
+              }
+            }
+          }
+        },
+        "brand-secondary": {
+          "$value": "{color.semantic.brand.100}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.600}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.600}"
+              }
+            }
+          }
+        },
+        "brand-tertiary": {
+          "$value": "{color.semantic.brand.500}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.200}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.200}"
+              }
+            }
+          }
+        },
+        "brand-shade": {
+          "$value": "{color.semantic.brand.400}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.300}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.300}"
+              }
+            }
+          }
+        },
+        "on-brand": {
+          "$value": "{color.white.100}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.100}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.100}"
+              }
+            }
+          }
+        },
+        "danger": {
+          "$value": "{color.red.600}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.red.100}"
+              },
+              "brand": {
+                "$value": "{color.red.100}"
+              }
+            }
+          }
+        },
+        "scrim": {
+          "$value": "{color.black.500}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.500}"
+              },
+              "brand": {
+                "$value": "{color.white.500}"
+              }
+            }
+          },
+          "$description": "A 20% neutral tint for a control that sits on a coloured card and has to read as recessed rather than raised — the notification dismiss button is the reference use. Flips to white in dark and on the branded shell so it stays visible against the card beneath it."
+        }
+      },
+      "icon": {
+        "$type": "color",
+        "primary": {
+          "$value": "{color.semantic.brand.200}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.400}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.400}"
+              }
+            }
+          }
+        },
+        "secondary": {
+          "$value": "{color.semantic.brand.400}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.200}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.200}"
+              }
+            }
+          }
+        }
+      },
+      "background": {
+        "$type": "color",
+        "$description": "Page chrome. Tinted from the active brand ramp rather than a fixed magenta, so [data-brand] re-themes the whole surface stack.",
+        "default": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.96471,
+              0.94118,
+              0.94902
+            ],
+            "hex": "#f6f0f2"
+          },
+          "$extensions": {
+            "com.cheddar.css": "color-mix(in srgb, var(--cds-color-brand-100) 6%, var(--token-color-white-100) 94%)",
+            "com.cheddar.mix": {
+              "space": "srgb",
+              "stops": [
+                {
+                  "ref": "{color.semantic.brand.100}",
+                  "weight": 6
+                },
+                {
+                  "ref": "{color.white.100}",
+                  "weight": 94
+                }
+              ]
+            },
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": {
+                  "colorSpace": "srgb",
+                  "components": [
+                    0.13333,
+                    0.05098,
+                    0.0902
+                  ],
+                  "hex": "#220d17"
+                },
+                "$extensions": {
+                  "com.cheddar.css": "color-mix(in srgb, var(--cds-color-brand-100) 20%, var(--token-color-neutral-900) 80%)",
+                  "com.cheddar.mix": {
+                    "space": "srgb",
+                    "stops": [
+                      {
+                        "ref": "{color.semantic.brand.100}",
+                        "weight": 20
+                      },
+                      {
+                        "ref": "{color.neutral.900}",
+                        "weight": 80
+                      }
+                    ]
+                  }
+                }
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.100}"
+              }
+            }
+          }
+        },
+        "surface": {
+          "$value": "{color.white.100}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": {
+                  "colorSpace": "srgb",
+                  "components": [
+                    0.19608,
+                    0.07843,
+                    0.13333
+                  ],
+                  "hex": "#321422"
+                },
+                "$extensions": {
+                  "com.cheddar.css": "color-mix(in srgb, var(--cds-color-brand-100) 28%, var(--token-color-neutral-800) 72%)",
+                  "com.cheddar.mix": {
+                    "space": "srgb",
+                    "stops": [
+                      {
+                        "ref": "{color.semantic.brand.100}",
+                        "weight": 28
+                      },
+                      {
+                        "ref": "{color.neutral.800}",
+                        "weight": 72
+                      }
+                    ]
+                  }
+                }
+              },
+              "brand": {
+                "$value": "{color.white.100}"
+              }
+            }
+          }
+        },
+        "muted": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9451,
+              0.9098,
+              0.92549
+            ],
+            "hex": "#f1e8ec"
+          },
+          "$extensions": {
+            "com.cheddar.css": "color-mix(in srgb, var(--cds-color-brand-100) 9%, var(--token-color-white-100) 91%)",
+            "com.cheddar.mix": {
+              "space": "srgb",
+              "stops": [
+                {
+                  "ref": "{color.semantic.brand.100}",
+                  "weight": 9
+                },
+                {
+                  "ref": "{color.white.100}",
+                  "weight": 91
+                }
+              ]
+            },
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": {
+                  "colorSpace": "srgb",
+                  "components": [
+                    0.22745,
+                    0.09412,
+                    0.15686
+                  ],
+                  "hex": "#3a1828"
+                },
+                "$extensions": {
+                  "com.cheddar.css": "color-mix(in srgb, var(--cds-color-brand-100) 32%, var(--token-color-neutral-700) 68%)",
+                  "com.cheddar.mix": {
+                    "space": "srgb",
+                    "stops": [
+                      {
+                        "ref": "{color.semantic.brand.100}",
+                        "weight": 32
+                      },
+                      {
+                        "ref": "{color.neutral.700}",
+                        "weight": 68
+                      }
+                    ]
+                  }
+                }
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.200}"
+              }
+            }
+          }
+        },
+        "overlay": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "hex": "#000000",
+            "alpha": 0.32
+          },
+          "$extensions": {
+            "com.cheddar.css": "color-mix(in srgb, var(--token-color-black-100) 32%, transparent)",
+            "com.cheddar.mix": {
+              "space": "srgb",
+              "stops": [
+                {
+                  "ref": "{color.black.100}",
+                  "weight": 32
+                },
+                {
+                  "ref": "transparent"
+                }
+              ]
+            },
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": {
+                  "colorSpace": "srgb",
+                  "components": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "hex": "#000000",
+                  "alpha": 0.52
+                },
+                "$extensions": {
+                  "com.cheddar.css": "color-mix(in srgb, var(--token-color-black-100) 52%, transparent)",
+                  "com.cheddar.mix": {
+                    "space": "srgb",
+                    "stops": [
+                      {
+                        "ref": "{color.black.100}",
+                        "weight": 52
+                      },
+                      {
+                        "ref": "transparent"
+                      }
+                    ]
+                  }
+                }
+              },
+              "brand": {
+                "$value": {
+                  "colorSpace": "srgb",
+                  "components": [
+                    0.39216,
+                    0,
+                    0.17647
+                  ],
+                  "hex": "#64002d",
+                  "alpha": 0.72
+                },
+                "$extensions": {
+                  "com.cheddar.css": "color-mix(in srgb, var(--cds-color-brand-100) 72%, transparent)",
+                  "com.cheddar.mix": {
+                    "space": "srgb",
+                    "stops": [
+                      {
+                        "ref": "{color.semantic.brand.100}",
+                        "weight": 72
+                      },
+                      {
+                        "ref": "transparent"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "default": {
+          "$value": "{color.black.600}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.500}"
+              },
+              "brand": {
+                "$value": "{color.white.500}"
+              }
+            }
+          }
+        },
+        "strong": {
+          "$value": "{color.black.300}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.400}"
+              },
+              "brand": {
+                "$value": "{color.white.400}"
+              }
+            }
+          }
+        },
+        "focus": {
+          "$value": "{color.semantic.brand.200}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.semantic.brand.400}"
+              },
+              "brand": {
+                "$value": "{color.semantic.brand.400}"
+              }
+            }
+          }
+        },
+        "danger": {
+          "$value": "{color.red.300}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.red.400}"
+              },
+              "brand": {
+                "$value": "{color.red.400}"
+              }
+            }
+          }
+        }
+      },
+      "track": {
+        "$type": "color",
+        "$description": "Progress and slider track fills.",
+        "default": {
+          "$value": "{color.black.600}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.white.500}"
+              },
+              "brand": {
+                "$value": "{color.white.500}"
+              }
+            }
+          }
+        }
+      },
+      "shadow": {
+        "$type": "color",
+        "$description": "Shadow tint, brand-derived so elevation matches the active ramp.",
+        "surface": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.39216,
+              0,
+              0.17647
+            ],
+            "hex": "#64002d",
+            "alpha": 0.08
+          },
+          "$extensions": {
+            "com.cheddar.css": "color-mix(in srgb, var(--cds-color-brand-100) 8%, transparent)",
+            "com.cheddar.mix": {
+              "space": "srgb",
+              "stops": [
+                {
+                  "ref": "{color.semantic.brand.100}",
+                  "weight": 8
+                },
+                {
+                  "ref": "transparent"
+                }
+              ]
+            },
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": {
+                  "colorSpace": "srgb",
+                  "components": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "hex": "#000000",
+                  "alpha": 0.32
+                },
+                "$extensions": {
+                  "com.cheddar.css": "color-mix(in srgb, var(--token-color-black-100) 32%, transparent)",
+                  "com.cheddar.mix": {
+                    "space": "srgb",
+                    "stops": [
+                      {
+                        "ref": "{color.black.100}",
+                        "weight": 32
+                      },
+                      {
+                        "ref": "transparent"
+                      }
+                    ]
+                  }
+                }
+              },
+              "brand": {
+                "$value": {
+                  "colorSpace": "srgb",
+                  "components": [
+                    0.39216,
+                    0,
+                    0.17647
+                  ],
+                  "hex": "#64002d",
+                  "alpha": 0.45
+                },
+                "$extensions": {
+                  "com.cheddar.css": "color-mix(in srgb, var(--cds-color-brand-100) 45%, transparent)",
+                  "com.cheddar.mix": {
+                    "space": "srgb",
+                    "stops": [
+                      {
+                        "ref": "{color.semantic.brand.100}",
+                        "weight": 45
+                      },
+                      {
+                        "ref": "transparent"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "control": {
+          "$value": "{color.black.500}",
+          "$extensions": {
+            "com.cheddar.mode": {
+              "dark": {
+                "$value": "{color.black.400}"
+              },
+              "brand": {
+                "$value": "{color.black.400}"
+              }
+            }
+          }
+        }
+      },
+      "brand-theme": {
+        "$description": "Selectable brand accent ramps. Applied in CSS via [data-brand=\"…\"], which overrides semantic.brand.100…600 and therefore every brand-derived token.",
+        "magenta": {
+          "100": {
+            "$value": "{color.brand.100}"
+          },
+          "200": {
+            "$value": "{color.brand.200}"
+          },
+          "300": {
+            "$value": "{color.brand.300}"
+          },
+          "400": {
+            "$value": "{color.brand.400}"
+          },
+          "500": {
+            "$value": "{color.brand.500}"
+          },
+          "600": {
+            "$value": "{color.brand.600}"
+          },
+          "$type": "color"
+        },
+        "blue": {
+          "100": {
+            "$value": "{color.blue.100}"
+          },
+          "200": {
+            "$value": "{color.blue.200}"
+          },
+          "300": {
+            "$value": "{color.blue.300}"
+          },
+          "400": {
+            "$value": "{color.blue.400}"
+          },
+          "500": {
+            "$value": "{color.blue.500}"
+          },
+          "600": {
+            "$value": "{color.blue.600}"
+          },
+          "$type": "color"
+        },
+        "green": {
+          "100": {
+            "$value": "{color.green.100}"
+          },
+          "200": {
+            "$value": "{color.green.200}"
+          },
+          "300": {
+            "$value": "{color.green.300}"
+          },
+          "400": {
+            "$value": "{color.green.400}"
+          },
+          "500": {
+            "$value": "{color.green.500}"
+          },
+          "600": {
+            "$value": "{color.green.600}"
+          },
+          "$type": "color"
+        },
+        "purple": {
+          "100": {
+            "$value": "{color.purple.100}"
+          },
+          "200": {
+            "$value": "{color.purple.200}"
+          },
+          "300": {
+            "$value": "{color.purple.300}"
+          },
+          "400": {
+            "$value": "{color.purple.400}"
+          },
+          "500": {
+            "$value": "{color.purple.500}"
+          },
+          "600": {
+            "$value": "{color.purple.600}"
+          },
+          "$type": "color"
+        }
+      }
+    }
+  },
+  "size": {
+    "$description": "Sizing scale from the Figma \"Size\" collection (--cds-size-*).",
+    "border": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "icon-stroke": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "padding": {
+      "$type": "dimension",
+      "xxxs": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      },
+      "xxs": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "xs": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "s": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "m": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "l": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "xl": {
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        }
+      },
+      "xxl": {
+        "$value": {
+          "value": 40,
+          "unit": "px"
+        }
+      }
+    },
+    "gap": {
+      "$type": "dimension",
+      "xs": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "s": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "m": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "l": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      }
+    },
+    "font": {
+      "$type": "dimension",
+      "xs": {
+        "$value": {
+          "value": 14,
+          "unit": "px"
+        }
+      },
+      "s": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "m": {
+        "$value": {
+          "value": 18,
+          "unit": "px"
+        }
+      },
+      "l": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "xl": {
+        "$value": {
+          "value": 64,
+          "unit": "px"
+        }
+      },
+      "display": {
+        "$value": {
+          "value": 80,
+          "unit": "px"
+        }
+      }
+    },
+    "corner": {
+      "$type": "dimension",
+      "xxsmall": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "xsmall": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "small": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "medium": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "large": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "xlarge": {
+        "$value": {
+          "value": 40,
+          "unit": "px"
+        }
+      },
+      "full": {
+        "$value": {
+          "value": 9999,
+          "unit": "px"
+        }
+      }
+    },
+    "icon": {
+      "$type": "dimension",
+      "small": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "medium": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "large": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      }
+    }
+  },
+  "font": {
+    "$description": "Font family tokens.",
+    "family": {
+      "text": {
+        "$type": "fontFamily",
+        "$value": [
+          "Mona Sans Variable",
+          "Inter",
+          "system-ui",
+          "sans-serif"
+        ]
+      },
+      "display": {
+        "$type": "fontFamily",
+        "$value": [
+          "Oswald",
+          "Mona Sans Variable",
+          "Inter",
+          "system-ui",
+          "sans-serif"
+        ]
+      }
+    }
+  },
+  "type": {
+    "$description": "Typography presets mirroring the Figma text styles. 48px / 21px / 12px have no Figma size variable and are inlined. Figma expresses display tracking as a percent of font size (-4% at display-large, -3% at display-medium); body and heading styles track at 0.",
+    "display-xlarge": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontWeight": 500,
+        "fontSize": "{size.font.display}",
+        "lineHeight": 1,
+        "letterSpacing": {
+          "value": -0.04,
+          "unit": "em"
+        }
+      }
+    },
+    "display-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontWeight": 600,
+        "fontSize": "{size.font.xl}",
+        "lineHeight": 1,
+        "letterSpacing": {
+          "value": -0.04,
+          "unit": "em"
+        }
+      }
+    },
+    "display-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontWeight": 500,
+        "fontSize": {
+          "value": 48,
+          "unit": "px"
+        },
+        "lineHeight": 1,
+        "letterSpacing": {
+          "value": -0.03,
+          "unit": "em"
+        }
+      }
+    },
+    "display-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontWeight": 500,
+        "fontSize": "{size.font.l}",
+        "lineHeight": 1,
+        "letterSpacing": {
+          "value": -0.04,
+          "unit": "em"
+        }
+      }
+    },
+    "display-xsmall": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.display}",
+        "fontWeight": 500,
+        "fontSize": {
+          "value": 21,
+          "unit": "px"
+        },
+        "lineHeight": 1,
+        "letterSpacing": {
+          "value": -0.04,
+          "unit": "em"
+        }
+      }
+    },
+    "heading": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.text}",
+        "fontWeight": 500,
+        "fontSize": "{size.font.l}",
+        "lineHeight": 1.4
+      }
+    },
+    "body-large": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.text}",
+        "fontWeight": 500,
+        "fontSize": "{size.font.s}",
+        "lineHeight": 1.3
+      }
+    },
+    "body-large-strong": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.text}",
+        "fontWeight": 600,
+        "fontSize": "{size.font.s}",
+        "lineHeight": 1.3
+      }
+    },
+    "body-medium": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.text}",
+        "fontWeight": 500,
+        "fontSize": "{size.font.xs}",
+        "lineHeight": 1.3
+      }
+    },
+    "body-medium-strong": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.text}",
+        "fontWeight": 700,
+        "fontSize": "{size.font.xs}",
+        "lineHeight": 1.3
+      }
+    },
+    "body-small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.text}",
+        "fontWeight": 500,
+        "fontSize": {
+          "value": 12,
+          "unit": "px"
+        },
+        "lineHeight": 1.3
+      }
+    },
+    "body-small-strong": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.text}",
+        "fontWeight": 600,
+        "fontSize": {
+          "value": 12,
+          "unit": "px"
+        },
+        "lineHeight": 1.3
+      }
+    }
+  },
+  "shadow": {
+    "$description": "Elevation presets. Colors reference semantic.shadow so they follow the theme.",
+    "surface": {
+      "$type": "shadow",
+      "$value": {
+        "color": "{color.semantic.shadow.surface}",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$extensions": {
+        "com.cheddar.mode": {
+          "dark": {
+            "$value": {
+              "color": "{color.semantic.shadow.surface}",
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 12,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 30,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              }
+            }
+          },
+          "brand": {
+            "$value": {
+              "color": "{color.semantic.shadow.surface}",
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 12,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 30,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              }
+            }
+          }
+        }
+      }
+    },
+    "control": {
+      "$type": "shadow",
+      "$value": {
+        "color": "{color.semantic.shadow.control}",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "control-raised": {
+      "$type": "shadow",
+      "$value": {
+        "color": "{color.semantic.shadow.control}",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 4,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 12,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "focus-ring": {
+      "$type": "shadow",
+      "$description": "Two-layer ring: a spacer in the surface color, then the focus color. Apply as box-shadow on :focus-visible.",
+      "$value": [
+        {
+          "color": "{color.semantic.background.surface}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": "{size.border}"
+        },
+        {
+          "color": "{color.semantic.border.focus}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 3,
+            "unit": "px"
+          }
+        }
+      ],
+      "$extensions": {
+        "com.cheddar.mode": {
+          "brand": {
+            "$value": [
+              {
+                "color": "{color.semantic.background.default}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "spread": "{size.border}"
+              },
+              {
+                "color": "{color.semantic.border.focus}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 3,
+                  "unit": "px"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

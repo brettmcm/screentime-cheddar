@@ -1,0 +1,20 @@
+/* Delegate to the published layer list so the gallery can never drift from what
+ * consumers get. Adding a component stylesheet to styles/index.css is enough. */
+@import './styles/index.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--cds-font-family-text);
+  background: var(--cds-color-background-default);
+  color: var(--cds-color-foreground-primary);
+}
+
+#root {
+  min-height: 100svh;
+}

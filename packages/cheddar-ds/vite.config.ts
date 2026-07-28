@@ -1,42 +1,15 @@
-import type { Plugin } from 'vite'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const RASTER_RE = /\.(png|jpe?g|gif|webp|avif)$/i
-
-// Vite library mode forces every asset import to be inlined as a base64 data URI,
-// which bloats the bundle. Append ?no-inline so Vite emits them as files instead.
-const emitRasterAssets = (): Plugin => ({
-  name: 'cds:emit-raster-assets',
-  enforce: 'pre',
-  async resolveId(source, importer, options) {
-    if (!importer || !RASTER_RE.test(source)) return null
-    if (source.includes('no-inline')) return null
-    const withQuery = source.includes('?') ? `${source}&no-inline` : `${source}?no-inline`
-    return this.resolve(withQuery, importer, { ...options, skipSelf: true })
-  },
-})
-
 export default defineConfig(({ command }) => ({
-  plugins: [react(), emitRasterAssets()],
-  // Asset URLs default to the origin root (`/assets/foo.png`), which only
-  // resolves when the consumer happens to serve this package's dist from their
-  // web root. Anywhere else — a Figma Make project, any app installing from
-  // npm — every image 404s. Resolve them against the module instead.
-  experimental: {
-    renderBuiltUrl(filename, { hostType }) {
-      if (hostType !== 'js') return { relative: true }
-      return { runtime: `new URL(${JSON.stringify(`./${filename}`)}, import.meta.url).href` }
-    },
-  },
-  // The /public dir only contains assets for the gallery demo (`vite dev`).
-  // Don't ship them in the library tarball.
+  plugins: [react()],
+  // The /public directory is gallery-only. The internal package build validates
+  // the source entry points; the product app bundles those sources directly.
   publicDir: command === 'build' ? false : 'public',
   build: {
     lib: {
-      // Additional entries are published as their own subpaths so consumers can
-      // pull demo fixtures or raw token values without dragging in every
-      // component. See the "exports" map in package.json.
+      // Build every internal API entry so the independent package check covers
+      // the same boundaries the app imports from source.
       entry: {
         index: 'src/index.ts',
         'demo-assets': 'src/demo-assets/index.ts',
@@ -47,9 +20,6 @@ export default defineConfig(({ command }) => ({
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],
-      output: {
-        assetFileNames: 'assets/[name]-[hash][extname]',
-      },
     },
     target: 'es2022',
     sourcemap: true,

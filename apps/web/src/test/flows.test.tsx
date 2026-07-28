@@ -72,7 +72,8 @@ describe('learn', () => {
 
     expect(screen.getByRole('heading', { name: 'Guides' })).toBeInTheDocument()
 
-    await user.type(screen.getByLabelText('Search articles'), 'credit')
+    await user.click(screen.getByRole('button', { name: 'Search articles' }))
+    await user.type(screen.getByRole('searchbox', { name: 'Search articles' }), 'credit')
 
     expect(screen.queryByRole('heading', { name: 'Guides' })).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Tips & Tricks' })).toBeInTheDocument()
@@ -82,7 +83,8 @@ describe('learn', () => {
     const user = await enterApp()
     await openLearn(user)
 
-    await user.type(screen.getByLabelText('Search articles'), 'zzzz')
+    await user.click(screen.getByRole('button', { name: 'Search articles' }))
+    await user.type(screen.getByRole('searchbox', { name: 'Search articles' }), 'zzzz')
 
     expect(screen.getByText(/No articles match/)).toBeInTheDocument()
   })

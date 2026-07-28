@@ -1,26 +1,57 @@
 {
-  "name": "cheddar-app",
+  "name": "screentime-cheddar",
   "private": true,
   "version": "1.0.0",
   "workspaces": [
     "apps/web",
-    "packages/cheddar-tokens"
+    "packages/cheddar-ds"
   ],
   "scripts": {
-    "sync:tokens": "cp node_modules/@screentime/cheddar-ds/dist/tokens/cheddar.tokens.json packages/cheddar-tokens/cheddar.tokens.json",
-    "sync:swift": "cp node_modules/@screentime/cheddar-ds/dist/platforms/swift/CheddarTokens.swift apps/ios/Packages/CheddarDS/Sources/CheddarDS/Theme/Generated/CheddarTokens.swift",
-    "generate:tokens": "node scripts/generate-tokens.mjs",
-    "generate:appicon": "node scripts/generate-app-icon.mjs",
-    "generate:icons": "node scripts/generate-ios-icons.mjs",
-    "sync:fonts": "node scripts/sync-ios-fonts.mjs",
-    "sync:ios-assets": "node scripts/sync-ios-assets.mjs",
-    "codegen": "npm run sync:tokens && npm run sync:swift && npm run generate:tokens && npm run generate:icons && npm run sync:fonts && npm run sync:ios-assets",
-    "ios:generate": "cd apps/ios && xcodegen generate",
-    "ios:build": "cd apps/ios && xcodebuild -scheme Cheddar -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17' build",
     "dev": "npm run dev --workspace apps/web",
-    "build": "npm run build --workspace apps/web"
+    "dev:ds": "npm run dev --workspace @screentime/cheddar-ds",
+    "build": "npm run build --workspace @screentime/cheddar-ds && npm run build --workspace apps/web",
+    "verify": "npm run verify --workspace @screentime/cheddar-ds && npm run verify --workspace apps/web",
+    "test": "npm run test --workspaces --if-present",
+    "test:visual": "npm run test:visual --workspace apps/web",
+    "test:visual:update": "npm run test:visual:update --workspace apps/web",
+    "tokens:build": "npm run tokens:build --workspace @screentime/cheddar-ds",
+    "tokens:check": "npm run tokens:check --workspace @screentime/cheddar-ds",
+    "figma:check-urls": "npm run figma:check-urls --workspace @screentime/cheddar-ds",
+    "figma:url-sync": "npm run figma:url-sync --workspace @screentime/cheddar-ds",
+    "figma:publish": "npm run figma:publish --workspace @screentime/cheddar-ds",
+    "figma:publish:dry-run": "npm run figma:publish:dry-run --workspace @screentime/cheddar-ds",
+    "figma:unpublish": "npm run figma:unpublish --workspace @screentime/cheddar-ds"
   },
-  "dependencies": {
-    "@screentime/cheddar-ds": "git+ssh://git@github.com/figma/screentime-cheddar-ds.git#semver:^1.2.2"
+  "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@eslint/js": "^10.0.1",
+    "@figma/code-connect": "^1.4.8",
+    "@fontsource-variable/mona-sans": "^5.2.8",
+    "@fontsource/oswald": "^5.2.8",
+    "@playwright/test": "^1.62.0",
+    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "axe-core": "^4.12.1",
+    "dotenv-cli": "^11.0.0",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.7.0",
+    "jsdom": "^29.1.1",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.65.0",
+    "vite": "^8.0.10",
+    "vitest": "^3.2.7"
+  },
+  "overrides": {
+    "eslint-plugin-react-hooks": {
+      "zod": "^4.4.3",
+      "zod-validation-error": "^4.0.2"
+    }
   }
 }

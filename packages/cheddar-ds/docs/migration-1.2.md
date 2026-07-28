@@ -1,5 +1,9 @@
 # Migrating to `@screentime/cheddar-ds@1.2.0`
 
+> Historical API notes from the former standalone package. The design system is
+> now a private source workspace; registry and git-install instructions in this
+> document are retained only as release history.
+
 `1.2.0` is a **backward-compatible minor release**. Nothing exported by `1.1.0` was
 removed or renamed, no token was deleted, and no required prop was added. You can
 upgrade, ship, and migrate afterwards.
@@ -88,7 +92,6 @@ Every component now exports its props type (`ButtonProps`, `GoalCardProps`, …)
 | `@screentime/cheddar-ds/demo-assets`                         | typed demo imagery manifest     |
 | `@screentime/cheddar-ds/tokens`                              | typed token accessors for React |
 | `@screentime/cheddar-ds/tokens.json`                         | the DTCG source document        |
-| `@screentime/cheddar-ds/platforms/swift/CheddarTokens.swift` | generated Swift tokens          |
 
 ---
 
@@ -625,39 +628,11 @@ circular mask and the feathered edge repainted in the circle's own `brand-200`.
 
 ---
 
-## 12. `1.2.3` — two defects a Figma Make consumer found
+## 12. `1.2.3` — the brand appearance canvas
 
-Nothing was removed or renamed. Both items below were invisible to `apps/web` and to the
-gallery, and broke immediately in an app that installs the package normally. Details of the
-Make kit test that found them are in [`make-kit/test-prompt.md`](./make-kit/test-prompt.md).
-
-### Bundled images 404'd outside this repo
-
-Every raster the package ships was referenced by a root-absolute URL — `dist/demo-assets.js`
-held literals like `/assets/headphones-DUTuBv5S.png`, and `dist/index.js` held three for the
-`Avatar` fallbacks. Vite's default `base` of `/` produced them. That resolves only when the
-consumer happens to serve this package's `dist` from their own web root, which is exactly what
-the gallery dev server does and nothing else does. Everywhere else all 25 images 404'd, so
-demo artwork rendered as empty accent tiles and `Avatar` lost its bundled fallback.
-
-`vite.config.ts` now emits them as module-relative instead:
-
-```ts
-experimental: {
-  renderBuiltUrl(filename, { hostType }) {
-    if (hostType !== 'js') return { relative: true }
-    return { runtime: `new URL(${JSON.stringify(`./${filename}`)}, import.meta.url).href` }
-  },
-},
-```
-
-The consuming bundler picks the `new URL(…, import.meta.url)` pattern up, re-emits the asset
-into its own output, and rewrites the reference. Verified in both dev and production builds of
-a scratch Vite app installing the packed tarball. Nothing changes for this repo's own dev
-server.
-
-Worth knowing for future asset work: the `emitRasterAssets` plugin appends `?no-inline` to
-every raster so none of them inline, which is why even the 1.3 KB avatar PNGs were affected.
+The former standalone package also fixed asset URLs for installed consumers.
+That distribution path no longer exists: the web app now imports the workspace
+source and lets its own Vite build emit every image.
 
 ### The brand appearance painted no canvas
 

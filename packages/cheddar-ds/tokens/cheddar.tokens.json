@@ -1,5 +1,5 @@
 {
-  "$description": "Cheddar design tokens (DTCG 2025.10). This document is the source of truth: src/styles/tokens.css, src/tokens/tokens.ts and the Swift package are all generated from it by scripts/build-tokens.mjs. Names mirror the web code syntax — primitives are --token-color-*, everything else is --cds-*.",
+  "$description": "Cheddar design tokens (DTCG 2025.10). This document is the source of truth: src/styles/tokens.css and src/tokens/tokens.ts are generated from it by scripts/build-tokens.mjs. Names mirror the web code syntax — primitives are --token-color-*, everything else is --cds-*.",
   "color": {
     "$description": "Color tokens. Primitive ramps mirror the Figma \"Colors\" collection; the neutral and red ramps are code-only additions noted below.",
     "black": {

@@ -1,10 +1,12 @@
 import { cp, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
 import { basename, dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const root = resolve(here, '..')
 const dist = resolve(root, 'dist')
+const require = createRequire(resolve(root, 'package.json'))
 
 const distStyles = resolve(dist, 'styles')
 const distTokens = resolve(dist, 'tokens')
@@ -28,7 +30,9 @@ for (const file of standalone) {
   await cp(resolve(root, 'src/styles', file), resolve(distStyles, file))
 }
 
-const componentSheets = layers.filter((file) => !standalone.includes(file))
+const componentSheets = layers.filter(
+  (file) => !standalone.includes(file) && file !== 'fonts.css',
+)
 if (componentSheets.length === 0) {
   throw new Error('copy-assets: no component stylesheets found in src/styles/index.css')
 }
@@ -55,11 +59,6 @@ for (const file of ['files.mjs', 'files.d.mts']) {
   await cp(resolve(root, 'src/demo-assets', file), resolve(distDemoAssets, file))
 }
 
-// Platform token outputs. Swift ships as source rather than a compiled
-// artifact — it is consumed by an Xcode package, which does not want our JS
-// build output.
-await cp(resolve(root, 'platforms'), resolve(dist, 'platforms'), { recursive: true })
-
 // Font bundling: read each fontsource CSS entry, copy every referenced font file
 // into dist/fonts/, and rewrite url() to point there. The result is a single
 // self-contained dist/styles/fonts.css that consumers get for free with the
@@ -75,7 +74,7 @@ const fontParts = []
 const copiedFonts = new Set()
 
 for (const entry of fontEntries) {
-  const cssPath = resolve(root, 'node_modules', entry)
+  const cssPath = require.resolve(entry)
   const cssDir = dirname(cssPath)
   let css = await readFile(cssPath, 'utf8')
 

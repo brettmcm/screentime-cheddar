@@ -17,7 +17,7 @@ export function LandingScreen() {
         Repeat
       </h1>
       <div className="landing-hero">
-        <img src={demoAssets.brand.hero} alt="" />
+        <img src={demoAssets.brand.coinDisc} alt="" />
       </div>
       <p>Let&rsquo;s get started on your personal savings journey.</p>
       <div className="landing-actions">

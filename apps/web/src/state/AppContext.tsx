@@ -60,7 +60,7 @@ export function AppProvider({ children }: PropsWithChildren) {
   const [completedGoals, setCompletedGoals] = useState(initialCompletedGoals)
   const [activities, setActivities] = useState(initialActivities)
   const [profile, setProfile] = useState<Profile>({ name: 'Jamie K.', handle: '@jamieh' })
-  const [brand, setBrandState] = useState<Brand>('magenta')
+  const [brand, setBrandState] = useState<Brand>('blue')
   const [mode, setModeState] = useState<Mode>('dark')
   const [toast, setToast] = useState<string>()
 
